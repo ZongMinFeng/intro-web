@@ -21,8 +21,7 @@
         <template slot-scope="props">
           <el-button type="warning" @click="modifyTap(props.row)">修改</el-button>
           <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
-          <el-button v-if="props.row.isLeaf==='N'" type="primary" @click="getChildren(props.row)">子类 &nbsp>>&nbsp
-          </el-button>
+          <el-button v-if="props.row.isLeaf==='N'" type="primary" @click="getChildren(props.row)">子类 &nbsp>>&nbsp</el-button>
           <el-button type="success" v-if="props.row.isLeaf==='Y'" @click="addChild(props.row)">新增子类</el-button>
         </template>
       </el-table-column>

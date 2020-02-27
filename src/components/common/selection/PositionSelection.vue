@@ -16,10 +16,11 @@
 <script>
   import {Sidebar} from '@/config/routeArray.js';
   import {PERMISSIONS} from '@/tool/permission.js'
+  import {funcMap2position, getPermissions, position2funcMap} from "../../../tool/permission";
   export default {
     name: "PositionSelection",
-    //v-model即value绑定是权限数组 举例：["addSystemChannel", "addInst", "listInstDepartments"]
-    props: ['value', 'superPosition'],
+    //v-model即value绑定是权限数组Map 举例：'03'表示权限数组["addSystemChannel", "addInst", "listInstDepartments"]
+    props: ['value'],
 
     data(){
       return {
@@ -91,26 +92,27 @@
         },
         //选中的权限
         position:[],
+        superPosition:[]
       }
     },
 
     watch: {
-      superPosition:function (newValue, oldValue) {
-        this.initData();
-      },
       value:function (newValue, oldValue) {
         this.setChecked();
       }
     },
 
     created() {
+      this.superPosition=getPermissions();
       this.initData();
     },
 
     methods:{
       initData(){
         this.superPosition2TreeData();
-        this.setChecked();
+        this.$nextTick(()=>{
+          this.setChecked();
+        });
       },
 
       //根据Sidebar生成菜单，权限不在superPosition的菜单不加载，权限在position中，并且也在superPosition的默认选中。
@@ -160,14 +162,17 @@
 
       setChecked(){
         if (!this.$refs.tree) {
+          console.log('啦啦我去');//debug
           return;
         }
         this.position=[];
-        this.value.forEach(item=>{
+        let positionTmp=funcMap2position(this.value);
+        positionTmp.forEach(item=>{
           if (this.superPosition.indexOf(item)>0){
             this.position.push(item);
           }
         });
+        console.log('this.position', this.position);//debug
         this.$refs.tree.setCheckedKeys(this.position);
       },
 
@@ -183,9 +188,10 @@
             permissionNew.push(item);
           }
         });
+        //相同的权限，不用发送input指令了
         if (this.isNew(permissionNew, this.position)) {
-          this.$emit('input', permissionNew);
-          console.log('啦啦，只执行一次啦');//debug
+          let funcMap=position2funcMap(permissionNew);
+          this.$emit('input', funcMap);
         }
       },
 

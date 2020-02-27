@@ -71,28 +71,8 @@ const PERMISSIONS={
 };
 
 const handelPermission=function (funcMap) {
-  console.log("funcMap", funcMap);//debug
-  let permissionMap=hex_to_bin(funcMap);
-  console.log("permissionMap", permissionMap);//debug
-  let length=permissionMap.length;
-  //权限数组permissions，以后每次交易查询此数组，看是否有权限。
-  let permissions=[];
-  //遍历所有权限配置，如果此权限在权限map有配置，那么此权限存入权限数组permissions
-  for (let permission in PERMISSIONS) {
-     let index=PERMISSIONS[permission].index;
-     if (index) {
-       if (index < length) {
-         if (permissionMap.substr(index, 1) === '1') {
-           permissions.push(permission);
-         }
-       }
-     }else {
-       permissions.push(permission);
-     }
-  }
-
+  let permissions = funcMap2position(funcMap);
   //将权限数组存入store
-  console.log('permissions', permissions);//debug
   store.commit('setPermissions', permissions);
 };
 
@@ -100,8 +80,47 @@ const getPermissions=function () {
   return store.getters.permissions;
 };
 
+/**
+ * 将funcMap转成权限数组
+ * @param funcMap
+ * @returns {[]}
+ */
+const funcMap2position=function(funcMap){
+  //权限数组permissions，以后每次交易查询此数组，看是否有权限。
+  let permissions=[];
+  let permissionMap=hex_to_bin(funcMap);
+  let length=permissionMap.length;
+  //遍历所有权限配置，如果此权限在权限map有配置，那么此权限存入权限数组permissions
+  for (let permission in PERMISSIONS) {
+    let index=PERMISSIONS[permission].index;
+    if (index) {
+      if (index < length) {
+        if (permissionMap.substr(index, 1) === '1') {
+          permissions.push(permission);
+        }
+      }
+    }else {
+      permissions.push(permission);
+    }
+  }
+  return  permissions;
+};
+
+/**
+ * 权限数组转funcMap
+ * @param position
+ * @returns {string}
+ */
+const position2funcMap=function (position) {
+  let funcMap='FFF';
+  return funcMap;
+};
+
+
 export {
   handelPermission,
   getPermissions,
-  PERMISSIONS
+  PERMISSIONS,
+  funcMap2position,
+  position2funcMap
 }

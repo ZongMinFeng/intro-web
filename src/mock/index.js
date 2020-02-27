@@ -199,7 +199,20 @@ Mock.mock('/mock/system/addDepartmentPosition', 'post', addDepartmentPosition);
 const listDepartmentPosition = {
   "returnCode": 200,
   "returnMsg": "OK",
-  "data":[]
+  "data": [{
+      "positionId": "I02190901DKWKTSXKP0",
+      "positionName": "财务运行考核部主管",
+      "departmentId": "SID200217001",
+      "instId": "I01System001",
+      "funcMap": "FFFA01",
+      "createTime": 1567335995304,
+      "createTellerId": "TELSystem001",
+      "updateTimme": 1567335995304,
+      "updateTellerId": "TELSystem001",
+      "version": 1,
+      "status": 1,
+    },
+    ]
 };
 Mock.mock('/mock/system/listDepartmentPosition', 'post', listDepartmentPosition);
 
