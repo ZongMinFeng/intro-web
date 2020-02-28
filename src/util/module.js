@@ -1480,6 +1480,43 @@ const synchronizeDeviceModification=(me, params, Toast)=>{
   });
 };
 
+
+/**
+ * 1.3.2.2.1	新增子公司 /addInst
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const addInst= (me, params) => {
+  console.log("addInst params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.addInst.url;
+    urlParams.txnId = cfg.service.addInst.txnId;
+
+    send.specInstId  = params.specInstId ;
+    send.instName = params.instName;
+    send.instLevel = params.instLevel;
+    send.tellerName = params.tellerName;
+    send.tellerId = params.tellerId;
+    send.tellerPhone = params.tellerPhone;
+    send.tellerFuncMap = params.tellerFuncMap;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
 const getAllInstById = (me,instId ,Toast) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
@@ -2024,6 +2061,34 @@ const resetTellerPwd= (me, params) => {
   });
 };
 
+/**
+ * 1.3.2.2.4	查询所有单位  /listAllUnitinfos  位图索引209
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listAllUnitinfos= (me, params) => {
+  console.log("listAllUnitinfos params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.listAllUnitinfos.url;
+    urlParams.txnId = cfg.service.listAllUnitinfos.txnId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
 export {
   instGetAllById,
   instTellersGetByCons,
@@ -2091,5 +2156,7 @@ export {
   addTellerInfo,
   updateTellerInfo,
   deleteDepartmentTeller,
-  resetTellerPwd
+  resetTellerPwd,
+  addInst,
+  listAllUnitinfos
 };

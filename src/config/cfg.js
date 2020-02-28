@@ -22,6 +22,11 @@ module.exports = {
       txnId: 'getAllInstById'
     },
 
+    addInst: {
+      url: baseUrl+'/system/addInst',
+      txnId: 'addInst'
+    },
+
     getInstById: {
       url: baseUrl+'/system/getInstById',
       txnId: 'getInstById'
@@ -105,6 +110,11 @@ module.exports = {
     updateGooCategoryById: {
       url: baseUrl+'/goods/updateGooCategoryById',
       txnId: 'updateGooCategoryById'
+    },
+
+    listAllUnitinfos: {
+      url: baseUrl+'/goods/listAllUnitinfos',
+      txnId: 'listAllUnitinfos'
     },
 
 

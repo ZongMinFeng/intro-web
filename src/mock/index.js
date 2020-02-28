@@ -72,6 +72,28 @@ const getLoginStatus = {
 };
 Mock.mock('/mock/pcMngLogin/getLoginStatus', 'post', getLoginStatus);
 
+const addInst = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+  "data": {
+    "newSysInstInfo": {        //新注册的子机构信息
+      "instId": "I02190901DKWKTSXKP0",
+      "instLevel": 2,
+      "instName": "南京华创科技贸易有限公司",
+      "parentInstId": "I01System001",
+      "isLeaf": "Y",
+      "createTime": 1567335995304,
+      "createTellerId": "TELSystem001",
+      "updateTimme": 1567335995304,
+      "updateTellerId": "TELSystem001",
+      "version": 1,
+      "status": 1,
+    },
+    "tellerPwd": "uW3CuQx8",      // 子机构管理员生成的密码
+  }
+};
+Mock.mock('/mock/system/addInst', 'post', addInst);
+
 const getAllInstById = {
   "returnCode": 200,
   "returnMsg": "OK",
@@ -403,3 +425,32 @@ const listGooCategorysByPid = {
   ]
 };
 Mock.mock('/mock/goods/listGooCategorysByPid', 'post', listGooCategorysByPid);
+
+//物资单位
+const listAllUnitinfos = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+  "data": [
+    {
+      "unitId": "681811686918852608",
+      "unitName": "克",
+      "createTime": "2020-02-25T10:36:13.666",
+      "createTellerId": "hcj001",
+      "updateTime": "2020-02-25T10:36:13.666",
+      "updateTellerId": "hcj001",
+      "version": 1,
+      "memo": null
+    },
+    {
+      "unitId": "681812442048761856",
+      "unitName": "测试单位1",
+      "createTime": "2020-02-25T10:39:13.654",
+      "createTellerId": "hcj001",
+      "updateTime": "2020-02-25T10:39:13.654",
+      "updateTellerId": "hcj001",
+      "version": 1,
+      "memo": null
+    }
+  ]
+};
+Mock.mock('/mock/goods/listAllUnitinfos', 'post', listAllUnitinfos);

@@ -2,8 +2,6 @@
   <div class="table">
     <div class="container">
       <div class="handle-box">
-        <!--<el-button type="success" :disabled='addDisabled' icon="el-icon-plus" @click="onAddNewTap">新增</el-button>-->
-        <!--<el-button type="primary" :disabled='uptDisabled' icon="el-icon-edit" @click="onUpdateNewTap">修改</el-button>-->
         <el-button type="primary" :disabled='refDisabled' icon="el-icon-refresh" @click="onRefresh" class="search-btn">
           刷新
         </el-button>
@@ -19,12 +17,23 @@
         :title="dialogTitle"
         :visible.sync="dialogVisible"
         width="30%">
-        <el-form ref="instPreservationForm" :model="instPreservationForm" :rules="rules" label-width="120px">
-          <el-form-item label="名称" prop="instName">
-            <el-input v-model="instPreservationForm.instName" maxlength="64" auto-complete="off"></el-input>
+        <el-form ref="instPreservationForm" :model="dialogForm" :rules="rules" label-width="120px">
+          <el-form-item label="公司名称" prop="instName">
+            <el-input v-model="dialogForm.instName" maxlength="64" auto-complete="off"></el-input>
           </el-form-item>
-          <el-form-item v-if="titleStatus===0" label="管理员手机号" prop="adminPhone">
-            <el-input v-model="instPreservationForm.adminPhone" maxlength="11" auto-complete="off"></el-input>
+          <el-form-item label="管理员名称" prop="tellerName">
+            <el-input v-model="dialogForm.tellerName" maxlength="64" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="管理员ID" prop="tellerId">
+            <el-input v-model="dialogForm.tellerId" maxlength="64" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="管理员手机号" prop="tellerPhone">
+            <el-input v-model="dialogForm.tellerPhone" maxlength="11" auto-complete="off"></el-input>
+          </el-form-item>
+          <el-form-item label="管理员权限" prop="tellerFuncMap">
+            请选择权限:
+            <position-selection v-model="dialogForm.tellerFuncMap"></position-selection>
+            已选择：{{dialogForm.tellerFuncMap}}
           </el-form-item>
         </el-form>
         <span slot="footer" class="dialog-footer">
@@ -41,14 +50,19 @@
 <script>
   import {validUsername} from '../../../util/validate'
   import {sendServer} from '../../../util/common'
-  import {instGetAllById} from '../../../util/module'
+  import {addInst, instGetAllById} from '../../../util/module'
   import cfg from '../../../config/cfg'
   import {Toast, Indicator} from 'mint-ui'
   import LevelTree from '../../common/LevelTree'
   import bus from '../../common/bus'
+  import PositionSelection from "../../common/selection/PositionSelection";
 
   export default {
     name: 'instActionSet',
+    components: {
+      LevelTree,
+      PositionSelection
+    },
     data() {
       const validateUsername = (rule, value, callback) => {
         if (!validUsername(value)) {
@@ -60,7 +74,7 @@
         } else {
           callback()
         }
-      }
+      };
 
       const validateAliasName = (rule, value, callback) => {
         if (!value) {
@@ -68,7 +82,7 @@
         } else {
           callback()
         }
-      }
+      };
 
       const validateInstName = (rule, value, callback) => {
         if (!value) {
@@ -76,11 +90,10 @@
         } else {
           callback()
         }
-      }
+      };
       return {
         instArray: [],
         dialogVisible: false,
-        dialogTitle: '',
         instLevel: 0,
         titleStatus: 0,
         maxlength: 20,
@@ -95,18 +108,32 @@
         refDisabled: false,
         uptDisabled: false,
         rules: {
-          aliasName: [{required: true, validate: '', trigger: 'blur', validator: validateAliasName}],
           instName: [{required: true, validate: '', trigger: 'blur', validator: validateInstName}],
-          adminPhone: [{required: true, trigger: 'blur', validator: validateUsername}]
+          tellerName: [{required: true, validate: '', trigger: 'blur', validator: validateAliasName}],
+          tellerId: [{required: true, validate: '', trigger: 'blur'}],
+          tellerPhone: [{required: true, trigger: 'blur', validator: validateUsername}]
         },
-        dialogForm:{
-
+        dialogForm: {
+          specInstId: null,
+          instName: null,
+          instLevel: null,
+          tellerName: null,
+          tellerId: null,
+          tellerPhone: null,
+          tellerFuncMap: '',
         },
+        flag: 1,
       }
     },
 
-    components: {
-      LevelTree
+    computed: {
+      dialogTitle() {
+        if (this.flag === 1) {
+          return '新增';
+        } else {
+          return '修改';
+        }
+      }
     },
 
     created() {
@@ -159,7 +186,7 @@
       onAddNewTap() {
         this.dialogVisible = true;
         this.dialogTitle = this.getDialogTitle('add');
-        this.instPreservationForm.specInstId=this.sysInstInfo.instId;
+        this.instPreservationForm.specInstId = this.sysInstInfo.instId;
         this.titleStatus = 0
       },
 
@@ -176,10 +203,9 @@
 
       onRefresh() {
         this.DestroyIncomeStatistics = false;
-        this.instPreservationForm = {
-          aliasName: '',
+        this.dialogForm = {
           instName: '',
-          adminPhone: ''
+          tellerPhone: ''
         };
         this.$nextTick(() => {
           this.DestroyIncomeStatistics = true
@@ -189,15 +215,7 @@
       handleConfirm(userAddForm) {
         this.$refs[userAddForm].validate((valid) => {
           if (valid) {
-            if (this.titleStatus === 0) {
-              this.instPreservation()
-            } else {
-              if (this.instPreservationForm.aliasName === this.sysInstInfo.aliasName && this.instPreservationForm.instName === this.sysInstInfo.instName) {
-                this.dialogVisible = false
-              } else {
-                this.instModification()
-              }
-            }
+            this.formCommit();
           } else {
             console.log('error submit!!')
             return false
@@ -205,23 +223,71 @@
         })
       },
 
+      formCommit(){
+        let params={};
+        if (this.flag === 1) {
+          //新增
+          params.specInstId =this.dialogForm.specInstId ;
+          params.instName=this.dialogForm.instName;
+          params.instLevel=this.dialogForm.instLevel;
+          params.tellerName=this.dialogForm.tellerName;
+          params.tellerId=this.dialogForm.tellerId;
+          params.tellerPhone=this.dialogForm.tellerPhone;
+          params.tellerFuncMap=this.dialogForm.tellerFuncMap;
+          addInst(this, params).then(
+            res=>{
+              this.$message.success('新增成功');
+              this.onRefresh();
+              this.dialogVisible=false;
+            },
+            res=>{
+              if (res.returnMsg) {
+                this.$message.error(res.returnMsg);
+              }else{
+                this.$message.error('新增失败');
+              }
+            }
+          ).catch();
+        }
+
+        if (this.flag === 2) {
+          //修改
+          params.positionId=this.dialogForm.positionId;
+          params.positionName=this.dialogForm.positionName;
+          params.funcMap=this.dialogForm.funcMap;
+          updateDepartmentPosition(this, params).then(
+            res=>{
+              this.$message.success('修改成功');
+              this.initData();
+              this.dialogVisible=false;
+            },
+            res=>{
+              if (res.returnMsg) {
+                this.$message.error(res.returnMsg);
+              }else{
+                this.$message.error('修改失败');
+              }
+            }
+          ).catch();
+        }
+      },
 
       instPreservation() {
-        let urlParams = {}
-        let send = {}
-        urlParams.url = cfg.service.instPreservation.url + '/' + cfg.service.instPreservation.action
-        urlParams.txnId = cfg.service.instPreservation.txnId
-        send.aliasName = this.instPreservationForm.aliasName
-        send.instName = this.instPreservationForm.instName
-        send.instLevel = parseInt(this.instLevel) + 1
-        send.adminPhone = this.instPreservationForm.adminPhone
-        urlParams.send = send
+        let urlParams = {};
+        let send = {};
+        urlParams.url = cfg.service.instPreservation.url + '/' + cfg.service.instPreservation.action;
+        urlParams.txnId = cfg.service.instPreservation.txnId;
+        send.aliasName = this.instPreservationForm.aliasName;
+        send.instName = this.instPreservationForm.instName;
+        send.instLevel = parseInt(this.instLevel) + 1;
+        send.adminPhone = this.instPreservationForm.adminPhone;
+        urlParams.send = send;
         let singArray = {
           instLevel: send.instLevel,
           adminPhone: send.adminPhone
-        }
-        urlParams.singArray = singArray
-        let that = this
+        };
+        urlParams.singArray = singArray;
+        let that = this;
         sendServer(urlParams, this, Toast).then(
           (res) => {
             console.log('res', res)
@@ -276,8 +342,8 @@
 
 
       instModification() {
-        let urlParams = {}
-        let send = {}
+        let urlParams = {};
+        let send = {};
         urlParams.url = cfg.service.instModification.url + '/' + cfg.service.instModification.action
         urlParams.txnId = cfg.service.instModification.txnId
 
@@ -369,8 +435,11 @@
         }
       },
 
-      createTap(instInfo){
+      createTap(instInfo) {
         console.log('createTap instInfo', instInfo);//debug
+        this.dialogForm.specInstId = instInfo.instId;
+        this.dialogForm.instLevel = parseInt(instInfo.instLevel) + 1 + '';
+        this.dialogVisible = true;
       },
     }
   }

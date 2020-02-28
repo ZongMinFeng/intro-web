@@ -41,7 +41,11 @@ module.exports = {
           component: resolve => require(['../components/page/goods/categoryAction.vue'], resolve),
           meta: {title: '物资分类' ,function: 'categoryAction'}
         },
-
+        {
+          path: '/unitAction',
+          component: resolve => require(['../components/page/goods/unitAction.vue'], resolve),
+          meta: {title: '单位管理' ,function: 'unitAction'}
+        },
       ]
     },
 
@@ -88,6 +92,7 @@ module.exports = {
           permissions:[
             'addInst',
             'getAllInstById',
+            'getInstById'
           ]
         },
         {
@@ -149,123 +154,20 @@ module.exports = {
             'updateGooCategoryById'
           ]
         },
-      ],
-    },
-
-    {
-      icon: 'el-icon-office-building',
-      index: '3',
-      title: '房屋管理',
-      flag: false,
-      subs: [
         {
-          index: 'houseAction',
-          title: '房屋列表',
+          index: 'unitAction',
+          title: '物资分类',
           flag: true,
-          function: 'houseAction'
-        },
-        {
-          index: 'houseBatchAction',
-          title: '房屋批量导入',
-          flag: true,
-          function: 'houseBatchAction'
-        },
-
-        // {
-        //   index: 'houseRoomerAction',
-        //   title: '房屋住户',
-        //   flag: true,
-        //   function: 'houseRoomerAction'
-        // },
-      ],
-    },
-
-    {
-      icon: 'el-icon-mobile-phone',
-      index: '4',
-      title: '设备管理',
-      flag: false,
-      subs: [
-        {
-          index: 'deviceAction',
-          title: '设备列表',
-          flag: true,
-          function: 'deviceAction'
+          function: 'unitAction',
+          permissions:[
+            'addGooUnitinfo',
+            'deleteGooUnitinfoById',
+            'getGooUnitinfoById',
+            'listAllUnitinfos'
+          ]
         },
       ],
     },
 
-    {
-      icon: 'el-icon-film',
-      index: '5',
-      title: '资源管理',
-      flag: false,
-      subs: [
-        {
-          index: 'resourceAction',
-          title: '资源列表',
-          flag: true,
-          function: 'resourceAction'
-        },
-
-        {
-          index: 'resourcePublishAction',
-          title: '资源发布',
-          flag: true,
-          function: 'resourcePublishAction'
-        },
-      ],
-    },
-
-    {
-      icon: 'el-icon-s-custom',
-      index: '6',
-      title: '住户管理',
-      flag: false,
-      subs: [
-        {
-          index: 'roomerAction',
-          title: '住户列表',
-          flag: true,
-          function: 'roomerAction'
-        },
-        {
-          index: 'roomerBatchAction',
-          title: '住户批量导入',
-          flag: true,
-          function: 'roomerBatchAction'
-        },
-      ],
-    },
-
-    {
-      icon: 'el-icon-postcard',
-      index: '7',
-      title: '门卡管理',
-      flag: false,
-      subs: [
-        {
-          index: 'CardListAction',
-          title: '门卡列表',
-          flag: true,
-          function: 'CardListAction'
-        },
-      ],
-    },
-
-    {
-      icon: 'el-icon-view',
-      index: '8',
-      title: '交易查询',
-      flag: false,
-      subs: [
-        {
-          index: 'BatcQueryhAction',
-          title: '批量结果查询',
-          flag: true,
-          function: 'BatcQueryhAction'
-        },
-      ],
-    },
   ]
 };

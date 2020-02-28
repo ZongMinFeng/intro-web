@@ -73,6 +73,11 @@ const PERMISSIONS={
     index:15,
     name:'重置员工密码'
   },
+  //16
+  getInstById:{
+    index:16,
+    name:'查询机构信息'
+  },
   //201
   addGooCategory:{
     index:201,
@@ -92,6 +97,11 @@ const PERMISSIONS={
   getGooCategoryById:{
     index:205,
     name:'根据主键查询物资分类'
+  },
+  //209
+  listAllUnitinfos:{
+    index:209,
+    name:'查询所有单位'
   },
 
   //无index
