@@ -2,8 +2,8 @@
   <div class="table">
     <div class="container">
       <div class="handle-box">
-        <el-button type="success" :disabled='addDisabled' icon="el-icon-plus" @click="onAddNewTap">新增</el-button>
-        <el-button type="primary" :disabled='uptDisabled' icon="el-icon-edit" @click="onUpdateNewTap">修改</el-button>
+        <!--<el-button type="success" :disabled='addDisabled' icon="el-icon-plus" @click="onAddNewTap">新增</el-button>-->
+        <!--<el-button type="primary" :disabled='uptDisabled' icon="el-icon-edit" @click="onUpdateNewTap">修改</el-button>-->
         <el-button type="primary" :disabled='refDisabled' icon="el-icon-refresh" @click="onRefresh" class="search-btn">
           刷新
         </el-button>
@@ -11,7 +11,7 @@
 
       <div width="100%" class="div-tree">
         <el-card class="form-container" shadow="never">
-          <level-tree v-if="DestroyIncomeStatistics === true"></level-tree>
+          <level-tree v-if="DestroyIncomeStatistics === true" create @createTap="createTap"></level-tree>
         </el-card>
       </div>
 
@@ -20,10 +20,7 @@
         :visible.sync="dialogVisible"
         width="30%">
         <el-form ref="instPreservationForm" :model="instPreservationForm" :rules="rules" label-width="120px">
-          <el-form-item label="简称" prop="aliasName">
-            <el-input v-model="instPreservationForm.aliasName" :maxlength="maxlength" auto-complete="off"></el-input>
-          </el-form-item>
-          <el-form-item label="全称" prop="instName">
+          <el-form-item label="名称" prop="instName">
             <el-input v-model="instPreservationForm.instName" maxlength="64" auto-complete="off"></el-input>
           </el-form-item>
           <el-form-item v-if="titleStatus===0" label="管理员手机号" prop="adminPhone">
@@ -41,7 +38,6 @@
   </div>
 </template>
 
-
 <script>
   import {validUsername} from '../../../util/validate'
   import {sendServer} from '../../../util/common'
@@ -50,7 +46,6 @@
   import {Toast, Indicator} from 'mint-ui'
   import LevelTree from '../../common/LevelTree'
   import bus from '../../common/bus'
-  import {role} from '../../../util/roleFunction'
 
   export default {
     name: 'instActionSet',
@@ -103,6 +98,9 @@
           aliasName: [{required: true, validate: '', trigger: 'blur', validator: validateAliasName}],
           instName: [{required: true, validate: '', trigger: 'blur', validator: validateInstName}],
           adminPhone: [{required: true, trigger: 'blur', validator: validateUsername}]
+        },
+        dialogForm:{
+
         },
       }
     },
@@ -159,8 +157,9 @@
       },
 
       onAddNewTap() {
-        this.dialogVisible = true
-        this.dialogTitle = this.getDialogTitle('add')
+        this.dialogVisible = true;
+        this.dialogTitle = this.getDialogTitle('add');
+        this.instPreservationForm.specInstId=this.sysInstInfo.instId;
         this.titleStatus = 0
       },
 
@@ -368,7 +367,11 @@
           this.maxlength = 10
           return '修改物业楼栋 '
         }
-      }
+      },
+
+      createTap(instInfo){
+        console.log('createTap instInfo', instInfo);//debug
+      },
     }
   }
 </script>

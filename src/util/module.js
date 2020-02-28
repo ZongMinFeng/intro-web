@@ -1774,6 +1774,256 @@ const listDepartmentPosition = (me, params) => {
   });
 };
 
+/**
+ * 1.3.2.4.3	修改部门职位 /updateDepartmentPosition
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateDepartmentPosition = (me, params) => {
+  console.log("updateDepartmentPosition params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.updateDepartmentPosition.url;
+    urlParams.txnId = cfg.service.updateDepartmentPosition.txnId;
+
+    send.positionId = params.positionId;
+    send.positionName = params.positionName;
+    send.funcMap = params.funcMap;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.4.4	删除部门职位 /deleteDepartmentPosition
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteDepartmentPosition= (me, params) => {
+  console.log("deleteDepartmentPosition params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.deleteDepartmentPosition.url;
+    urlParams.txnId = cfg.service.deleteDepartmentPosition.txnId;
+
+    send.positionId = params.positionId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.1	新增部门员工 /addTellerInfo
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const addTellerInfo= (me, params) => {
+  console.log("addTellerInfo params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.addTellerInfo.url;
+    urlParams.txnId = cfg.service.addTellerInfo.txnId;
+
+    send.specDepartmentId = params.specDepartmentId;
+    send.specTellerId = params.specTellerId;
+    send.tellerName = params.tellerName;
+    send.tellerPhone  = params.tellerPhone ;
+    send.tellerPositonIds = params.tellerPositonIds;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.3	查询部门所有员工（分页） /listDepartmentTeller?currentPage=1&pageSize=10
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listDepartmentTeller= (me, params) => {
+  console.log("listDepartmentTeller params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.listDepartmentTeller.url;
+    urlParams.url+='?currentPage='+params.currentPage+'&pageSize='+params.pageSize;
+    urlParams.txnId = cfg.service.listDepartmentTeller.txnId;
+
+    send.specDepartmentId = params.specDepartmentId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.4	查询部门员工信息 /getTellerInfoById
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getTellerInfoById= (me, params) => {
+  console.log("getTellerInfoById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.getTellerInfoById.url;
+    urlParams.txnId = cfg.service.getTellerInfoById.txnId;
+
+    send.specDepartmentId = params.specDepartmentId;
+    send.specTellerId = params.specTellerId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.5	修改部门员工 /updateTellerInfo
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateTellerInfo= (me, params) => {
+  console.log("updateTellerInfo params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.updateTellerInfo.url;
+    urlParams.txnId = cfg.service.updateTellerInfo.txnId;
+
+    send.specDepartmentId = params.specDepartmentId;
+    send.specTellerId = params.specTellerId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.6	删除部门员工 /deleteDepartmentTeller
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteDepartmentTeller= (me, params) => {
+  console.log("deleteDepartmentTeller params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.deleteDepartmentTeller.url;
+    urlParams.txnId = cfg.service.deleteDepartmentTeller.txnId;
+
+    send.specTellerId = params.specTellerId;
+    send.specDepartmentId = params.specDepartmentId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.7	重置员工密码 /resetTellerPwd
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const resetTellerPwd= (me, params) => {
+  console.log("resetTellerPwd params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    urlParams.url = cfg.service.resetTellerPwd.url;
+    urlParams.txnId = cfg.service.resetTellerPwd.txnId;
+
+    send.specTellerId = params.specTellerId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
 export {
   instGetAllById,
   instTellersGetByCons,
@@ -1833,5 +2083,13 @@ export {
   listInstDepartments,
   addDepartmentInfo,
   addDepartmentPosition,
-  listDepartmentPosition
+  listDepartmentPosition,
+  updateDepartmentPosition,
+  deleteDepartmentPosition,
+  listDepartmentTeller,
+  getTellerInfoById,
+  addTellerInfo,
+  updateTellerInfo,
+  deleteDepartmentTeller,
+  resetTellerPwd
 };

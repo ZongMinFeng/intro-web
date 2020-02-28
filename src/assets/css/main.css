@@ -175,3 +175,10 @@ a {
 .el-icon-i{
     font-weight: 600;position: absolute;left: 10px;
 }
+
+.handle-box {
+    margin-top: 10px;
+    margin-bottom: 20px;
+    display: inline-block;
+    width: 100%;
+}

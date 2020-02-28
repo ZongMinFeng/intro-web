@@ -5,7 +5,7 @@
     </div>
 
     <ul class="levels">
-      <li v-for="item in levels">
+      <li v-for="item in levels" :key="item.id">
         <button @click="goToLevel(item)">{{item.label}}</button>
         <span>&nbsp;>>&nbsp;&nbsp;</span>
       </li>
@@ -21,7 +21,7 @@
         <template slot-scope="props">
           <el-button type="warning" @click="modifyTap(props.row)">修改</el-button>
           <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
-          <el-button v-if="props.row.isLeaf==='N'" type="primary" @click="getChildren(props.row)">子类 &nbsp>>&nbsp</el-button>
+          <el-button v-if="props.row.isLeaf==='N'" type="primary" @click="getChildren(props.row)">子类 &nbsp;&gt;&gt;&nbsp;</el-button>
           <el-button type="success" v-if="props.row.isLeaf==='Y'" @click="addChild(props.row)">新增子类</el-button>
         </template>
       </el-table-column>
@@ -70,7 +70,7 @@
           {
             level: 0,
             label: '基础分类',
-            categoryId: null,
+            categoryId: 'root',
           },
         ],
         tableData: [],
@@ -115,7 +115,7 @@
 
       goodsList() {
         let params = {};
-        if (this.searchForm.categoryId != null) {
+        if (this.searchForm.categoryId !== 'root') {
           params.categoryId = this.searchForm.categoryId;
         } else {
           params.categoryLevel = this.searchForm.categoryLevel;

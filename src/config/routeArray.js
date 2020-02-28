@@ -31,6 +31,12 @@ module.exports = {
         },
 
         {
+          path: '/tellerAction',
+          component: resolve => require(['../components/page/setting/tellerAction.vue'], resolve),
+          meta: {title: '人员管理' ,function: 'tellerAction'}
+        },
+
+        {
           path: '/categoryAction',
           component: resolve => require(['../components/page/goods/categoryAction.vue'], resolve),
           meta: {title: '物资分类' ,function: 'categoryAction'}
@@ -104,6 +110,22 @@ module.exports = {
             'listDepartmentPosition',
             'updateDepartmentPosition',
             'deleteDepartmentPosition'
+          ]
+        },
+        {
+          index: 'tellerAction',
+          title: '员工管理',
+          flag: false,
+          function: 'tellerAction',
+          permissions:[
+            'addTellerInfo',
+            'addTellerDepartment',
+            'listDepartmentTeller',
+            'getTellerInfoById',
+            'updateTellerInfo',
+            'deleteDepartmentTeller',
+            'resetTellerPwd',
+            'checkTellerId'
           ]
         },
       ],

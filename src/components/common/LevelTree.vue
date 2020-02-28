@@ -18,6 +18,14 @@
             <svg-icon class="svgname" icon-class="building" v-if="node.data.instLevel === '5'"/>
            {{ node.label }}
          </span>
+         <span v-if="create!=null">
+          <el-button
+            type="text"
+            icon="el-icon-circle-plus"
+            @click.stop="() => createNew(node,data)">
+            新增子公司
+          </el-button>
+         </span>
          <span>
           <el-button
             type="text"
@@ -25,7 +33,7 @@
             @click.stop="() => append(node,data)">
             刷新
           </el-button>
-      </span>
+         </span>
       </span>
     </el-tree>
 
@@ -61,14 +69,16 @@
 </template>
 
 <script>
-  import { role } from '../../util/roleFunction'
-  import { Toast } from 'mint-ui'
+  import {role} from '../../util/roleFunction'
+  import {Toast} from 'mint-ui'
   import bus from './bus'
-  import { instGetAllById, instGetById } from './../../util/module'
+  import {instGetAllById, instGetById} from './../../util/module'
   import {getAllInstById, getInstById} from "../../util/module";
+
   export default {
     name: 'LevelTree',
-    data () {
+    props: ['create'],
+    data() {
       return {
         sysInstInfoAll: [],
         instLevel: 0,
@@ -79,12 +89,11 @@
         }
       }
     },
-    created () {
+    created() {
       let sysInstInfo = JSON.parse(localStorage.getItem('sysInstInfo'));
       this.instLevel = sysInstInfo.instLevel;
       let sysInstInfoAll = [];
       let sysInstInList = {
-        aliasName: sysInstInfo.aliasName,
         instId: sysInstInfo.instId,
         parentInstId: sysInstInfo.parentInstId,
         instName: sysInstInfo.instName,
@@ -102,7 +111,7 @@
     },
     methods: {
 
-      append (node, data) {
+      append(node, data) {
         let instId = data.instId;
         getInstById(this, instId, Toast).then((res) => {
           console.log('res', res);
@@ -137,7 +146,7 @@
           node.data = InstInList;
           this.$message.success('更新成功');
           let instId = localStorage.getItem('instId') || '';
-          if(res.data.instId === instId){
+          if (res.data.instId === instId) {
             localStorage.setItem('sysInstInfo', JSON.stringify(res.data));
             bus.$emit('tellerToParentInst', '');
             bus.$emit('sysInstInfo', '');
@@ -147,12 +156,12 @@
         })
       },
 
-      handleNodeClick (node, data) {
+      handleNodeClick(node, data) {
         this.$emit('click', node);
       },
 
 
-      loadNode (node, resolve) {
+      loadNode(node, resolve) {
         console.log('node', node);
         if (node.level === 0) {
           this.requestTree(resolve)
@@ -162,12 +171,12 @@
         }
       },
 
-      requestTree (resolve) {
+      requestTree(resolve) {
         let that = this;
         resolve(that.sysInstInfoAll)
       },
 
-      instGetAllByIdFun (instId, resolve, node) {
+      instGetAllByIdFun(instId, resolve, node) {
         getAllInstById(this, instId, Toast).then((res) => {
             console.log('res', res);
             let data = res.data;
@@ -192,8 +201,13 @@
             console.log('res', res)
           }
         )
-      }
-    },
+      },
+
+      createNew(node,data){
+        console.log('createNew data' ,data);//debug
+        this.$emit('createTap', data);
+      },
+    }
   }
 </script>
 
@@ -202,25 +216,32 @@
     .el-tree-node__expand-icon {
       font-size: 20px;
     }
+
     .el-tree-node__content {
       height: 36px;
     }
+
     .el-tree-node {
       position: relative;
       padding-left: 16px;
     }
+
     .el-tree-node__children {
       padding-left: 16px;
     }
+
     .el-tree-node :last-child:before {
       height: 38px;
     }
+
     .el-tree > .el-tree-node:before {
       border-left: none;
     }
+
     .el-tree > .el-tree-node:after {
       border-top: none;
     }
+
     .el-tree-node:before, .el-tree-node:after {
       content: "";
       left: -4px;
@@ -228,9 +249,11 @@
       right: auto;
       border-width: 1px;
     }
+
     .tree :first-child .el-tree-node:before {
       border-left: none;
     }
+
     .el-tree-node:before {
       border-left: 1px dashed #909399;
       bottom: 0px;
@@ -238,15 +261,18 @@
       top: -20px;
       width: 1px;
     }
+
     .el-tree-node:after {
       border-top: 1px dashed #909399;
       height: 20px;
       top: 17px;
       width: 25px;
     }
+
     .el-tree-node__content {
       padding-left: 0px !important;
     }
+
     .el-tree-node__content > .el-tree-node__expand-icon {
       padding: 3px;
     }
@@ -258,6 +284,7 @@
     width: 1.5em;
     height: 1.5em;
   }
+
   .custom-tree-node {
     flex: 1;
     display: flex;
@@ -265,20 +292,24 @@
     justify-content: space-between;
     font-size: 17px;
   }
+
   .svg-view {
     display: flex;
     flex-direction: row;
     margin: 100px 0 0 10px;
   }
+
   .svg-view-cont {
     display: flex;
     flex-direction: row;
     justify-content: center;
     margin-right: 30px;
   }
+
   .svg-view-span {
     margin-left: 10px;
   }
+
   .svgname {
     width: 1.5em;
     height: 1.5em;

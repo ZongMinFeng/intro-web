@@ -35,15 +35,51 @@
     </el-table>
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
+      <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
+        <el-row>
+          <el-col :span="24">
+            <el-form-item label="名称" prop="positionName" :rules="[{required:true, message:'请输入职位名称', trigger: 'blur'}]">
+              <el-input v-model="dialogForm.positionName"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+        <el-row>
+          <el-col :span="24">
+            请选择选择权限:
+            <position-selection v-model="dialogForm.funcMap"></position-selection>
+            已选择：{{dialogForm.funcMap}}
+          </el-col>
+        </el-row>
+      </el-form>
+      <span slot="footer" class="dialog_footer">
+        <el-button @click="dialogVisible=false">取消</el-button>
+        <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
+      </span>
     </el-dialog>
 
-    <position-selection v-model="position"></position-selection>
+    <el-dialog title="权限详情" :visible.sync="detailVisible">
+      <div>
+        职位：{{detailForm.positionName}}
+      </div>
+      <div>
+        权限值：{{detailForm.positionShow}}
+      </div>
+      <position-selection v-model="detailForm.positionShow"></position-selection>
+    </el-dialog>
+
+    <!--<position-selection v-model="position"></position-selection>-->
+    <!--<div>权限：{{position}}</div>-->
   </div>
 </template>
 
 <script>
   import InstSelection from '@/components/common/selection/InstSelection';
-  import {listDepartmentPosition, listInstDepartments} from "../../../util/module";
+  import {
+    addDepartmentPosition, deleteDepartmentPosition,
+    listDepartmentPosition,
+    listInstDepartments,
+    updateDepartmentPosition
+  } from "../../../util/module";
   import PositionSelection from "../../common/selection/PositionSelection";
 
   export default {
@@ -63,8 +99,17 @@
         tableData: [],
         position: '',
         superPosition: [],
-        flag:1,
-        dialogVisible:false,
+        flag: 1,
+        dialogVisible: false,
+        dialogForm: {
+          positionName: null,
+          funcMap: '',
+        },
+        detailVisible:false,
+        detailForm:{
+          positionName:null,
+          positionShow:null,
+        },
       }
     },
 
@@ -82,8 +127,6 @@
       this.instInfo = JSON.parse(localStorage.getItem("sysInstInfo"));
       this.searchForm.specInstId = this.instInfo.instId;
       this.getDepartment();
-      // this.position = ["listInstDepartments", "addInst"];//debug
-      this.position ='03';//debug
     },
 
     methods: {
@@ -115,10 +158,13 @@
       },
 
       onAddNewTap() {
-        if(this.searchForm.departmentId==null||this.searchForm.departmentId===''){
+        if (this.searchForm.departmentId == null || this.searchForm.departmentId === '') {
           this.$message.error('请选择部门');
           return;
         }
+        this.dialogForm.specDepartmentId = this.searchForm.departmentId;
+        this.flag=1;
+        this.dialogVisible = true;
       },
 
       instClickTap(instInfo) {
@@ -134,17 +180,104 @@
         this.getPositions();
       },
 
-      positionDetail(item){
-
+      positionDetail(item) {
+        this.detailForm.positionShow=item.funcMap;
+        this.detailForm.positionName=item.positionName;
+        this.detailVisible=true;
       },
 
-      modifyTap(item){
-
+      modifyTap(item) {
+        this.dialogForm.positionId = item.positionId;
+        this.dialogForm.positionName=item.positionName;
+        this.dialogForm.funcMap=item.funcMap;
+        this.flag=2;
+        this.dialogVisible=true;
       },
 
-      deleteTap(item){
+      deleteTap(item) {
+        this.$confirm('此操作将删除职位，是否确认?', '删除分类', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            this.deleteCommit(item);
+          }
+        );
+      },
 
-      }
+      deleteCommit(item){
+        let params={};
+        params.positionId=item.positionId;
+        deleteDepartmentPosition(this, params).then(
+          res=>{
+            this.$message.success('删除成功');
+            this.initData();
+          },
+          res=>{
+            if (res.returnMsg) {
+              this.$message.error(res.returnMsg);
+            }else{
+              this.$message.error('删除失败');
+            }
+          }
+        ).catch();
+      },
+
+      dialogFormConfirm(){
+        this.$refs.dialogForm.validate((valid) => {
+          if (valid) {
+            this.formCommit();
+          } else {
+            return false;
+          }
+        });
+      },
+
+      formCommit(){
+        let params={};
+        if (this.flag === 1) {
+          //新增
+          params.specDepartmentId=this.dialogForm.specDepartmentId;
+          params.positionName=this.dialogForm.positionName;
+          params.funcMap=this.dialogForm.funcMap;
+          addDepartmentPosition(this, params).then(
+            res=>{
+              this.$message.success('新增成功');
+              this.initData();
+              this.dialogVisible=false;
+            },
+            res=>{
+              if (res.returnMsg) {
+                this.$message.error(res.returnMsg);
+              }else{
+                this.$message.error('新增失败');
+              }
+            }
+          ).catch();
+        }
+
+        if (this.flag === 2) {
+          //修改
+          params.positionId=this.dialogForm.positionId;
+          params.positionName=this.dialogForm.positionName;
+          params.funcMap=this.dialogForm.funcMap;
+          updateDepartmentPosition(this, params).then(
+            res=>{
+              this.$message.success('修改成功');
+              this.initData();
+              this.dialogVisible=false;
+            },
+            res=>{
+              if (res.returnMsg) {
+                this.$message.error(res.returnMsg);
+              }else{
+                this.$message.error('修改失败');
+              }
+            }
+          ).catch();
+        }
+      },
     }
   }
 </script>

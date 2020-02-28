@@ -1,12 +1,6 @@
 /**
- * 权限处理
- * 在Login.vue中，查询二维码登录状态成功，允许登录后调用handelPermission函数处理权限
+ * 用于代码测试
  */
-import {hex_to_bin} from "../Gw/GwString";
-import store from '../store'
-
-//所有权限
-//属性index为funcMap位图的位置，从1开始；index为null表示此权限默认存在
 const PERMISSIONS={
   //1
   addSystemChannel:{
@@ -33,45 +27,10 @@ const PERMISSIONS={
     index:5,
     name:'新增部门职位'
   },
-  //6
+  //56
   listDepartmentPosition:{
     index:6,
     name:'查询部门职位'
-  },
-  //7
-  updateDepartmentPosition:{
-    index:7,
-    name:'修改部门职位'
-  },
-  //8
-  deleteDepartmentPosition:{
-    index:8,
-    name:'删除部门职位'
-  },
-  //9
-  addTellerInfo:{
-    index:9,
-    name:'新增部门员工'
-  },
-  //11
-  listDepartmentTeller:{
-    index:11,
-    name:'查询部门所有员工'
-  },
-  //13
-  updateTellerInfo:{
-    index:13,
-    name:'修改部门员工'
-  },
-  //14
-  deleteDepartmentTeller:{
-    index:14,
-    name:'删除部门员工'
-  },
-  //15
-  resetTellerPwd:{
-    index:15,
-    name:'重置员工密码'
   },
   //201
   addGooCategory:{
@@ -104,50 +63,6 @@ const PERMISSIONS={
     name:'查询二维码登录状态'
   },
 };
-
-const handelPermission=function (funcMap) {
-  let permissions = funcMap2position(funcMap);
-  //将权限数组存入store
-  store.commit('setPermissions', permissions);
-};
-
-const getPermissions=function () {
-  return store.getters.permissions;
-};
-
-/**
- * 将funcMap转成权限数组
- * @param funcMap
- * @returns {[]}
- */
-const funcMap2position=function(funcMap){
-  //权限数组permissions，以后每次交易查询此数组，看是否有权限。
-  let permissions=[];
-  let permissionMap=hex_to_bin(funcMap);
-  console.log('permissionMap', permissionMap);//debug
-  let length=permissionMap.length;
-  //遍历所有权限配置，如果此权限在权限map有配置，那么此权限存入权限数组permissions
-  for (let permission in PERMISSIONS) {
-    let index=PERMISSIONS[permission].index;
-    if (index) {
-      if (index-1 < length) {
-        if (permissionMap.substr(index-1, 1) === '1') {
-          permissions.push(permission);
-        }
-      }
-    }else {
-      permissions.push(permission);
-    }
-  }
-  console.log('funcMap转permissions', permissions);//debug
-  return  permissions;
-};
-
-/**
- * 权限数组转funcMap
- * @param position
- * @returns {string}
- */
 const position2funcMap=function (position) {
   let funcMapTmp=new Array(1024);
   for (let i = 0; i < 1024; i++){
@@ -156,7 +71,6 @@ const position2funcMap=function (position) {
   let max=0;
   position.forEach(item=>{
     if (PERMISSIONS[item]) {
-      //注意：权限funcMap位置从1开始计算，但是数组下标是从0开始算的
       let index=PERMISSIONS[item].index;
       funcMapTmp[index-1]='1';
       if (max < index) {
@@ -166,6 +80,7 @@ const position2funcMap=function (position) {
   });
   let x8=parseInt(max/8+1);
   funcMapTmp.length=8*x8;
+  console.log('funcMapTmp', funcMapTmp);//debug
   let funcMap='';
   for (let i = 0; i < x8*2; i++) {
     let funcStr=funcMapTmp[4*i]+funcMapTmp[4*i+1]+funcMapTmp[4*i+2]+funcMapTmp[4*i+3];
@@ -224,11 +139,6 @@ const position2funcMap=function (position) {
   }
   return funcMap;
 };
-
-export {
-  handelPermission,
-  getPermissions,
-  PERMISSIONS,
-  funcMap2position,
-  position2funcMap
-}
+let position=["listInstDepartments", "addInst"];
+let funcMap=position2funcMap(position);
+console.log(funcMap);

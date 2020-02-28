@@ -12,6 +12,7 @@ const sendServer = (urlParams, me) => {
   let macKey = localStorage.getItem('macKey') || '';
   let instId = localStorage.getItem('instId') || '';
   let tellerId = localStorage.getItem('tellerId') || '';
+  let departmentId = localStorage.getItem('departmentId') || '';
   let date = new Date();
   let ssDate = util.ssformatTime(date);
   let sha256Key = '';
@@ -28,8 +29,11 @@ const sendServer = (urlParams, me) => {
     } else {
       sha256Key = macKey;
       header.instId = instId;
+      header.departmentId = departmentId;
       header.reqUuid = reqUuid;
       header.tellerId   = tellerId;
+      //内部员工
+      header.tellerFlag=1;
     }
 
     //公共报文头

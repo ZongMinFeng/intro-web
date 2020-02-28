@@ -199,7 +199,8 @@ Mock.mock('/mock/system/addDepartmentPosition', 'post', addDepartmentPosition);
 const listDepartmentPosition = {
   "returnCode": 200,
   "returnMsg": "OK",
-  "data": [{
+  "data": [
+    {
       "positionId": "I02190901DKWKTSXKP0",
       "positionName": "财务运行考核部主管",
       "departmentId": "SID200217001",
@@ -212,10 +213,111 @@ const listDepartmentPosition = {
       "version": 1,
       "status": 1,
     },
-    ]
+    {
+      "positionId": "I02190901DKWKTSXKP1",
+      "positionName": "总经理",
+      "departmentId": "SID200217001",
+      "instId": "I01System001",
+      "funcMap": "FFFA01",
+      "createTime": 1567335995304,
+      "createTellerId": "TELSystem001",
+      "updateTimme": 1567335995304,
+      "updateTellerId": "TELSystem001",
+      "version": 1,
+      "status": 1,
+    },
+  ]
 };
 Mock.mock('/mock/system/listDepartmentPosition', 'post', listDepartmentPosition);
 
+const updateDepartmentPosition = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+};
+Mock.mock('/mock/system/updateDepartmentPosition', 'post', updateDepartmentPosition);
+
+const deleteDepartmentPosition = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+};
+Mock.mock('/mock/system/deleteDepartmentPosition', 'post', deleteDepartmentPosition);
+
+//员工管理
+const addTellerInfo = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+  "tellerPwd": "123456",
+};
+Mock.mock('/mock/system/addTellerInfo', 'post', addTellerInfo);
+
+const listDepartmentTeller = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+  "data": {
+    "records": [
+      {
+        "tellerId": "wdj",
+        "tellerFlag": "1",
+        "tellerPhone": "18012345678",
+        "tellerPwd": "674bcd2ee7f5006197e8c1fece5bf2f7",
+        "tellerName": "飞马",
+        "tellerImage": null,
+        "tellerAddr": '哈哈国',
+        "createTime": "2020-02-26T10:04:16.584",
+        "createTellerId": "hcj001",
+        "updateTime": "2020-02-26T10:04:16.584",
+        "updateTellerId": "hcj001",
+        "version": 1,
+        "randomKey": "859055",
+        "status": "1"
+      },
+      {
+        "tellerId": "wdj",
+        "tellerFlag": "1",
+        "tellerPhone": "18012345678",
+        "tellerPwd": "674bcd2ee7f5006197e8c1fece5bf2f7",
+        "tellerName": "啦啦",
+        "tellerImage": null,
+        "tellerAddr": '哈哈国',
+        "createTime": "2020-02-26T10:04:16.584",
+        "createTellerId": "hcj001",
+        "updateTime": "2020-02-26T10:04:16.584",
+        "updateTellerId": "hcj001",
+        "version": 1,
+        "randomKey": "859055",
+        "status": "1"
+      },
+    ],
+    "total": 100,
+    "size": 10,
+    "current": 1,
+    "orders": [],
+    "searchCount": true,
+    "pages": 1
+  }
+};
+Mock.mock('/mock/system/listDepartmentTeller?currentPage=1&pageSize=10', 'post', listDepartmentTeller);
+
+const updateTellerInfo = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+};
+Mock.mock('/mock/system/updateTellerInfo', 'post', updateTellerInfo);
+
+const deleteDepartmentTeller = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+};
+Mock.mock('/mock/system/deleteDepartmentTeller', 'post', deleteDepartmentTeller);
+
+const resetTellerPwd = {
+  "returnCode": 200,
+  "returnMsg": "OK",
+  "tellerPwd":"123456"
+};
+Mock.mock('/mock/system/resetTellerPwd', 'post', resetTellerPwd);
+
+//物资管理
 const addGooCategory = {
   "returnCode": 200,
   "returnMsg": "OK",

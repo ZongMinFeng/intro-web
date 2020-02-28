@@ -137,6 +137,9 @@
                 if (sysInstInfo) {
                   localStorage.setItem('instId', sysInstInfo.instId)
                 }
+                if (sysInstDepartment) {
+                  localStorage.setItem('departmentId', sysInstDepartment.departmentId)
+                }
                 localStorage.setItem('macKey', res.data.macKey);
                 that.$store.commit('loginIn');
 

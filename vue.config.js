@@ -11,8 +11,8 @@ module.exports = {
     proxy: {
       '/': {
         ws: false,             //相关代理端不支持 ws
-        target: 'https://www.v-uu.com',//生产
-        // target: 'http://192.168.0.24:8081',//本地测试
+        // target: 'https://www.v-uu.com',//生产
+        target: 'http://192.168.0.24:8081',//本地测试
         secure: false,
         changeOrigin: true
       },

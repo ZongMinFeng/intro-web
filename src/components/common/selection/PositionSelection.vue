@@ -7,7 +7,7 @@
                default-expand-all
                ref='tree'
                :props="props"
-               @check-change="handleCheckChange">
+               @check="check">
       </el-tree>
     </div>
   </div>
@@ -117,7 +117,6 @@
 
       //根据Sidebar生成菜单，权限不在superPosition的菜单不加载，权限在position中，并且也在superPosition的默认选中。
       superPosition2TreeData(){
-        console.log('superPosition', this.superPosition);//debug
         let treeDataAll=[];
         Sidebar.forEach(level1=>{
           let treeLevel1={};
@@ -156,13 +155,11 @@
             treeDataAll.push(treeLevel1);
           }
         });
-        console.log('treeDataAll', treeDataAll);//debug
         this.treeData=treeDataAll;
       },
 
       setChecked(){
         if (!this.$refs.tree) {
-          console.log('啦啦我去');//debug
           return;
         }
         this.position=[];
@@ -172,15 +169,11 @@
             this.position.push(item);
           }
         });
-        console.log('this.position', this.position);//debug
         this.$refs.tree.setCheckedKeys(this.position);
       },
 
-      handleCheckChange(data, checked, indeterminate) {
-        // console.log('data', data);//debug
-        // console.log('checked', checked);//debug
-        // console.log('indeterminate', indeterminate);//debug
-        console.log('all', this.$refs.tree.getCheckedKeys());
+      check(){
+        console.log('checked', this.$refs.tree.getCheckedKeys());//debug
         let permissionReady=this.$refs.tree.getCheckedKeys();
         let permissionNew=[];
         permissionReady.forEach(item=>{
@@ -188,33 +181,8 @@
             permissionNew.push(item);
           }
         });
-        //相同的权限，不用发送input指令了
-        if (this.isNew(permissionNew, this.position)) {
-          let funcMap=position2funcMap(permissionNew);
-          this.$emit('input', funcMap);
-        }
-      },
-
-      //选中的权限是否有变化, 有变化返回true
-      isNew(newPosition, oldPosition){
-        if (newPosition.length !== oldPosition.length) {
-          return true;
-        }
-        if (newPosition.length>0){
-          newPosition.forEach(item=>{
-            if (oldPosition.indexOf(item)<0){
-              return true;
-            }
-          });
-        }
-        if (oldPosition.length>0){
-          oldPosition.forEach(item=>{
-            if (newPosition.indexOf(item)<0){
-              return true;
-            }
-          });
-        }
-        return false;
+        let funcMap=position2funcMap(permissionNew);
+        this.$emit('input', funcMap);
       },
     }
   }

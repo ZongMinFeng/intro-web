@@ -47,7 +47,45 @@ module.exports = {
       txnId: 'listDepartmentPosition'
     },
 
+    updateDepartmentPosition: {
+      url: baseUrl+'/system/updateDepartmentPosition',
+      txnId: 'updateDepartmentPosition'
+    },
 
+    deleteDepartmentPosition: {
+      url: baseUrl+'/system/deleteDepartmentPosition',
+      txnId: 'deleteDepartmentPosition'
+    },
+
+    addTellerInfo: {
+      url: baseUrl+'/system/addTellerInfo',
+      txnId: 'addTellerInfo'
+    },
+
+    listDepartmentTeller: {
+      url: baseUrl+'/system/listDepartmentTeller',
+      txnId: 'listDepartmentTeller'
+    },
+
+    getTellerInfoById: {
+      url: baseUrl+'/system/getTellerInfoById',
+      txnId: 'getTellerInfoById'
+    },
+
+    updateTellerInfo: {
+      url: baseUrl+'/system/updateTellerInfo',
+      txnId: 'updateTellerInfo'
+    },
+
+    deleteDepartmentTeller: {
+      url: baseUrl+'/system/deleteDepartmentTeller',
+      txnId: 'deleteDepartmentTeller'
+    },
+
+    resetTellerPwd: {
+      url: baseUrl+'/system/resetTellerPwd',
+      txnId: 'resetTellerPwd'
+    },
 
     listGooCategorysByPid: {
       url: baseUrl+'/goods/listGooCategorysByPid',
