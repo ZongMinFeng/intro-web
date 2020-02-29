@@ -61,12 +61,12 @@ var jsonR2Unpack = function (arys1) {
 };
 var objKeySort = function (arys) {
   var newkey = Object.keys(arys).sort();
-  var newObj = {}; 
+  var newObj = {};
   for (var i = 0; i < newkey.length; i++) {
     newObj[newkey[i]] = arys[newkey[i]];
 
   }
-  return newObj; 
+  return newObj;
 };
 
 
@@ -92,7 +92,7 @@ var treeSort = function (tree) {
       }
     });
   });
-  return newTree; 
+  return newTree;
 };
 
 
@@ -241,6 +241,38 @@ var SHA256 = function (s) {
 
 };
 
+/**
+ * 成员
+ "tellerPositionList": [
+ {
+       "positionId": "test_position0001",
+       "recycleSeq": "1"
+   }
+ ]
+ 转成如下多个成员
+ {
+  tellerPositionList1positionId:test_position0001
+  tellerPositionList1recycleSeq:1
+ }
+ * @param signArray
+ */
+const expandArray=function (signArray) {
+  let signArrayNew={};
+  for (let key in signArray) {
+    if (signArray[key] instanceof Array && signArray[key].length>0 ) {
+      signArray[key].forEach((item)=>{
+        // signArray[key+item.recycleSeq]
+        for(let key2 in item){
+          signArrayNew[key+item.recycleSeq+key2]=item[key2];
+        }
+      });
+    }else{
+      signArrayNew[key]=signArray[key];
+    }
+  }
+  return signArrayNew;
+};
+
 export {
   mathJsonSha,
   json2sha,
@@ -248,5 +280,6 @@ export {
   jsonR2Unpack,
   objKeySort,
   SHA256,
-  treeSort
+  treeSort,
+  expandArray
 }

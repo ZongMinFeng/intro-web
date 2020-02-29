@@ -1,5 +1,5 @@
-// const baseUrl='/adminTest';//生产
-const baseUrl='/mock';//测试
+const baseUrl='/adminTest';//生产
+// const baseUrl='/mock';//测试
 // const baseUrl='';//DJ测试
 
 module.exports = {
@@ -117,6 +117,30 @@ module.exports = {
       txnId: 'listAllUnitinfos'
     },
 
+    addGooUnitinfo: {
+      url: baseUrl+'/goods/addGooUnitinfo',
+      txnId: 'addGooUnitinfo'
+    },
+
+    deleteGooUnitinfoById: {
+      url: baseUrl+'/goods/deleteGooUnitinfoById',
+      txnId: 'deleteGooUnitinfoById'
+    },
+
+    getGooUnitinfoById: {
+      url: baseUrl+'/goods/getGooUnitinfoById',
+      txnId: 'getGooUnitinfoById'
+    },
+
+    genGoodsId: {
+      url: baseUrl+'/goods/genGoodsId',
+      txnId: 'genGoodsId'
+    },
+
+    sendPicture: {
+      url: baseUrl+'/goods/sendPicture',
+      txnId: 'sendPicture'
+    },
 
 
 

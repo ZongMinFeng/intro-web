@@ -79,6 +79,39 @@ module.exports = {
     },
 
     {
+      icon: 'el-icon-school',
+      index: 'goods',
+      title: '物资管理',
+      flag: false,
+      subs: [
+        {
+          index: 'categoryAction',
+          title: '物资分类',
+          flag: true,
+          function: 'categoryAction',
+          permissions:[
+            'getGooCategoryById',
+            'addGooCategory',
+            'deleteGooCategoryById',
+            'updateGooCategoryById'
+          ]
+        },
+        {
+          index: 'unitAction',
+          title: '单位管理',
+          flag: true,
+          function: 'unitAction',
+          permissions:[
+            'addGooUnitinfo',
+            'deleteGooUnitinfoById',
+            'getGooUnitinfoById',
+            'listAllUnitinfos'
+          ]
+        },
+      ],
+    },
+
+    {
       icon: 'el-icon-setting',
       index: 'setting',
       title: '系统设置',
@@ -135,39 +168,5 @@ module.exports = {
         },
       ],
     },
-
-    {
-      icon: 'el-icon-school',
-      index: 'goods',
-      title: '物资管理',
-      flag: false,
-      subs: [
-        {
-          index: 'categoryAction',
-          title: '物资分类',
-          flag: true,
-          function: 'categoryAction',
-          permissions:[
-            'getGooCategoryById',
-            'addGooCategory',
-            'deleteGooCategoryById',
-            'updateGooCategoryById'
-          ]
-        },
-        {
-          index: 'unitAction',
-          title: '物资分类',
-          flag: true,
-          function: 'unitAction',
-          permissions:[
-            'addGooUnitinfo',
-            'deleteGooUnitinfoById',
-            'getGooUnitinfoById',
-            'listAllUnitinfos'
-          ]
-        },
-      ],
-    },
-
   ]
 };

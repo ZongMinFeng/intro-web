@@ -42,6 +42,9 @@
       </span>
       </el-dialog>
 
+      <el-dialog title="新密码" :visible.sync="passwordVisible">
+        {{passwordForm.tellerPwd}}
+      </el-dialog>
 
     </div>
   </div>
@@ -123,6 +126,10 @@
           tellerFuncMap: '',
         },
         flag: 1,
+        passwordVisible:false,
+        passwordForm:{
+          tellerPwd:''
+        },
       }
     },
 
@@ -237,15 +244,12 @@
           addInst(this, params).then(
             res=>{
               this.$message.success('新增成功');
+              this.passwordForm.tellerPwd=res.data.tellerPwd;
               this.onRefresh();
               this.dialogVisible=false;
+              this.passwordVisible=true;
             },
             res=>{
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }else{
-                this.$message.error('新增失败');
-              }
             }
           ).catch();
         }
@@ -262,11 +266,6 @@
               this.dialogVisible=false;
             },
             res=>{
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }else{
-                this.$message.error('修改失败');
-              }
             }
           ).catch();
         }

@@ -143,6 +143,13 @@
                 localStorage.setItem('macKey', res.data.macKey);
                 that.$store.commit('loginIn');
 
+                //如果登录的用户是顶级管理员，那么不管后台返回的权限是多少，都赋予顶级管理员最高权限
+                if (res.data.sysInstInfo.instLevel && res.data.sysInstInfo.instLevel === '1') {
+                  if (res.data.sysInstDepartment.departmentId && res.data.sysInstDepartment.departmentId.startsWith('Admin')) {
+                    res.data.funcMap='FFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFF';
+                  }
+                }
+
                 //处理权限
                 handelPermission(res.data.funcMap);
 

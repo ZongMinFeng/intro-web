@@ -75,7 +75,7 @@
         ],
         tableData: [],
         searchForm: {
-          categoryId: null,
+          categoryId: 'root',
           categoryLevel: 1,
         },
         flag: 1,
@@ -200,11 +200,6 @@
           },
 
           res => {
-            if (res.returnMsg) {
-              this.$message.error(res.returnMsg);
-            } else {
-              this.$message.error('删除失败');
-            }
           }
         ).catch();
       },
@@ -230,14 +225,11 @@
           params.categoryName = this.dialogForm.categoryName;
           addGooCategory(this, params).then(
             res => {
-              this.$message.success('修改成功');
+              this.$message.success('新增成功');
               this.dialogVisible = false;
               this.initData();
             },
             res => {
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }
             }
           ).catch();
         }
@@ -251,14 +243,11 @@
           params.status = this.dialogForm.status;
           updateGooCategoryById(this, params).then(
             res => {
-              this.$message.success('新增成功');
+              this.$message.success('修改成功');
               this.dialogVisible = false;
               this.initData();
             },
             res => {
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }
             }
           ).catch();
         }
@@ -283,7 +272,7 @@
 
       //获取当前tableData中最大sortOrder的下一个
       nextOrder() {
-        if (this.tableData.length === 0) {
+        if (!this.tableData||this.tableData.length === 0) {
           return '1';
         }
         let sortOrder = '0';
@@ -309,7 +298,7 @@
       goToLevel(item) {
         if (item.level === 0) {
           this.searchForm.categoryLevel = 1;
-          this.searchForm.categoryId = null;
+          this.searchForm.categoryId = 'root';
         } else {
           this.searchForm.categoryId = item.categoryId;
         }

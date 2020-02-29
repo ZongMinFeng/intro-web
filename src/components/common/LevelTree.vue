@@ -18,7 +18,7 @@
             <svg-icon class="svgname" icon-class="building" v-if="node.data.instLevel === '5'"/>
            {{ node.label }}
          </span>
-         <span v-if="create!=null">
+         <span v-if="create!=null&&node.data.instLevel === '1'">
           <el-button
             type="text"
             icon="el-icon-circle-plus"
@@ -26,14 +26,15 @@
             新增子公司
           </el-button>
          </span>
-         <span>
-          <el-button
-            type="text"
-            icon="el-icon-refresh"
-            @click.stop="() => append(node,data)">
-            刷新
-          </el-button>
-         </span>
+         <!--只有两层，不需要刷新-->
+         <!--<span>-->
+          <!--<el-button-->
+            <!--type="text"-->
+            <!--icon="el-icon-refresh"-->
+            <!--@click.stop="() => append(node,data)">-->
+            <!--刷新-->
+          <!--</el-button>-->
+         <!--</span>-->
       </span>
     </el-tree>
 
@@ -41,29 +42,30 @@
       <span style="margin-right: 10px;">图例备注：</span>
       <div v-if="instLevel ==='1'" class="svg-view-cont">
         <svg-icon class="svgname" icon-class="terrace"/>
-        <span class="svg-view-span">物业平台</span>
+        <span class="svg-view-span">总公司</span>
       </div>
 
       <div v-if="instLevel ==='1'||instLevel ==='2'" class="svg-view-cont">
         <svg-icon class="svgname" icon-class="group"/>
-        <span class="svg-view-span">物业集团</span>
+        <span class="svg-view-span">子公司</span>
       </div>
 
-      <div v-if="instLevel !=='4'&&instLevel !=='5'" class="svg-view-cont">
-        <svg-icon class="svgname" icon-class="sub-institutional"/>
-        <span class="svg-view-span">物业子机构</span>
-      </div>
+      <!--目前只有两层-->
+      <!--<div v-if="instLevel !=='4'&&instLevel !=='5'" class="svg-view-cont">-->
+        <!--<svg-icon class="svgname" icon-class="sub-institutional"/>-->
+        <!--<span class="svg-view-span">物业子机构</span>-->
+      <!--</div>-->
 
 
-      <div v-if="instLevel !=='5'" class="svg-view-cont">
-        <svg-icon class="svgname" icon-class="village"/>
-        <span class="svg-view-span">物业小区</span>
-      </div>
+      <!--<div v-if="instLevel !=='5'" class="svg-view-cont">-->
+        <!--<svg-icon class="svgname" icon-class="village"/>-->
+        <!--<span class="svg-view-span">物业小区</span>-->
+      <!--</div>-->
 
-      <div class="svg-view-cont">
-        <svg-icon class="svgname" icon-class="building"/>
-        <span class="svg-view-span">物业楼栋</span>
-      </div>
+      <!--<div class="svg-view-cont">-->
+        <!--<svg-icon class="svgname" icon-class="building"/>-->
+        <!--<span class="svg-view-span">物业楼栋</span>-->
+      <!--</div>-->
     </div>
   </div>
 </template>

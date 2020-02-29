@@ -24,7 +24,7 @@
     </el-form>
 
     <el-table :data="tableData" border stripe>
-      <el-table-column label="名称" prop="positionName"></el-table-column>
+      <el-table-column label="职位名称" prop="postionName"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="props">
           <el-button type="primary" @click="positionDetail(props.row)">权限明细</el-button>
@@ -38,7 +38,7 @@
       <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
         <el-row>
           <el-col :span="24">
-            <el-form-item label="名称" prop="positionName" :rules="[{required:true, message:'请输入职位名称', trigger: 'blur'}]">
+            <el-form-item label="职位名称" prop="positionName" :rules="[{required:true, message:'请输入职位名称', trigger: 'blur'}]">
               <el-input v-model="dialogForm.positionName"></el-input>
             </el-form-item>
           </el-col>
@@ -67,6 +67,7 @@
       <position-selection v-model="detailForm.positionShow"></position-selection>
     </el-dialog>
 
+    <!--测试权限使用-->
     <!--<position-selection v-model="position"></position-selection>-->
     <!--<div>权限：{{position}}</div>-->
   </div>
@@ -131,7 +132,7 @@
 
     methods: {
       initData() {
-
+        this.getPositions();
       },
 
       getDepartment() {
@@ -182,13 +183,13 @@
 
       positionDetail(item) {
         this.detailForm.positionShow=item.funcMap;
-        this.detailForm.positionName=item.positionName;
+        this.detailForm.positionName=item.postionName;
         this.detailVisible=true;
       },
 
       modifyTap(item) {
         this.dialogForm.positionId = item.positionId;
-        this.dialogForm.positionName=item.positionName;
+        this.dialogForm.positionName=item.postionName;
         this.dialogForm.funcMap=item.funcMap;
         this.flag=2;
         this.dialogVisible=true;
@@ -215,11 +216,6 @@
             this.initData();
           },
           res=>{
-            if (res.returnMsg) {
-              this.$message.error(res.returnMsg);
-            }else{
-              this.$message.error('删除失败');
-            }
           }
         ).catch();
       },
@@ -248,11 +244,6 @@
               this.dialogVisible=false;
             },
             res=>{
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }else{
-                this.$message.error('新增失败');
-              }
             }
           ).catch();
         }
@@ -269,11 +260,6 @@
               this.dialogVisible=false;
             },
             res=>{
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }else{
-                this.$message.error('修改失败');
-              }
             }
           ).catch();
         }

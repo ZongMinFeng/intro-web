@@ -24,7 +24,6 @@ const sendServer = (urlParams, me) => {
     header.reqTime = ssDate;
 
     if (urlParams.txnId === cfg.service.genLoginId.txnId) {
-      console.log("啦啦");//debug
       sha256Key = '8AAE67FA6B5B1BBCF14BC7CA425A0116'
     } else {
       sha256Key = macKey;
@@ -43,18 +42,20 @@ const sendServer = (urlParams, me) => {
     let noSing = urlParams.noSing || false;
     pub.pubRandom(header);
     if (!noSing) {
-      let headerStr = '1=4&2=' + header.reqCasher + '&3=' + ssDate + '&4=' + urlParams.txnId;
+      let headerStr = '1=1&2=' + header.reqRandom + '&3=' + ssDate + '&4=' + urlParams.txnId + '&5=' + header.reqUuid;
       let singArray = urlParams.singArray || {};
-
       if(urlParams.txnId === cfg.service.bindDeviceModification.txnId||urlParams.txnId === cfg.service.roomerInsBatch.txnId){
-        headerStr += '&5=' + header.adminPcUuid + '&6=' + header.instId + '&7=' + header.operFlag + '&8=' + header.tellerId
       } else if (urlParams.txnId !== cfg.service.login.txnId) {
-        headerStr += '&5=' + header.adminPcUuid + '&6=' + header.instId + '&8=' + header.tellerId
+        headerStr += '&6=' + header.instId + '&7=' + header.departmentId + '&8=' + header.tellerId + '&9=1'
       }
 
       let jsonstr = '';
       if (singArray && singArray !== {}) {
-        let jsonObj = jsonSha256.objKeySort(singArray);
+        //处理singArray的数组成员
+        console.log("singArray-----------------", singArray);//debug
+        let singArrayNew=jsonSha256.expandArray(singArray);
+        let jsonObj = jsonSha256.objKeySort(singArrayNew);
+        // let jsonObj = jsonSha256.objKeySort(singArray);
         console.log('jsonObj:', jsonObj);
 
         for (let item in jsonObj) {

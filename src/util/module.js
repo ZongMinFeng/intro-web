@@ -1492,20 +1492,35 @@ const addInst= (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
     urlParams.url = cfg.service.addInst.url;
     urlParams.txnId = cfg.service.addInst.txnId;
 
-    send.specInstId  = params.specInstId ;
+    if (params.specInstId) {
+      send.specInstId  = params.specInstId ;
+      singArray.specInstId=params.specInstId;
+    }
     send.instName = params.instName;
-    send.instLevel = params.instLevel;
+    if (params.instLevel) {
+      send.instLevel = params.instLevel;
+      singArray.instLevel=params.instLevel;
+    }
     send.tellerName = params.tellerName;
-    send.tellerId = params.tellerId;
-    send.tellerPhone = params.tellerPhone;
-    send.tellerFuncMap = params.tellerFuncMap;
+    if (params.tellerId) {
+      send.tellerId = params.tellerId;
+      singArray.tellerId=params.tellerId;
+    }
+    if(params.tellerPhone){
+      send.tellerPhone = params.tellerPhone;
+      singArray.tellerPhone=params.tellerPhone;
+    }
+    if (params.tellerFuncMap) {
+      send.tellerFuncMap = params.tellerFuncMap;
+      singArray.tellerFuncMap=params.tellerFuncMap;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1518,6 +1533,7 @@ const addInst= (me, params) => {
 };
 
 const getAllInstById = (me,instId ,Toast) => {
+  console.log("getAllInstById params", instId);//debug
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
@@ -1578,16 +1594,25 @@ const addGooCategory = (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.addGooCategory.url;
     urlParams.txnId = cfg.service.addGooCategory.txnId;
-    send.categoryLevel=params.categoryLevel;
-    send.parentCategory  = params.parentCategory ;
-    send.categoryName   = params.categoryName  ;
-    send.sortOrder= params.sortOrder;
+
+    if (params.categoryLevel) {
+      send.categoryLevel=params.categoryLevel;
+      singArray.categoryLevel=params.categoryLevel;
+    }
+    if (params.parentCategory) {
+      send.parentCategory=params.parentCategory;
+      singArray.parentCategory=params.parentCategory;
+    }
+    if (params.categoryName) {
+      send.categoryName=params.categoryName;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1610,13 +1635,18 @@ const deleteGooCategoryById = (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.deleteGooCategoryById.url;
     urlParams.txnId = cfg.service.deleteGooCategoryById.txnId;
-    send.categoryId=params.categoryId;
+
+    if (params.categoryId) {
+      send.categoryId=params.categoryId;
+      singArray.categoryId=params.categoryId;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1639,17 +1669,33 @@ const updateGooCategoryById = (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.updateGooCategoryById.url;
     urlParams.txnId = cfg.service.updateGooCategoryById.txnId;
-    send.categoryId=params.categoryId;
-    send.version=params.version;
-    send.categoryName =params.categoryName ;
-    send.sortOrder =params.sortOrder ;
-    send.status =params.status;
+
+    if (params.categoryId) {
+      send.categoryId=params.categoryId;
+      singArray.categoryId=params.categoryId;
+    }
+    if (params.version) {
+      send.version=params.version;
+      singArray.version=params.version;
+    }
+    if (params.categoryName) {
+      send.categoryName=params.categoryName;
+    }
+    if (params.sortOrder) {
+      send.sortOrder=params.sortOrder;
+      singArray.sortOrder=params.sortOrder;
+    }
+    if (params.status) {
+      send.status=params.status;
+      singArray.status=params.status;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1673,14 +1719,23 @@ const listGooCategorysByPid = (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.listGooCategorysByPid.url;
     urlParams.txnId = cfg.service.listGooCategorysByPid.txnId;
-    send.categoryId = params.categoryId;
-    send.categoryLevel=params.categoryLevel;
+
+    if (params.categoryId) {
+      send.categoryId = params.categoryId;
+      singArray.categoryId=params.categoryId;
+    }
+    if (params.categoryLevel) {
+      send.categoryLevel = params.categoryLevel;
+      singArray.categoryLevel=params.categoryLevel;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
+
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1705,8 +1760,8 @@ const listInstDepartments = (me, params) => {
     let send = {};
     urlParams.url = cfg.service.listInstDepartments.url;
     urlParams.txnId = cfg.service.listInstDepartments.txnId;
-    send.categoryId = params.categoryId;
-    send.categoryLevel=params.categoryLevel;
+
+    send.specInstId  = params.specInstId ;
 
     urlParams.send = send;
     urlParams.noSing = true;
@@ -1735,12 +1790,15 @@ const addDepartmentInfo = (me, params) => {
     let send = {};
     urlParams.url = cfg.service.addDepartmentInfo.url;
     urlParams.txnId = cfg.service.addDepartmentInfo.txnId;
-    send.categoryId = params.categoryId;
-    send.categoryLevel=params.categoryLevel;
+
+    send.specInstId  = params.specInstId ;
+    send.departmentName=params.departmentName;
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
+    let singArray = {
+      specInstId:params.specInstId,
+    };
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1763,14 +1821,25 @@ const addDepartmentPosition = (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
+    // urlParams.noSing = true;
     urlParams.url = cfg.service.addDepartmentPosition.url;
     urlParams.txnId = cfg.service.addDepartmentPosition.txnId;
-    send.categoryId = params.categoryId;
-    send.categoryLevel=params.categoryLevel;
+
+    if(params.specDepartmentId){
+      send.specDepartmentId = params.specDepartmentId;
+      singArray.specDepartmentId=params.specDepartmentId;
+    }
+    if(params.positionName){
+      send.positionName = params.positionName;
+    }
+    if(params.funcMap){
+      send.funcMap = params.funcMap;
+      singArray.funcMap=params.funcMap;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1822,16 +1891,25 @@ const updateDepartmentPosition = (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.updateDepartmentPosition.url;
     urlParams.txnId = cfg.service.updateDepartmentPosition.txnId;
 
-    send.positionId = params.positionId;
-    send.positionName = params.positionName;
-    send.funcMap = params.funcMap;
+    if (params.positionId) {
+      send.positionId = params.positionId;
+      singArray.positionId=params.positionId;
+    }
+    if (params.positionName) {
+      send.positionName = params.positionName;
+    }
+    if (params.funcMap) {
+      send.funcMap = params.funcMap;
+      singArray.funcMap=params.funcMap;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1854,14 +1932,18 @@ const deleteDepartmentPosition= (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.deleteDepartmentPosition.url;
     urlParams.txnId = cfg.service.deleteDepartmentPosition.txnId;
 
-    send.positionId = params.positionId;
+    if (params.positionId) {
+      send.positionId = params.positionId;
+      singArray.positionId=params.positionId;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1884,18 +1966,40 @@ const addTellerInfo= (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
+    // urlParams.noSing = true;
     urlParams.url = cfg.service.addTellerInfo.url;
     urlParams.txnId = cfg.service.addTellerInfo.txnId;
 
-    send.specDepartmentId = params.specDepartmentId;
-    send.specTellerId = params.specTellerId;
-    send.tellerName = params.tellerName;
-    send.tellerPhone  = params.tellerPhone ;
-    send.tellerPositonIds = params.tellerPositonIds;
+    if (params.specDepartmentId){
+      send.specDepartmentId = params.specDepartmentId;
+      singArray.specDepartmentId=params.specDepartmentId;
+    }
+    if (params.specTellerId){
+      send.specTellerId = params.specTellerId;
+      singArray.specTellerId=params.specTellerId;
+    }
+    if (params.tellerName){
+      send.tellerName = params.tellerName;
+    }
+    if (params.tellerPhone){
+      send.tellerPhone = params.tellerPhone;
+      singArray.tellerPhone=params.tellerPhone;
+    }
+    if (params.tellerPositionIds){
+      send.tellerPositionList=[];
+      params.tellerPositionIds.forEach((item, index)=>{
+        let tmp={
+          "recycleSeq":index+1+'',
+          "positionId":item
+        };
+        send.tellerPositionList.push(tmp);
+      });
+      singArray.tellerPositionList=send.tellerPositionList;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -1980,15 +2084,33 @@ const updateTellerInfo= (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.updateTellerInfo.url;
     urlParams.txnId = cfg.service.updateTellerInfo.txnId;
 
-    send.specDepartmentId = params.specDepartmentId;
-    send.specTellerId = params.specTellerId;
+    if (params.specTellerId) {
+      send.specTellerId = params.specTellerId;
+      singArray.specTellerId=params.specTellerId;
+    }
+    if (params.specDepartmentId) {
+      send.specDepartmentId = params.specDepartmentId;
+      singArray.specDepartmentId=params.specDepartmentId;
+    }
+    if (params.tellerPhone) {
+      send.tellerPhone = params.tellerPhone;
+      singArray.tellerPhone=params.tellerPhone;
+    }
+    if (params.tellerName) {
+      send.tellerName = params.tellerName;
+    }
+    if (params.tellerPositonIds) {
+      send.tellerPositonIds = params.tellerPositonIds;
+      // singArray.tellerPositonIds=params.tellerPositonIds;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
+    // urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -2011,15 +2133,22 @@ const deleteDepartmentTeller= (me, params) => {
   return new Promise((resolve, reject) => {
     let urlParams = {};
     let send = {};
+    let singArray = {};
+
     urlParams.url = cfg.service.deleteDepartmentTeller.url;
     urlParams.txnId = cfg.service.deleteDepartmentTeller.txnId;
+    // urlParams.noSing = true;
 
-    send.specTellerId = params.specTellerId;
-    send.specDepartmentId = params.specDepartmentId;
+    if (params.specTellerId) {
+      send.specTellerId = params.specTellerId;
+      singArray.specTellerId=params.specTellerId;
+    }
+    if (params.specDepartmentId) {
+      send.specDepartmentId = params.specDepartmentId;
+      singArray.specDepartmentId=params.specDepartmentId;
+    }
 
     urlParams.send = send;
-    urlParams.noSing = true;
-    let singArray = {};
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -2078,6 +2207,170 @@ const listAllUnitinfos= (me, params) => {
     urlParams.send = send;
     urlParams.noSing = true;
     let singArray = {};
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ *1.3.2.2.1	新增物资单位
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const addGooUnitinfo= (me, params) => {
+  console.log("addGooUnitinfo params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.addGooUnitinfo.url;
+    urlParams.txnId = cfg.service.addGooUnitinfo.txnId;
+
+    if (params.unitName ) {
+      send.unitName  = params.unitName ;
+    }
+
+    urlParams.send = send;
+    // urlParams.noSing = true;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.2.2	删除  /deleteGooUnitinfoById  位图索引207
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteGooUnitinfoById= (me, params) => {
+  console.log("deleteGooUnitinfoById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.deleteGooUnitinfoById.url;
+    urlParams.txnId = cfg.service.deleteGooUnitinfoById.txnId;
+
+    if (params.id) {
+      send.id  = params.id ;
+      singArray.id=params.id;
+    }
+
+    urlParams.send = send;
+    // urlParams.noSing = true;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.2.3	根据主键查询  /getGooUnitinfoById 位图索引208
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getGooUnitinfoById= (me, params) => {
+  console.log("getGooUnitinfoById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.getGooUnitinfoById.url;
+    urlParams.txnId = cfg.service.getGooUnitinfoById.txnId;
+
+    if (params.id) {
+      send.id  = params.id ;
+      singArray.id=params.id;
+    }
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.3	获取物资ID   位图索引210
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const genGoodsId= (me, params) => {
+  console.log("genGoodsId params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.genGoodsId.url;
+    urlParams.txnId = cfg.service.genGoodsId.txnId;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams,me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ *1.3.2.4	 图片上传  位图索引211
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const sendPicture= (me, params) => {
+  console.log("sendPicture params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.sendPicture.url;
+    urlParams.url+='?goodsId='+params.goodsId+'&&index='+params.index+'&operFlag='+params.operFlag;
+    urlParams.txnId = cfg.service.sendPicture.txnId;
+
+    send.goodsFileNames=params.goodsFileNames;
+    singArray.goodsId=params.goodsId;
+    singArray.index=params.index;
+
+    urlParams.send = send;
+    urlParams.noSing = true;
     urlParams.singArray = singArray;
     common.sendServer(urlParams,me).then(
       (res) => {
@@ -2158,5 +2451,10 @@ export {
   deleteDepartmentTeller,
   resetTellerPwd,
   addInst,
-  listAllUnitinfos
+  listAllUnitinfos,
+  addGooUnitinfo,
+  deleteGooUnitinfoById,
+  getGooUnitinfoById,
+  genGoodsId,
+  sendPicture
 };

@@ -29,10 +29,9 @@
       <el-table-column label="住址" prop="tellerAddr"></el-table-column>
       <el-table-column label="操作" width="340" >
         <template slot-scope="props">
-          <el-button type="primary" @click="newPassword(props.row)">重置密码</el-button>
+          <el-button type="primary" @click="resetPasswordTap(props.row)">重置密码</el-button>
           <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
           <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
-          <el-button type="primary" @click="resetPasswordTap(props.row)">重置密码</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -72,8 +71,8 @@
         <el-row>
           <el-col :span="24">
             <el-form-item label="职位">
-              <el-select v-model="dialogForm.tellerPositonIds" multiple  placeholder="请选择职位，可多选" style="width: 100%;">
-                <el-option v-for="item in positions" :key="item.positionId" :label="item.positionName"
+              <el-select v-model="dialogForm.tellerPositionIds" multiple  placeholder="请选择职位，可多选" style="width: 100%;">
+                <el-option v-for="item in positions" :key="item.positionId" :label="item.postionName"
                            :value="item.positionId"></el-option>
               </el-select>
             </el-form-item>
@@ -123,7 +122,7 @@
           specTellerId:null,
           tellerName:null,
           tellerPhone:null,
-          tellerPositonIds:null,
+          tellerPositionIds:null,
         },
         positions:[],
         passwordVisible:false,
@@ -203,15 +202,16 @@
         listDepartmentTeller(this, params).then(
           res=>{
             console.log('res', res);//debug
-            this.tableData=res.data.records;
             this.AllCount=res.data.total;
+            let records=[];
+            if (this.AllCount > 0) {
+              res.data.records.forEach(item=>{
+                records.push(item.sysTellerInfo);
+              });
+            }
+            this.tableData=records;
           },
           res=>{
-            if (res.returnMsg) {
-              this.$message.error(res.returnMsg);
-            }else{
-              this.$message.error('查询失败');
-            }
           }
         ).catch();
       },
@@ -225,17 +225,13 @@
         this.getTeller();
       },
 
-      newPassword(item){
-
-      },
-
       modifyTap(item){
         this.flag=2;
         this.dialogForm.specDepartmentId=this.searchForm.departmentId;
         this.dialogForm.specTellerId=item.tellerId;
         this.dialogForm.tellerPhone=item.tellerPhone;
         this.dialogForm.tellerName=item.tellerName;
-        this.dialogForm.tellerPositonIds=item.tellerPositonIds;
+        this.dialogForm.tellerPositionIds=item.tellerPositionIds;
         this.dialogVisible=true;
       },
 
@@ -261,11 +257,6 @@
             this.initData();
           },
           res=>{
-            if (res.returnMsg) {
-              this.$message.error(res.returnMsg);
-            }else{
-              this.$message.error('删除失败');
-            }
           }
         ).catch();
       },
@@ -292,11 +283,6 @@
             this.passwordVisible=true;
           },
           res=>{
-            if (res.returnMsg) {
-              this.$message.error(res.returnMsg);
-            }else{
-              this.$message.error('重置失败');
-            }
           }
         ).catch();
       },
@@ -329,7 +315,7 @@
           params.specTellerId=this.dialogForm.specTellerId;
           params.tellerName=this.dialogForm.tellerName;
           params.tellerPhone =this.dialogForm.tellerPhone ;
-          params.tellerPositonIds=this.dialogForm.tellerPositonIds;
+          params.tellerPositionIds=this.dialogForm.tellerPositionIds;
           addTellerInfo(this, params).then(
             res=>{
               this.$message.success('新增成功');
@@ -337,11 +323,6 @@
               this.dialogVisible=false;
             },
             res=>{
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }else{
-                this.$message.error('新增失败');
-              }
             }
           ).catch();
         }
@@ -352,7 +333,7 @@
           params.specDepartmentId=this.dialogForm.specDepartmentId;
           params.tellerPhone=this.dialogForm.tellerPhone;
           params.tellerName=this.dialogForm.tellerName;
-          params.tellerPositonIds=this.dialogForm.tellerPositonIds;
+          params.tellerPositionIds=this.dialogForm.tellerPositionIds;
           updateTellerInfo(this, params).then(
             res=>{
               this.$message.success('修改成功');
@@ -360,11 +341,6 @@
               this.dialogVisible=false;
             },
             res=>{
-              if (res.returnMsg) {
-                this.$message.error(res.returnMsg);
-              }else{
-                this.$message.error('修改失败');
-              }
             }
           ).catch();
         }

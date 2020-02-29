@@ -13,70 +13,70 @@ const PERMISSIONS={
     index:1,
     name:'系统交易渠道信息表新增'
   },
-  //2
+  //102
   addInst:{
-    index:2,
+    index:102,
     name:'添加子公司'
   },
-  //3
+  //105
   listInstDepartments:{
-    index:3,
+    index:105,
     name:'查询公司所有部门'
   },
-  //4
+  //104
   addDepartmentInfo:{
-    index:4,
+    index:104,
     name:'新增部门'
   },
-  //5
+  //107
   addDepartmentPosition:{
-    index:5,
+    index:107,
     name:'新增部门职位'
   },
-  //6
+  //106
   listDepartmentPosition:{
-    index:6,
+    index:106,
     name:'查询部门职位'
   },
-  //7
+  //108
   updateDepartmentPosition:{
-    index:7,
+    index:108,
     name:'修改部门职位'
   },
-  //8
+  //109
   deleteDepartmentPosition:{
-    index:8,
+    index:109,
     name:'删除部门职位'
   },
-  //9
-  addTellerInfo:{
-    index:9,
-    name:'新增部门员工'
-  },
-  //11
+  //110
   listDepartmentTeller:{
-    index:11,
+    index:110,
     name:'查询部门所有员工'
   },
-  //13
+  //111
+  addTellerInfo:{
+    index:111,
+    name:'新增部门员工'
+  },
+  //112
+  getInstById:{
+    index:112,
+    name:'查询机构信息'
+  },
+  //115
   updateTellerInfo:{
-    index:13,
+    index:115,
     name:'修改部门员工'
   },
-  //14
+  //116
   deleteDepartmentTeller:{
-    index:14,
+    index:116,
     name:'删除部门员工'
   },
-  //15
+  //117
   resetTellerPwd:{
-    index:15,
+    index:117,
     name:'重置员工密码'
-  },
-  //16
-  getInstById:{
-    index:16,
-    name:'查询机构信息'
   },
   //201
   addGooCategory:{
@@ -98,10 +98,37 @@ const PERMISSIONS={
     index:205,
     name:'根据主键查询物资分类'
   },
+  //206
+  addGooUnitinfo:{
+    index:206,
+    name:'新增物资单位'
+  },
+  //207
+  deleteGooUnitinfoById:{
+    index:207,
+    name:'删除物资单位'
+  },
+  //208
+  getGooUnitinfoById:{
+    index:208,
+    name:'根据主键查询物资单位'
+  },
   //209
   listAllUnitinfos:{
     index:209,
     name:'查询所有单位'
+  },
+  //210
+  genGoodsId:{
+    // 暂时不控制权限
+    // index:210,
+    name:'获取物资ID'
+  },
+  //211
+  sendPicture:{
+    // 暂时不控制权限
+    // index:211,
+    name:'获取物资ID'
   },
 
   //无index
