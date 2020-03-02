@@ -23,15 +23,15 @@ Router.prototype.push = function push (location) {
 
 // 拖拽el-dialog
 import './directives'
-
 import VueDirectiveImagePreviewer from 'vue-directive-image-previewer'
 import 'vue-directive-image-previewer/dist/assets/style.css'
+Vue.use(VueDirectiveImagePreviewer);
 
 // 图片预览
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+Vue.use(preview);
 
-Vue.use(VueDirectiveImagePreviewer)
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {
@@ -42,7 +42,6 @@ axios.defaults.timeout = 10000
 //原型上挂在axios,便于全局使用
 Vue.prototype.$axios = axios
 
-Vue.use(preview)
 Vue.use(Mint);
 
 //使用mockjs模拟数据

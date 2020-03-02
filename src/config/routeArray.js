@@ -44,7 +44,27 @@ module.exports = {
         {
           path: '/unitAction',
           component: resolve => require(['../components/page/goods/unitAction.vue'], resolve),
-          meta: {title: '单位管理' ,function: 'unitAction'}
+          meta: {title: '物资单位' ,function: 'unitAction'}
+        },
+        {
+          path: '/goodslistAction',
+          component: resolve => require(['../components/page/goods/goodslistAction.vue'], resolve),
+          meta: {title: '物资列表' ,function: 'goodslistAction'}
+        },
+        {
+          path: '/goodsInfos',
+          component: resolve => require(['../components/page/goods/goodsInfos.vue'], resolve),
+          meta: {title: '物资信息' ,function: 'goodsInfos'}
+        },
+        {
+          path: '/partTimeJob',
+          component: resolve => require(['../components/page/setting/partTimeJob.vue'], resolve),
+          meta: {title: '员工兼职' ,function: 'goodsInfos'}
+        },
+        {
+          path: '/userPassword',
+          component: resolve => require(['../components/page/setting/userPassword.vue'], resolve),
+          meta: {title: '修改密码' ,function: 'userPassword'}
         },
       ]
     },
@@ -98,7 +118,7 @@ module.exports = {
         },
         {
           index: 'unitAction',
-          title: '单位管理',
+          title: '物资单位',
           flag: true,
           function: 'unitAction',
           permissions:[
@@ -106,6 +126,19 @@ module.exports = {
             'deleteGooUnitinfoById',
             'getGooUnitinfoById',
             'listAllUnitinfos'
+          ]
+        },
+        {
+          index: 'goodslistAction',
+          title: '物资列表',
+          flag: true,
+          function: 'goodslistAction',
+          permissions:[
+            'addGooTGoodsinfo',
+            'deleteGooTGoodsinfoById',
+            'updateGooTGoodsinfoById',
+            'getGooTGoodsinfoById',
+            'listGoodsinfosByConditions'
           ]
         },
       ],

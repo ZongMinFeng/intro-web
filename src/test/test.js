@@ -6,10 +6,22 @@
 /**
  * 成员
  {
+    "hehe":"hehehe",
    "tellerPositionList": [
+   "我擦嘞",
    {
          "positionId": "test_position0001",
-         "recycleSeq": "1"
+         "recycleSeq": "1",
+         "child": [
+           {
+                 "lala": "test_position0001",
+                 "recycleSeq": "1"
+            },
+            {
+                 "lala": "test_position0002",
+                 "recycleSeq": "2"
+            },
+          ]
      }
    ]
  }
@@ -20,35 +32,46 @@
  }
  * @param signArray
  */
-const expandArray=function (signArray) {
-  let signArrayNew={};
-  for (let key in signArray) {
-    if (signArray[key] instanceof Array && signArray[key].length>0 ) {
-      signArray[key].forEach((item)=>{
-        // signArray[key+item.recycleSeq]
-        for(let key2 in item){
-          signArrayNew[key+item.recycleSeq+key2]=item[key2];
-        }
-      });
-    }else{
-      signArrayNew[key]=signArray[key];
-    }
-  }
+const expandArray = function (signArray) {
+  let signArrayNew = {};
+  expandArrayOnce(signArrayNew, signArray, '');
   return signArrayNew;
 };
 
-let test1={
-  specDepartmentId: "AdminSID200217000",
-  specTellerId: "lala",
-  tellerName: "啦啦",
-  tellerPhone: "17728782722",
+const expandArrayOnce = function (signArrayNew, signArray, head) {
+  for (let key in signArray) {
+    if (signArray[key] instanceof Array && signArray[key].length > 0) {
+      signArray[key].forEach(item=>{
+        if (item instanceof Object) {
+          expandArrayOnce(signArrayNew, item, head+key+item.recycleSeq);
+        }
+      });
+    } else {
+      signArrayNew[head + key] = signArray[key];
+    }
+  }
+};
+
+let test1 = {
+  "hehe":"hehehe",
   "tellerPositionList": [
+    "我擦嘞",
     {
-      "positionId": "testpostion_id",
-      "recycleSeq": "1"
+      "positionId": "test_position0001",
+      "recycleSeq": "1",
+      "child": [
+        {
+          "lala": "test_position0001",
+          "recycleSeq": "1"
+        },
+        {
+          "lala": "test_position0002",
+          "recycleSeq": "2"
+        },
+      ]
     }
   ]
 };
 
-let test2=expandArray(test1);
+let test2 = expandArray(test1);
 console.log(test2);

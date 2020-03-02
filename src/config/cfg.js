@@ -7,14 +7,29 @@ module.exports = {
     uploadUrl:'http://139.196.162.158:10081',//测试
     // uploadUrl:'http://139.196.162.158:10080',//生产 v-uu
 
+    checkTellerId: {
+      url: baseUrl+'/system/checkTellerId',
+      txnId: 'checkTellerId'
+    },
+
+    chgTellerPwd: {
+      url: baseUrl+'/system/chgTellerPwd',
+      txnId: 'chgTellerPwd'
+    },
+
     genLoginId: {
-      url: baseUrl+'/pcMngLogin/genLoginId',
+      url: baseUrl+'/system/genLoginId',
       txnId: 'genLoginId'
     },
 
     getLoginStatus: {
-      url: baseUrl+'/pcMngLogin/getLoginStatus',
+      url: baseUrl+'/system/getLoginStatus',
       txnId: 'getLoginStatus'
+    },
+
+    loginOut: {
+      url: baseUrl+'/system/loginOut',
+      txnId: 'loginOut'
     },
 
     getAllInstById: {
@@ -140,6 +155,16 @@ module.exports = {
     sendPicture: {
       url: baseUrl+'/goods/sendPicture',
       txnId: 'sendPicture'
+    },
+
+    listGoodsinfosByConditions: {
+      url: baseUrl+'/goods/listGoodsinfosByConditions',
+      txnId: 'listGoodsinfosByConditions'
+    },
+
+    addGooTGoodsinfo: {
+      url: baseUrl+'/goods/addGooTGoodsinfo',
+      txnId: 'addGooTGoodsinfo'
     },
 
 

@@ -1,6 +1,6 @@
 <template>
   <div class="login-wrap">
-    <div class="ms-title">商场后台管理系统</div>
+    <div class="ms-title">测试管理系统</div>
     <div  class="ms-login" id="qrcode">
     </div>
     <div v-if="LoginStatus!=='0' " class="ms-mgs" :class="LoginStatus=='1'?'':'ms-mgs1'">
@@ -126,11 +126,9 @@
                 let sysTellerInfo = res.data.sysTellerInfo || '';
                 let sysInstInfo = res.data.sysInstInfo || '';
                 let sysInstDepartment = res.data.sysInstDepartment || '';
-                let positionsArray = res.data.positionsArray || '';
                 localStorage.setItem('sysTellerInfo', JSON.stringify(sysTellerInfo));
                 localStorage.setItem('sysInstInfo', JSON.stringify(sysInstInfo));
                 localStorage.setItem('sysInstDepartment', JSON.stringify(sysInstDepartment));
-                // localStorage.setItem('positionsArray', positionsArray);
                 if (sysTellerInfo) {
                   localStorage.setItem('tellerId', sysTellerInfo.tellerId)
                 }

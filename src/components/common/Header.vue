@@ -42,10 +42,8 @@
               </el-dropdown-item>
             </router-link>
 
-            <router-link to="/profile">
-              <el-dropdown-item>
-                个人资料
-              </el-dropdown-item>
+            <router-link to="/userPassword">
+              <el-dropdown-item>修改密码</el-dropdown-item>
             </router-link>
 
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
@@ -60,6 +58,7 @@
   import { Toast } from 'mint-ui'
   import { sendServer } from './../../util/common'
   import cfg from './../../config/cfg'
+  import {loginOut} from "../../util/module";
 
   export default {
     data () {
@@ -94,7 +93,7 @@
     },
 
     beforeDestroy () {
-      console.log('beforeDestroy')
+      console.log('beforeDestroy');
       bus.$off('tellerToParentInst')
     },
 
@@ -129,39 +128,28 @@
       },
 
       handleCommand (command) {
-        if (command == 'loginout') {
-
-          let urlParams = {}
-          let send = {}
-          let singArray = {}
-          urlParams.url = cfg.service.logout.url + '/' + cfg.service.logout.action
-          urlParams.txnId = cfg.service.logout.txnId
-          urlParams.send = send
-          urlParams.singArray = singArray
-          urlParams.noSing = true 
-
-          let that = this
-          sendServer(urlParams, this, Toast).then(
-            (res) => {
-              console.log('res', res)
-              localStorage.removeItem('adminPcUuid')
-              localStorage.removeItem('macKey')
-              localStorage.removeItem('instId')
-              localStorage.removeItem('tellerId')
-              localStorage.removeItem('adminFlag')
-              localStorage.removeItem('funcArray')
-              localStorage.removeItem('sysTellerInfo')
-              localStorage.removeItem('sysInstInfo')
-              localStorage.removeItem('loginPass')
-              localStorage.removeItem('parentInstInfos')
-              this.$store.commit('loginOut')
+        if (command === 'loginout') {
+          let params={};
+          loginOut(this, params).then(
+            res=>{
+              localStorage.removeItem('sysTellerInfo');
+              localStorage.removeItem('sysInstInfo');
+              localStorage.removeItem('sysInstDepartment');
+              localStorage.removeItem('tellerId');
+              localStorage.removeItem('instId');
+              localStorage.removeItem('departmentId');
+              localStorage.removeItem('macKey');
+              localStorage.removeItem('reqUuid');
+              this.$store.commit('loginOut');
               this.$router.push('/login')
-            }, (res) => {
-              console.log('res', res)
-            })
+            },
+            res=>{
 
+            }
+          ).catch();
         }
       },
+
       collapseChage () {
         this.collapse = !this.collapse
         bus.$emit('collapse', this.collapse)

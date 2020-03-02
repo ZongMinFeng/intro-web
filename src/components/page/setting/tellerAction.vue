@@ -49,7 +49,7 @@
       <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
         <el-row v-if="flag===1">
           <el-col :span="24">
-            <el-form-item label="账号" prop="specTellerId" :rules="[{required:true, message:'请输入账号,账号用于登录管理小程序', trigger: 'blur'}]">
+            <el-form-item label="账号" prop="specTellerId" :rules="[{required:true, message:'请输入账号,账号用于登录管理小程序', trigger: 'blur'}, {validator: checkSpecTellerId, trigger: 'blur'} ]">
               <el-input v-model="dialogForm.specTellerId"></el-input>
             </el-form-item>
           </el-col>
@@ -93,7 +93,7 @@
 
 <script>
   import {
-    addTellerInfo, deleteDepartmentTeller,
+    addTellerInfo, checkTellerId, deleteDepartmentTeller,
     listDepartmentPosition,
     listDepartmentTeller,
     listInstDepartments, resetTellerPwd,
@@ -151,6 +151,25 @@
     methods: {
       initData() {
         this.getTeller();
+      },
+
+      checkSpecTellerId(rule, specTellerId, callback){
+        console.log("specTellerId", specTellerId);//debug
+        let params={};
+        params.specDepartmentId=this.searchForm.departmentId;
+        params.specTellerId=specTellerId;
+        checkTellerId(this, params).then(
+          res=>{
+            callback();
+          },
+          res=>{
+            if (res.returnMsg) {
+              callback(new Error(res.returnMsg));
+            }else{
+              callback(new Error('用户已存在!'));
+            }
+          }
+        ).catch();
       },
 
       onAddNewTap() {

@@ -243,34 +243,56 @@ var SHA256 = function (s) {
 
 /**
  * 成员
- "tellerPositionList": [
  {
-       "positionId": "test_position0001",
-       "recycleSeq": "1"
-   }
- ]
+    "hehe":"hehehe",
+   "tellerPositionList": [
+   "我擦嘞",
+   {
+         "positionId": "test_position0001",
+         "recycleSeq": "1",
+         "child": [
+           {
+                 "lala": "test_position0001",
+                 "recycleSeq": "1"
+            },
+            {
+                 "lala": "test_position0002",
+                 "recycleSeq": "2"
+            },
+          ]
+     }
+   ]
+ }
  转成如下多个成员
  {
-  tellerPositionList1positionId:test_position0001
-  tellerPositionList1recycleSeq:1
+    "hehe": "hehehe",
+    "tellerPositionList1child1lala": "test_position0001",
+    "tellerPositionList1child1recycleSeq": "1",
+    "tellerPositionList1child2lala": "test_position0002",
+    "tellerPositionList1child2recycleSeq": "2",
+    "tellerPositionList1positionId": "test_position0001",
+    "tellerPositionList1recycleSeq": "1"
  }
  * @param signArray
  */
-const expandArray=function (signArray) {
-  let signArrayNew={};
+const expandArray = function (signArray) {
+  let signArrayNew = {};
+  expandArrayOnce(signArrayNew, signArray, '');
+  return signArrayNew;
+};
+
+const expandArrayOnce = function (signArrayNew, signArray, head) {
   for (let key in signArray) {
-    if (signArray[key] instanceof Array && signArray[key].length>0 ) {
-      signArray[key].forEach((item)=>{
-        // signArray[key+item.recycleSeq]
-        for(let key2 in item){
-          signArrayNew[key+item.recycleSeq+key2]=item[key2];
+    if (signArray[key] instanceof Array && signArray[key].length > 0) {
+      signArray[key].forEach(item=>{
+        if (item instanceof Object) {
+          expandArrayOnce(signArrayNew, item, head+key+item.recycleSeq);
         }
       });
-    }else{
-      signArrayNew[key]=signArray[key];
+    } else {
+      signArrayNew[head + key] = signArray[key];
     }
   }
-  return signArrayNew;
 };
 
 export {

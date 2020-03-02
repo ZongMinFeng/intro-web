@@ -78,6 +78,16 @@ const PERMISSIONS={
     index:117,
     name:'重置员工密码'
   },
+  //118
+  checkTellerId:{
+    index:118,
+    name:'检查用户注册情况'
+  },
+  //119
+  chgTellerPwd:{
+    index:119,
+    name:'修改密码'
+  },
   //201
   addGooCategory:{
     index:201,
@@ -129,6 +139,36 @@ const PERMISSIONS={
     // 暂时不控制权限
     // index:211,
     name:'获取物资ID'
+  },
+  //212
+  addGooTGoodsinfo:{
+    index:212,
+    name:'新增物资基础信息'
+  },
+  //213
+  deleteGooTGoodsinfoById:{
+    index:213,
+    name:'删除物资基础信息'
+  },
+  //214
+  updateGooTGoodsinfoById:{
+    index:214,
+    name:'根据主键修改物资基础信息'
+  },
+  //215
+  getGooTGoodsinfoById:{
+    index:215,
+    name:'根据主键查询物资基础信息'
+  },
+  //216
+  listGoodsinfosByConditions:{
+    index:216,
+    name:'分页查询指定条件的物资信息'
+  },
+  //217
+  addGoodsProductmanual:{
+    index:217,
+    name:'新增物资产品说明书'
   },
 
   //无index
