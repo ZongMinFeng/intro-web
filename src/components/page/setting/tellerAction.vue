@@ -30,6 +30,7 @@
       <el-table-column label="操作" width="340" >
         <template slot-scope="props">
           <el-button type="primary" @click="resetPasswordTap(props.row)">重置密码</el-button>
+          <el-button type="primary" @click="partTimeTap(props.row)">兼职</el-button>
           <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
           <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
         </template>
@@ -242,6 +243,10 @@
       handleCurrentChange(options){
         this.currentPage=options;
         this.getTeller();
+      },
+
+      partTimeTap(item){
+        this.$router.push({path:'/partTimeJob', query:{tellerId:item.tellerId, specDepartmentId:this.searchForm.departmentId}});
       },
 
       modifyTap(item){

@@ -66,6 +66,11 @@ module.exports = {
           component: resolve => require(['../components/page/setting/userPassword.vue'], resolve),
           meta: {title: '修改密码' ,function: 'userPassword'}
         },
+        {
+          path: '/test',
+          component: resolve => require(['../test/Test.vue'], resolve),
+          meta: {title: '测试页面' ,function: 'test'}
+        },
       ]
     },
 
