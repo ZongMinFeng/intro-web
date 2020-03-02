@@ -271,11 +271,26 @@
       tellerModification() {
         let params = {};
         params.tellerId=this.loginForm.tellerId;
-        params.oldpwd=this.loginForm.password;
-        params.newpwd=this.loginForm.newPassword;
+        params.oldPwd=this.loginForm.password;
+        params.newPwd=this.loginForm.newPassword;
         chgTellerPwd(this, params).then(
           res=>{
             this.$message.success('修改成功');
+            this.loginForm.password='';
+            this.loginForm.newPassword='';
+            this.loginForm.newPassword2='';
+
+            //退出登录
+            localStorage.removeItem('sysTellerInfo');
+            localStorage.removeItem('sysInstInfo');
+            localStorage.removeItem('sysInstDepartment');
+            localStorage.removeItem('tellerId');
+            localStorage.removeItem('instId');
+            localStorage.removeItem('departmentId');
+            localStorage.removeItem('macKey');
+            localStorage.removeItem('reqUuid');
+            this.$store.commit('loginOut');
+            this.$router.push('/login');
           },
           res=>{
 

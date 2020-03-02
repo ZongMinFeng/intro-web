@@ -141,7 +141,7 @@
               localStorage.removeItem('macKey');
               localStorage.removeItem('reqUuid');
               this.$store.commit('loginOut');
-              this.$router.push('/login')
+              this.$router.push('/login');
             },
             res=>{
 

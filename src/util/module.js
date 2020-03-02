@@ -2576,19 +2576,19 @@ const chgTellerPwd = (me, params) => {
     urlParams.txnId = cfg.service.chgTellerPwd.txnId;
     // urlParams.noSing = true;
 
-    if (params.oldpwd) {
-      let EncPwd = params.tellerId + params.oldpwd.length + params.oldpwd;
+    if (params.oldPwd) {
+      let EncPwd = params.tellerId + params.oldPwd.length + params.oldPwd;
       let EncPwdMd5 = md5.hex_md5(EncPwd);
       let EncPwdSha = jsonSha256.SHA256(params.tellerId + EncPwdMd5);
-      send.oldpwd = EncPwdSha.toUpperCase().substring(0, 32);
-      singArray.oldpwd = send.oldpwd;
+      send.oldPwd = EncPwdSha.toUpperCase().substring(0, 32);
+      singArray.oldPwd = send.oldPwd;
     }
-    if (params.newpwd) {
-      let EncPwd = params.tellerId + params.newpwd.length + params.newpwd;
+    if (params.newPwd) {
+      let EncPwd = params.tellerId + params.newPwd.length + params.newPwd;
       let EncPwdMd5 = md5.hex_md5(EncPwd);
       let EncPwdSha = jsonSha256.SHA256(params.tellerId + EncPwdMd5);
-      send.newpwd = EncPwdSha.toUpperCase().substring(0, 32);
-      singArray.newpwd = send.newpwd;
+      send.newPwd = EncPwdSha.toUpperCase().substring(0, 32);
+      singArray.newPwd = send.newPwd;
     }
 
     urlParams.send = send;
