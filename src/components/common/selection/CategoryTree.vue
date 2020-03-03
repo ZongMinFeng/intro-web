@@ -55,6 +55,7 @@
     methods: {
 
       handleNodeClick(node, data) {
+        console.log('handleNodeClick node', node);//debug
         this.$emit('click', node);
       },
 

@@ -125,6 +125,7 @@
               if (that.LoginStatus === '3') {
                 let sysTellerInfo = res.data.sysTellerInfo || '';
                 let sysInstInfo = res.data.sysInstInfo || '';
+                this.$store.commit('setSysInstInfo', sysInstInfo);
                 let sysInstDepartment = res.data.sysInstDepartment || '';
                 localStorage.setItem('sysTellerInfo', JSON.stringify(sysTellerInfo));
                 localStorage.setItem('sysInstInfo', JSON.stringify(sysInstInfo));

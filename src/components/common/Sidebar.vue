@@ -34,35 +34,44 @@
     data() {
       return {
         collapse: false,
-        items: routeArray.Sidebar
+        items: [],
       }
-    },
-
-    mounted() {
-      bus.$on('tellerToSpec', (red) => {
-        this.items = routeArray.Sidebar;
-        this.setFunction();
-      })
-    },
-
-    beforeDestroy() {
-      bus.$off('tellerToSpec')
     },
 
 
     computed: {
       onRoutes() {
         return this.$route.path.replace('/', '');
+      },
+
+      pomitionStore(){
+        return this.$store.state.permissions;
       }
     },
+
+    created() {
+      this.setFunction();
+      // 通过 Event Bus 进行组件间通信，来折叠侧边栏
+      bus.$on('collapse', msg => {
+        this.collapse = msg;
+      })
+    },
+
+    watch:{
+      pomitionStore:function(newVal){
+        this.setFunction();
+      }
+    },
+
     methods: {
       setFunction() {   // 对目录进行权限过滤，没有权限的不显示了
         const ruleFunction = getPermissions();
-        console.log("items", this.items);//debug
+        this.items=routeArray.Sidebar;
         this.items.forEach(item => {
           if (item.subs) {
             item.flag = false;
             item.subs.forEach(itemSub => {
+              itemSub.flag=false;
               if (itemSub.permissions) {
                 itemSub.permissions.forEach(permission => {
                   if (ruleFunction.indexOf(permission) !== -1) {
@@ -77,13 +86,7 @@
         })
       }
     },
-    created() {
-      this.setFunction();
-      // 通过 Event Bus 进行组件间通信，来折叠侧边栏
-      bus.$on('collapse', msg => {
-        this.collapse = msg;
-      })
-    }
+    
   }
 </script>
 

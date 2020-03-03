@@ -69,9 +69,26 @@
       }
     },
 
+    computed: {
+      sysInstInfoStore(){
+        return this.$store.state.sysInstInfo;
+      }
+    },
+
+    watch:{
+      sysInstInfoStore:{
+        handler(newName, oldName) {
+          console.log("sysInstInfo", this.sysInstInfoStore);//debug
+          this.sysInstInfo=this.sysInstInfoStore;
+        },
+        immediate: true,
+        deep:true
+      }
+    },
+
     created() {
       this.sysInstInfo=JSON.parse(localStorage.getItem("sysInstInfo"));
-      console.log('sysInstInfo', this.sysInstInfo);//debug
+      // this.sysInstInfo=this.sysInstInfoStore;
     },
 
     mounted() {

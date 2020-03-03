@@ -1,5 +1,6 @@
-const getters={
-  permissions:state=>state.permissions
+const getters = {
+    permissions: state => state.permissions,
+    sysInstInfo: state => state.sysInstInfo,
 };
 
 export default getters;

@@ -77,6 +77,7 @@
             let sysInstDepartment = res.data.sysInstDepartment || '';
             localStorage.setItem('sysTellerInfo', JSON.stringify(sysTellerInfo));
             localStorage.setItem('sysInstInfo', JSON.stringify(sysInstInfo));
+            this.$store.commit('setSysInstInfo', sysInstInfo);
             localStorage.setItem('sysInstDepartment', JSON.stringify(sysInstDepartment));
             if (sysTellerInfo) {
               localStorage.setItem('tellerId', sysTellerInfo.tellerId)
