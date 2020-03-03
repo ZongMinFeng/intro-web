@@ -17,6 +17,16 @@ module.exports = {
       txnId: 'chgTellerPwd'
     },
 
+    departmentLogin: {
+      url: baseUrl+'/system/departmentLogin',
+      txnId: 'departmentLogin'
+    },
+
+    addTellerDepartment: {
+      url: baseUrl+'/system/addTellerDepartment',
+      txnId: 'addTellerDepartment'
+    },
+
     genLoginId: {
       url: baseUrl+'/system/genLoginId',
       txnId: 'genLoginId'

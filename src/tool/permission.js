@@ -63,6 +63,11 @@ const PERMISSIONS={
     index:112,
     name:'查询机构信息'
   },
+  //113
+  addTellerDepartment:{
+    index:113,
+    name:'员工兼职'
+  },
   //115
   updateTellerInfo:{
     index:115,
@@ -87,6 +92,11 @@ const PERMISSIONS={
   chgTellerPwd:{
     index:119,
     name:'修改密码'
+  },
+  //120
+  departmentLogin:{
+    index:120,
+    name:'部门切换'
   },
   //201
   addGooCategory:{

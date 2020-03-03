@@ -66,10 +66,6 @@
       </div>
       <position-selection v-model="detailForm.positionShow"></position-selection>
     </el-dialog>
-
-    <!--测试权限使用-->
-    <!--<position-selection v-model="position"></position-selection>-->
-    <!--<div>权限：{{position}}</div>-->
   </div>
 </template>
 
@@ -105,6 +101,7 @@
         dialogForm: {
           positionName: null,
           funcMap: '',
+          version:null,
         },
         detailVisible:false,
         detailForm:{
@@ -191,6 +188,7 @@
         this.dialogForm.positionId = item.positionId;
         this.dialogForm.positionName=item.postionName;
         this.dialogForm.funcMap=item.funcMap;
+        this.dialogForm.version=item.version;
         this.flag=2;
         this.dialogVisible=true;
       },
@@ -253,6 +251,7 @@
           params.positionId=this.dialogForm.positionId;
           params.positionName=this.dialogForm.positionName;
           params.funcMap=this.dialogForm.funcMap;
+          params.version=this.dialogForm.version;
           updateDepartmentPosition(this, params).then(
             res=>{
               this.$message.success('修改成功');

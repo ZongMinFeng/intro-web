@@ -27,12 +27,17 @@
       <el-table-column label="名字" prop="tellerName"></el-table-column>
       <el-table-column label="手机号" prop="tellerPhone"></el-table-column>
       <el-table-column label="住址" prop="tellerAddr"></el-table-column>
+      <el-table-column label="部门类型">
+        <template slot-scope="props">
+          {{departmentFlagShow(props.row.departmentFlag)}}
+        </template>
+      </el-table-column>
       <el-table-column label="操作" width="340" >
         <template slot-scope="props">
           <el-button type="primary" @click="resetPasswordTap(props.row)">重置密码</el-button>
           <el-button type="primary" @click="partTimeTap(props.row)">兼职</el-button>
           <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
-          <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
+          <el-button v-if="props.row.tellerId!==tellerId" type="danger" @click="deleteTap(props.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -120,6 +125,7 @@
         dialogVisible:false,
         dialogForm:{
           specDepartmentId:null,
+          version:null,
           specTellerId:null,
           tellerName:null,
           tellerPhone:null,
@@ -130,6 +136,7 @@
         passwordForm:{
           tellerPwd:null
         },
+        tellerId:null,
       }
     },
 
@@ -144,6 +151,7 @@
     },
 
     created() {
+      this.tellerId=localStorage.getItem('tellerId')||'';
       this.instInfo = JSON.parse(localStorage.getItem("sysInstInfo"));
       this.searchForm.specInstId = this.instInfo.instId;
       this.getDepartment();
@@ -152,6 +160,13 @@
     methods: {
       initData() {
         this.getTeller();
+      },
+
+      departmentFlagShow(flag){
+        if (flag === "1") {
+          return '本部门';
+        }
+        return '兼职';
       },
 
       checkSpecTellerId(rule, specTellerId, callback){
@@ -226,6 +241,7 @@
             let records=[];
             if (this.AllCount > 0) {
               res.data.records.forEach(item=>{
+                item.sysTellerInfo.departmentFlag=item.sysTellerInst.departmentFlag;
                 records.push(item.sysTellerInfo);
               });
             }
@@ -250,8 +266,10 @@
       },
 
       modifyTap(item){
+        console.log("modifyTap item", item);//debug
         this.flag=2;
         this.dialogForm.specDepartmentId=this.searchForm.departmentId;
+        this.dialogForm.version=item.version;
         this.dialogForm.specTellerId=item.tellerId;
         this.dialogForm.tellerPhone=item.tellerPhone;
         this.dialogForm.tellerName=item.tellerName;
@@ -354,6 +372,7 @@
         if (this.flag === 2) {
           //修改
           params.specTellerId=this.dialogForm.specTellerId;
+          params.version=this.dialogForm.version;
           params.specDepartmentId=this.dialogForm.specDepartmentId;
           params.tellerPhone=this.dialogForm.tellerPhone;
           params.tellerName=this.dialogForm.tellerName;

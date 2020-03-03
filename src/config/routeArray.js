@@ -67,6 +67,11 @@ module.exports = {
           meta: {title: '修改密码' ,function: 'userPassword'}
         },
         {
+          path: '/departmentLogin',
+          component: resolve => require(['../components/page/setting/departmentLogin.vue'], resolve),
+          meta: {title: '切换部门' ,function: 'departmentLogin'}
+        },
+        {
           path: '/test',
           component: resolve => require(['../test/Test.vue'], resolve),
           meta: {title: '测试页面' ,function: 'test'}
@@ -201,7 +206,8 @@ module.exports = {
             'updateTellerInfo',
             'deleteDepartmentTeller',
             'resetTellerPwd',
-            'checkTellerId'
+            'checkTellerId',
+            'departmentLogin'
           ]
         },
       ],

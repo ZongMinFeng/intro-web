@@ -1903,6 +1903,10 @@ const updateDepartmentPosition = (me, params) => {
       send.positionId = params.positionId;
       singArray.positionId = params.positionId;
     }
+    if (params.version ) {
+      send.version  = params.version ;
+      singArray.version  = params.version ;
+    }
     if (params.positionName) {
       send.positionName = params.positionName;
     }
@@ -2095,6 +2099,10 @@ const updateTellerInfo = (me, params) => {
     if (params.specTellerId) {
       send.specTellerId = params.specTellerId;
       singArray.specTellerId = params.specTellerId;
+    }
+    if (params.version) {
+      send.version = params.version;
+      singArray.version = params.version;
     }
     if (params.specDepartmentId) {
       send.specDepartmentId = params.specDepartmentId;
@@ -2565,6 +2573,12 @@ const checkTellerId = (me, params) => {
   });
 };
 
+/**
+ * 1.3.1.6.9	修改密码 /chgTellerPwd  索引119    验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
 const chgTellerPwd = (me, params) => {
   console.log("chgTellerPwd params", params);//debug
   return new Promise((resolve, reject) => {
@@ -2589,6 +2603,89 @@ const chgTellerPwd = (me, params) => {
       let EncPwdSha = jsonSha256.SHA256(params.tellerId + EncPwdMd5);
       send.newPwd = EncPwdSha.toUpperCase().substring(0, 32);
       singArray.newPwd = send.newPwd;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ *1.3.1.6.2	员工兼职 /addTellerDepartment  索引113  验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const addTellerDepartment = (me, params) => {
+  console.log("addTellerDepartment params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    // urlParams.noSing = true;
+    urlParams.url = cfg.service.addTellerDepartment.url;
+    urlParams.txnId = cfg.service.addTellerDepartment.txnId;
+
+    if (params.specDepartmentId) {
+      send.specDepartmentId = params.specDepartmentId;
+      singArray.specDepartmentId = params.specDepartmentId;
+    }
+    if (params.specTellerId) {
+      send.specTellerId = params.specTellerId;
+      singArray.specTellerId = params.specTellerId;
+    }
+    if (params.tellerPositonList) {
+      send.tellerPositionList = [];
+      params.tellerPositonList.forEach((item, index) => {
+        let tmp = {
+          "recycleSeq": index + 1 + '',
+          "positionId": item
+        };
+        send.tellerPositionList.push(tmp);
+      });
+      singArray.tellerPositionList = send.tellerPositionList;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.1.1	部门切换  /departmentLogin   索引120  验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const departmentLogin = (me, params) => {
+  console.log("departmentLogin params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    // urlParams.noSing = true;
+    urlParams.url = cfg.service.departmentLogin.url;
+    urlParams.txnId = cfg.service.departmentLogin.txnId;
+
+    if (params.specDepartmentId ) {
+      send.specDepartmentId  = params.specDepartmentId ;
+      singArray.specDepartmentId  = params.specDepartmentId ;
     }
 
     urlParams.send = send;
@@ -2682,5 +2779,7 @@ export {
   addGooTGoodsinfo,
   loginOut,
   checkTellerId,
-  chgTellerPwd
+  chgTellerPwd,
+  addTellerDepartment,
+  departmentLogin
 };

@@ -13,12 +13,12 @@
          <span>
            {{ node.label }}
          </span>
-         <span v-if="create!=null&&node.data.instLevel === '1'">
+         <span v-if="create!=null">
           <el-button
             type="text"
             icon="el-icon-circle-plus"
             @click.stop="() => createNew(node,data)">
-            新增子公司
+            新增子分类
           </el-button>
          </span>
       </span>
@@ -28,6 +28,7 @@
 
 <script>
   import {Toast} from 'mint-ui'
+  import {listGooCategorysByPid} from "../../../util/module";
 
   export default {
     name: 'categoryTree',
@@ -37,78 +38,21 @@
         sysInstInfoAll: [],
         instLevel: 0,
         props: {
-          label: 'instName',
+          label: 'categoryName',
           children: [],
-          isLeaf: 'leaf',
-        }
+          isLeaf: 'isLeaf',
+        },
+        searchForm:{
+          categoryId:'root',
+          categoryLevel:1,
+        },
       }
     },
+
     created() {
-      let sysInstInfo = JSON.parse(localStorage.getItem('sysInstInfo'));
-      this.instLevel = sysInstInfo.instLevel;
-      let sysInstInfoAll = [];
-      let sysInstInList = {
-        instId: sysInstInfo.instId,
-        parentInstId: sysInstInfo.parentInstId,
-        instName: sysInstInfo.instName,
-        isLeaf: sysInstInfo.isLeaf,
-        instLevel: sysInstInfo.instLevel,
-        status: sysInstInfo.status
-      };
-      if (sysInstInfo.isLeaf === 'N') {
-        sysInstInList.leaf = false
-      } else {
-        sysInstInList.leaf = true
-      }
-      sysInstInfoAll.push(sysInstInList);
-      this.sysInstInfoAll = sysInstInfoAll;
+
     },
     methods: {
-
-      append(node, data) {
-        let instId = data.instId;
-        getInstById(this, instId, Toast).then((res) => {
-          console.log('res', res);
-          let data = res.data;
-          if (!data) {
-            Toast({
-              message: res.msg,
-              duration: 2000
-            });
-            node.isLeaf = true;
-            return
-          }
-          let InstInList = {
-            instId: res.data.instId,
-            parentInstId: res.data.parentInstId,
-            instName: res.data.instName,
-            isLeaf: res.data.isLeaf,
-            instLevel: res.data.instLevel,
-            status: res.data.status
-          };
-          if (res.data.isLeaf === 'N') {
-            InstInList.leaf = false;
-            node.isLeaf = false
-          } else {
-            InstInList.leaf = true;
-            node.isLeaf = true
-          }
-          var theChildren = node.childNodes;
-          theChildren.splice(0, theChildren.length);
-          node.loaded = false;
-          node.expanded = false;
-          node.data = InstInList;
-          this.$message.success('更新成功');
-          let instId = localStorage.getItem('instId') || '';
-          if (res.data.instId === instId) {
-            localStorage.setItem('sysInstInfo', JSON.stringify(res.data));
-            bus.$emit('tellerToParentInst', '');
-            bus.$emit('sysInstInfo', '');
-          }
-        }, (res) => {
-          console.log('res', res);
-        })
-      },
 
       handleNodeClick(node, data) {
         this.$emit('click', node);
@@ -118,43 +62,34 @@
       loadNode(node, resolve) {
         console.log('node', node);
         if (node.level === 0) {
-          this.requestTree(resolve)
+          this.searchForm.categoryId='root';
         }
         if (node.level >= 1) {
-          this.instGetAllByIdFun(node.data.instId, resolve, node)
+          this.searchForm.categoryId=node.data.categoryId;
         }
+        this.goodsList(resolve);
       },
 
-      requestTree(resolve) {
-        let that = this;
-        resolve(that.sysInstInfoAll)
-      },
-
-      instGetAllByIdFun(instId, resolve, node) {
-        getAllInstById(this, instId, Toast).then((res) => {
-            console.log('res', res);
-            let data = res.data;
-            if (!data) {
-              Toast({
-                message: res.msg,
-                duration: 2000
-              });
-              resolve([]);
-              return
-            }
-            res.data.forEach(item => {
-              if (item.isLeaf === 'N') {
-                item.leaf = false
-              } else {
-                item.leaf = true
+      goodsList(resolve) {
+        let params = {};
+        if (this.searchForm.categoryId !== 'root') {
+          params.categoryId = this.searchForm.categoryId;
+        } else {
+          params.categoryLevel = this.searchForm.categoryLevel;
+        }
+        listGooCategorysByPid(this, params).then(
+          res => {
+            if (res.data instanceof Array) {
+              let length=res.data.length;
+              for (let i = 0; i < length; i++) {
+                res.data[i].isLeaf = res.data[i].isLeaf === 'Y';
               }
-            });
-            resolve(res.data)
-          }, (res) => {
-            node.loading = false
-            console.log('res', res)
+            }
+            resolve(res.data);
+          },
+          res => {
           }
-        )
+        ).catch();
       },
 
       createNew(node, data) {

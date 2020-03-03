@@ -10,20 +10,10 @@
     <div class="header-right">
       <div class="header-user-con">
         <div class="head-inst">
-        <span class="div-sapn" v-if="tellerToParentInst">
-          <span v-if="tellerName" class="span-tellername">{{tellerName}}</span> 你好，欢迎进入：
-          <label v-for="(item,index) in tellerToParentInst" :key="index">
-             <span class="span-iinstname">{{item}}</span>
-             <span v-if="index!==tellerToParentInst.length-1">
-            <svg-icon class="svgname" icon-class="arrow"/>
-             </span>
-          </label>
-
-          <!--<label v-for="item in [1,2,3,4]">-->
-          <!--<span class="span-iinstname ">南京市雨花台区小航路大数据产业基地六栋四</span>-->
-          <!--<span>-&#45;&#45;</span>-->
-          <!--</label>-->
-        </span>
+          <span class="div-sapn" v-if="tellerToParentInst">
+            <span v-if="tellerName" class="span-tellername">{{tellerName}}</span> 你好，欢迎进入：
+            <span class="span-iinstname">{{sysInstInfo.instName}}</span>
+          </span>
         </div>
         <!-- 全屏显示 -->
         <div class="btn-fullscreen" @click="handleFullScreen">
@@ -46,6 +36,10 @@
               <el-dropdown-item>修改密码</el-dropdown-item>
             </router-link>
 
+            <router-link to="/departmentLogin">
+              <el-dropdown-item>切换部门</el-dropdown-item>
+            </router-link>
+
             <el-dropdown-item divided command="loginout">退出登录</el-dropdown-item>
           </el-dropdown-menu>
         </el-dropdown>
@@ -55,50 +49,55 @@
 </template>
 <script>
   import bus from './bus'
-  import { Toast } from 'mint-ui'
-  import { sendServer } from './../../util/common'
+  import {Toast} from 'mint-ui'
+  import {sendServer} from './../../util/common'
   import cfg from './../../config/cfg'
   import {loginOut} from "../../util/module";
 
   export default {
-    data () {
+    data() {
       return {
         collapse: false,
         fullscreen: false,
         name: '',
         message: 2,
         tellerToParentInst: [],
-        tellerName: ''
+        tellerName: '',
+        sysInstInfo:{
+          instName:null,
+        },
       }
     },
 
-    create () {
+    created() {
+      this.sysInstInfo=JSON.parse(localStorage.getItem("sysInstInfo"));
+      console.log('sysInstInfo', this.sysInstInfo);//debug
     },
 
-    mounted () {
-      console.log('mounted')
-      this.dataChange()
+    mounted() {
+      console.log('mounted');
+      this.dataChange();
 
       bus.$on('tellerToParentInst', (red) => {
-        console.log('red', red)
+        console.log('red', red);
         this.dataChange()
       })
     },
 
     computed: {
-      username () {
+      username() {
         let UserName = localStorage.getItem('UserName')
         return UserName ? UserName : this.name
       }
     },
 
-    beforeDestroy () {
+    beforeDestroy() {
       console.log('beforeDestroy');
       bus.$off('tellerToParentInst')
     },
 
     methods: {
-      dataChange () {
+      dataChange() {
         let parentInstInfosArray = localStorage.getItem('parentInstInfos') || ''
         let sysInstInfoArray = localStorage.getItem('sysInstInfo') || ''
         let sysTellerInfoArray = localStorage.getItem('sysTellerInfo') || ''
@@ -127,11 +126,11 @@
         this.tellerToParentInst = tellerToParentInst
       },
 
-      handleCommand (command) {
+      handleCommand(command) {
         if (command === 'loginout') {
-          let params={};
+          let params = {};
           loginOut(this, params).then(
-            res=>{
+            res => {
               localStorage.removeItem('sysTellerInfo');
               localStorage.removeItem('sysInstInfo');
               localStorage.removeItem('sysInstDepartment');
@@ -143,18 +142,18 @@
               this.$store.commit('loginOut');
               this.$router.push('/login');
             },
-            res=>{
+            res => {
 
             }
           ).catch();
         }
       },
 
-      collapseChage () {
+      collapseChage() {
         this.collapse = !this.collapse
         bus.$emit('collapse', this.collapse)
       },
-      handleFullScreen () {
+      handleFullScreen() {
         let element = document.documentElement
         if (this.fullscreen) {
           if (document.exitFullscreen) {
@@ -248,15 +247,15 @@
 
   .span-iinstname {
     border: white 1.5px solid;
-    border-radius:10px;
+    border-radius: 10px;
     padding: 5px 10px;
     /*background-color: white;*/
     color: #409EFF;
   }
 
-  .span-tellername{
+  .span-tellername {
     border: white 1.5px solid;
-    border-radius:10px;
+    border-radius: 10px;
     padding: 5px 8px;
     color: #409EFF;
     font-size: 12px;
@@ -324,7 +323,7 @@
     text-align: center;
   }
 
-  .svgname{
+  .svgname {
     margin: 0 3px;
   }
 </style>
