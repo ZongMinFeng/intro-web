@@ -22,6 +22,7 @@ module.exports = {
       txnId: 'departmentLogin'
     },
 
+
     addTellerDepartment: {
       url: baseUrl+'/system/addTellerDepartment',
       txnId: 'addTellerDepartment'
@@ -175,6 +176,16 @@ module.exports = {
     addGooTGoodsinfo: {
       url: baseUrl+'/goods/addGooTGoodsinfo',
       txnId: 'addGooTGoodsinfo'
+    },
+
+    deleteGooTGoodsinfoById: {
+      url: baseUrl+'/goods/deleteGooTGoodsinfoById',
+      txnId: 'deleteGooTGoodsinfoById'
+    },
+
+    getGooTGoodsinfoById: {
+      url: baseUrl+'/goods/getGooTGoodsinfoById',
+      txnId: 'getGooTGoodsinfoById'
     },
 
 

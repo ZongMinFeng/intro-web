@@ -1484,6 +1484,9 @@ const synchronizeDeviceModification = (me, params, Toast) => {
 };
 
 
+
+
+
 /**
  * 1.3.2.2.1  新增子公司 /addInst
  * @param me
@@ -2707,6 +2710,74 @@ const departmentLogin = (me, params) => {
   });
 };
 
+/**
+ * 1.3.2.5.2	删除  /deleteGooTGoodsinfoById   位图索引213
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteGooTGoodsinfoById = (me, params) => {
+  console.log("deleteGooTGoodsinfoById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    // urlParams.noSing = true;
+    urlParams.url = cfg.service.deleteGooTGoodsinfoById.url;
+    urlParams.txnId = cfg.service.deleteGooTGoodsinfoById.txnId;
+
+    if (params.goodsId  ) {
+      send.goodsId   = params.goodsId  ;
+      singArray.goodsId   = params.goodsId  ;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.5.4	根据主键查询  /getGooTGoodsinfoById  位图索引215
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getGooTGoodsinfoById = (me, params) => {
+  console.log("getGooTGoodsinfoById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    // urlParams.noSing = true;
+    urlParams.url = cfg.service.getGooTGoodsinfoById.url;
+    urlParams.txnId = cfg.service.getGooTGoodsinfoById.txnId;
+
+    if (params.goodsId  ) {
+      send.goodsId   = params.goodsId  ;
+      singArray.goodsId   = params.goodsId  ;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
 export {
   instGetAllById,
   instTellersGetByCons,
@@ -2788,5 +2859,7 @@ export {
   checkTellerId,
   chgTellerPwd,
   addTellerDepartment,
-  departmentLogin
+  departmentLogin,
+  deleteGooTGoodsinfoById,
+  getGooTGoodsinfoById
 };

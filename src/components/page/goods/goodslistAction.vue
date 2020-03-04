@@ -58,7 +58,7 @@
           </p>
           <!--有系列、锁定库存不允许删除商品-->
           <p style="margin-top: 5px;" v-if="canDelete(props.row)">
-            <el-button type="danger" style="width: 90px;" @click="delGoodCheck(props.row)">删除</el-button>
+            <el-button type="danger" style="width: 90px;" @click="deleteTap(props.row)">删除</el-button>
           </p>
         </template>
       </el-table-column>
@@ -76,7 +76,7 @@
 </template>
 
 <script>
-  import {listGoodsinfosByConditions} from "../../../util/module";
+  import {deleteGooTGoodsinfoById, listGoodsinfosByConditions} from "../../../util/module";
 
   export default {
     name: "goodsinfoAction",
@@ -116,7 +116,33 @@
         this.goodsList();
       },
 
+      deleteTap(item){
+        this.$confirm('此操作将删除物资，是否确认?', '删除物资', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            this.deleteCommit(item);
+          }
+        );
+      },
+
+      deleteCommit(item){
+        let params={};
+        params.goodsId =item.goodsId ;
+        deleteGooTGoodsinfoById(this, params).then(
+          res=>{
+            this.$message.success('删除成功');
+            this.initData();
+          },
+          res=>{
+          }
+        ).catch();
+      },
+
       canDelete(item){
+        return true;//debug
         if (item.status !== '3'){
           return false;
         }
