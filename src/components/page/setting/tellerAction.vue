@@ -99,7 +99,7 @@
 
 <script>
   import {
-    addTellerInfo, checkTellerId, deleteDepartmentTeller,
+    addTellerInfo, checkTellerId, deleteDepartmentTeller, getTellerInfoById,
     listDepartmentPosition,
     listDepartmentTeller,
     listInstDepartments, resetTellerPwd,
@@ -137,6 +137,8 @@
           tellerPwd:null
         },
         tellerId:null,
+        sysInstDepartment:{},
+        tellerInfo:{},
       }
     },
 
@@ -154,7 +156,17 @@
       this.tellerId=localStorage.getItem('tellerId')||'';
       this.instInfo = JSON.parse(localStorage.getItem("sysInstInfo"));
       this.searchForm.specInstId = this.instInfo.instId;
-      this.getDepartment();
+      this.sysInstDepartment=JSON.parse(localStorage.getItem('sysInstDepartment'));
+      //如果不是管理员部门用户，那么只能修改本部门人员
+      if (!this.sysInstDepartment.departmentId.startsWith('Admin')) {
+        this.departments=[
+          this.sysInstDepartment
+        ];
+        this.searchForm.departmentId=this.sysInstDepartment.departmentId;
+        this.chooseDepartment();
+      }else{
+        this.getDepartment();
+      }
     },
 
     methods: {
@@ -242,6 +254,12 @@
             if (this.AllCount > 0) {
               res.data.records.forEach(item=>{
                 item.sysTellerInfo.departmentFlag=item.sysTellerInst.departmentFlag;
+                item.sysTellerInfo.positions=[];
+                if (item.sysDepartmentPositions) {
+                  item.sysDepartmentPositions.forEach(position=>{
+                    item.sysTellerInfo.positions.push(position.positionId);
+                  });
+                }
                 records.push(item.sysTellerInfo);
               });
             }
@@ -273,7 +291,7 @@
         this.dialogForm.specTellerId=item.tellerId;
         this.dialogForm.tellerPhone=item.tellerPhone;
         this.dialogForm.tellerName=item.tellerName;
-        this.dialogForm.tellerPositionIds=item.tellerPositionIds;
+        this.dialogForm.tellerPositionIds=item.positions;
         this.dialogVisible=true;
       },
 

@@ -18,8 +18,8 @@
       <el-table-column label="部门名称" prop="departmentName"></el-table-column>
       <el-table-column label="操作">
         <template slot-scope="props">
-          <el-button type="warning" @click="modifyTap(props.row)">修改</el-button>
-          <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
+          <!--<el-button type="warning" @click="modifyTap(props.row)">修改</el-button>-->
+          <!--<el-button type="danger" @click="deleteTap(props.row)">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>

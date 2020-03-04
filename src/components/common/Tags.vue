@@ -23,12 +23,36 @@
 </template>
 
 <script>
+  import bus from './bus';
   export default {
     data() {
       return {
         tagsList: []
       }
     },
+
+
+    computed: {
+      showTags() {
+        return this.tagsList.length > 0;
+      }
+    },
+    watch: {
+      $route(newValue, oldValue) {
+        this.setTags(newValue);
+      }
+    },
+    created() {
+      this.setTags(this.$route);
+      console.log('this.$route', this.$route);
+      bus.$on('reboot', ()=>{
+        this.closeAll();
+      });
+    },
+
+    beforeDestroy(){
+    },
+
     methods: {
       isActive(path) {
         return path === this.$route.path;
@@ -49,13 +73,13 @@
       closeOther() {
         const curItem = this.tagsList.filter(item => {
           return item.path === this.$route.path;
-        })
+        });
         this.tagsList = curItem;
       },
       setTags(route) {
         const isExist = this.tagsList.some(item => {
           return item.path === route.path;
-        })
+        });
         console.log('route', route);
 
         !isExist && this.tagsList.push({
@@ -66,21 +90,7 @@
       },
       handleTags(command) {
         command === 'other' ? this.closeOther() : this.closeAll();
-      }
-    },
-    computed: {
-      showTags() {
-        return this.tagsList.length > 0;
-      }
-    },
-    watch: {
-      $route(newValue, oldValue) {
-        this.setTags(newValue);
-      }
-    },
-    created() {
-      this.setTags(this.$route);
-      console.log('this.$route', this.$route);
+      },
     }
   }
 

@@ -13,6 +13,7 @@
           <span class="div-sapn" v-if="tellerToParentInst">
             <span v-if="tellerName" class="span-tellername">{{tellerName}}</span> 你好，欢迎进入：
             <span class="span-iinstname">{{sysInstInfo.instName}}</span>
+            &nbsp;&nbsp;部门:<span class="span-iinstname">{{sysInstDepartment.departmentName}}</span>
           </span>
         </div>
         <!-- 全屏显示 -->
@@ -66,29 +67,35 @@
         sysInstInfo:{
           instName:null,
         },
+        sysInstDepartment:{},
       }
     },
 
     computed: {
+      username() {
+        let UserName = localStorage.getItem('UserName');
+        return UserName ? UserName : this.name
+      },
+
       sysInstInfoStore(){
-        return this.$store.state.sysInstInfo;
+        console.log("store store store");//debug
+        return this.$store.getters.sysInstInfo;
       }
     },
 
     watch:{
       sysInstInfoStore:{
-        handler(newName, oldName) {
-          console.log("sysInstInfo", this.sysInstInfoStore);//debug
+        handler(){
           this.sysInstInfo=this.sysInstInfoStore;
+          this.sysInstDepartment=JSON.parse(localStorage.getItem('sysInstDepartment'));
         },
-        immediate: true,
-        deep:true
+        deep:true,
+        immediate:true
       }
     },
 
-    created() {
-      this.sysInstInfo=JSON.parse(localStorage.getItem("sysInstInfo"));
-      // this.sysInstInfo=this.sysInstInfoStore;
+    created(){
+      this.sysInstDepartment=JSON.parse(localStorage.getItem('sysInstDepartment'));
     },
 
     mounted() {
@@ -99,13 +106,6 @@
         console.log('red', red);
         this.dataChange()
       })
-    },
-
-    computed: {
-      username() {
-        let UserName = localStorage.getItem('UserName')
-        return UserName ? UserName : this.name
-      }
     },
 
     beforeDestroy() {

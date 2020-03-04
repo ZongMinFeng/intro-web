@@ -19,7 +19,7 @@
       </el-table-column>
       <el-table-column label="操作" width="340" >
         <template slot-scope="props">
-          <el-button  type="danger" @click="changeDepartmentTap(props.row)">切换部门</el-button>
+          <el-button v-if="props.row.departmentId!==sysInstDepartment.departmentId"  type="danger" @click="changeDepartmentTap(props.row)">切换部门</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -29,6 +29,7 @@
 <script>
   import {departmentLogin, getTellerInfoById} from "../../../util/module";
   import {handelPermission} from "../../../tool/permission";
+  import bus from '../../common/bus';
 
   export default {
     name: "departmentLogin",
@@ -39,12 +40,14 @@
         tellerInfo:{},
         tableData:[],
         positionAll:[],
+        sysInstDepartment:{},
       }
     },
 
     created() {
       this.tellerId = localStorage.getItem("tellerId")||'';
       this.departmentId=localStorage.getItem("departmentId");
+      this.sysInstDepartment=JSON.parse(localStorage.getItem('sysInstDepartment'));
       this.initData();
     },
 
@@ -70,10 +73,8 @@
         params.specDepartmentId=item.departmentId;
         departmentLogin(this, params).then(
           res=>{
-            console.log('啦啦啦啦', res);
             let sysTellerInfo = res.data.sysTellerInfo || '';
             let sysInstInfo = res.data.sysInstInfo || '';
-            sysInstInfo.instName='我换部门啦';//debug
             let sysInstDepartment = res.data.sysInstDepartment || '';
             localStorage.setItem('sysTellerInfo', JSON.stringify(sysTellerInfo));
             localStorage.setItem('sysInstInfo', JSON.stringify(sysInstInfo));
@@ -100,8 +101,9 @@
 
             //处理权限
             handelPermission(res.data.funcMap);
-
-            this.$router.push('/');
+            //重启
+            bus.$emit('reboot', '');
+            // this.$router.push('/');
           },
           res=>{
 

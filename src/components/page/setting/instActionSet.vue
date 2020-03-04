@@ -53,7 +53,7 @@
 <script>
   import {validUsername} from '../../../util/validate'
   import {sendServer} from '../../../util/common'
-  import {addInst, instGetAllById} from '../../../util/module'
+  import {addInst, checkTellerId, instGetAllById} from '../../../util/module'
   import cfg from '../../../config/cfg'
   import {Toast, Indicator} from 'mint-ui'
   import LevelTree from '../../common/LevelTree'
@@ -81,7 +81,7 @@
 
       const validateAliasName = (rule, value, callback) => {
         if (!value) {
-          callback(new Error('请填写简称！'))
+          callback(new Error('请填写管理员名称！'))
         } else {
           callback()
         }
@@ -89,7 +89,7 @@
 
       const validateInstName = (rule, value, callback) => {
         if (!value) {
-          callback(new Error('请填写全称！'))
+          callback(new Error('请填写公司名称！'))
         } else {
           callback()
         }
@@ -113,7 +113,7 @@
         rules: {
           instName: [{required: true, validate: '', trigger: 'blur', validator: validateInstName}],
           tellerName: [{required: true, validate: '', trigger: 'blur', validator: validateAliasName}],
-          tellerId: [{required: true, validate: '', trigger: 'blur'}],
+          tellerId: [{required: true, message: '请输入管理员ID', trigger: 'blur'}],
           tellerPhone: [{required: true, trigger: 'blur', validator: validateUsername}]
         },
         dialogForm: {
@@ -188,6 +188,26 @@
         }, (res) => {
           console.log('res', res)
         })
+      },
+
+      //用于检测公司管理员ID，目前不检测
+      checkSpecTellerId(rule, specTellerId, callback){
+        console.log("specTellerId", specTellerId);//debug
+        let params={};
+        params.specDepartmentId=this.searchForm.departmentId;
+        params.specTellerId=specTellerId;
+        checkTellerId(this, params).then(
+          res=>{
+            callback();
+          },
+          res=>{
+            if (res.returnMsg) {
+              callback(new Error(res.returnMsg));
+            }else{
+              callback(new Error('用户已存在!'));
+            }
+          }
+        ).catch();
       },
 
       onAddNewTap() {
