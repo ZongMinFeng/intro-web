@@ -1,7 +1,7 @@
 <template>
   <div class="tree-leve" style="width: 100%" id="box">
     <input :placeholder="placeholder" class="inputClass" :disabled="disabled" v-model="value.instName"
-           @focus="onFocus"/>
+                                    @focus="onFocus"/>
     <el-card v-show="treeVisible" :body-style="{ padding: '0px' } " style="width: 100%;">
       <level-tree @click="clicked"></level-tree>
     </el-card>

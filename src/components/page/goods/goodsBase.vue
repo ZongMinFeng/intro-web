@@ -12,6 +12,26 @@
       </el-row>
       <el-row>
         <el-col :span="24">
+          <el-form-item label="分类" prop="categoryId ">
+            <category-selection @click="categoryClick"></category-selection>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+          <el-form-item label="单位">
+            <el-select v-model="searchForm.unitId" placeholder="请选择单位"
+                       style="width: 100%;"
+                       filterable allow-create
+            @change="unitChange">
+              <el-option v-for="item in units" :key="item.unitId" :label="item.unitName"
+                         :value="item.unitId"></el-option>
+            </el-select>
+          </el-form-item>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
           <el-form-item label="型号" prop="goodsType">
             <el-input v-model="searchForm.goodsType" placeholder="请输入物资型号"></el-input>
           </el-form-item>
@@ -83,6 +103,7 @@
       <el-form-item class="form-bot">
         <el-button v-if="!create" type="primary" :disabled="saveDisabled" @click="addConfirm">保存</el-button>
         <el-button v-else type="success" :disabled="addDisabled" @click="addConfirm">新增</el-button>
+        <el-button type="success" @click="testClick">测试</el-button>
       </el-form-item>
     </el-form>
   </div>
@@ -90,14 +111,17 @@
 
 <script>
   import * as cfg from "../../../config/cfg";
-  import {sendPicture} from "../../../util/module";
+  import {addGooTGoodsinfo, addGooUnitinfo, listAllUnitinfos, sendPicture} from "../../../util/module";
   import draggable from 'vuedraggable';
+  import CategorySelection from '../../common/selection/CategorySelection';
+  import {inArrayOptionByCons} from "../../../Gw/GwArray";
 
   export default {
     name: "goodsBase",
 
     components: {
-      draggable
+      draggable,
+      CategorySelection
     },
 
     props: ['create', 'goodsId'],
@@ -106,12 +130,12 @@
       return {
         searchForm: {
           goodsId: null,
-          goodsImgs: [],
+          goodsImgs: null,
           mainPicture: null,
           imgs:[],
-          memo:''
+          memo:null,
+          unitId:null,
         },
-        addDisabled: true,
         saveDisabled: true,
         pictureUrl: '',
         flag: 1,//1：新增主图
@@ -122,6 +146,14 @@
           group: 'sortlist',
           ghostClass: 'ghost-style'
         },
+        units:[],
+        addFlag:1,//1.新增   2.修改
+      }
+    },
+
+    computed:{
+      addDisabled(){
+        return !(this.searchForm.goodsId!=null&&this.searchForm.categoryId!=null&&this.searchForm.goodsName!=null&&this.searchForm.mainPicture!=null&&this.searchForm.imgs.length>0&&this.searchForm.goodsType!=null&&this.searchForm.unitId!=null)||this.addFlag===2;
       }
     },
 
@@ -134,11 +166,73 @@
     created() {
       this.searchForm.goodsId = this.goodsId;
       this.pictureUrl = cfg.service.uploadUrl + '/';
+      this.getUnits();
     },
 
     methods: {
-      addConfirm() {
+      testClick(){
+        console.log("this.searchForm", this.searchForm);//debug
+      },
 
+      unitChange(){
+        console.log('单位变化', this.searchForm.unitId);//debug
+        //如果单位是新增的，那么发送新增单位交易
+        if (inArrayOptionByCons(this.units, this.searchForm.unitId, 'unitId')){
+          return;
+        }
+        let params={};
+        params.unitName=this.searchForm.unitId;
+        addGooUnitinfo(this, params).then(
+          res=>{
+            let unit=res.data;
+            this.units.push(unit);
+            this.$nextTick(()=>{
+              this.searchForm.unitId=unit.unitId;
+            });
+          },
+          res=>{
+            this.$nextTick(()=>{
+              this.searchForm.unitId=null;
+            });
+          }
+        ).catch();
+      },
+
+      getUnits(){
+        let params={};
+        listAllUnitinfos(this, params).then(
+          res=>{
+            this.units=res.data;
+          },
+          res=>{
+
+          }
+        ).catch();
+      },
+
+      categoryClick(nodeInfo){
+        this.searchForm.categoryId=nodeInfo.categoryId;
+      },
+
+      addConfirm() {
+        let params={};
+        params.goodsId=this.searchForm.goodsId;
+        params.categoryId=this.searchForm.categoryId;
+        params.goodsName=this.searchForm.goodsName;
+        params.mainPicture=this.searchForm.mainPicture;
+        params.goodsImgs=this.searchForm.imgs.join(',');
+        params.goodsType=this.searchForm.goodsType;
+        params.unitId=this.searchForm.unitId;
+        params.memo=this.searchForm.memo;
+        addGooTGoodsinfo(this, params).then(
+          res=>{
+            this.$message.success('新增成功!');
+            this.addFlag=2;
+          },
+          res=>{
+
+          }
+        ).catch();
       },
 
       handelPicturePost(data) {

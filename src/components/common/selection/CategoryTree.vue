@@ -55,7 +55,7 @@
     methods: {
 
       handleNodeClick(node, data) {
-        this.$emit('click', node);
+        this.$emit('node-click', node);
       },
 
 

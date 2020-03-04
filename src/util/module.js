@@ -2115,9 +2115,16 @@ const updateTellerInfo = (me, params) => {
     if (params.tellerName) {
       send.tellerName = params.tellerName;
     }
-    if (params.tellerPositonIds) {
-      send.tellerPositonIds = params.tellerPositonIds;
-      // singArray.tellerPositonIds=params.tellerPositonIds;
+    if (params.tellerPositionIds) {
+      let tellerPositionList=[];
+      params.tellerPositionIds.forEach((item,index)=>{
+        let position={};
+        position.positionId=item;
+        position.recycleSeq=index+1+'';
+        tellerPositionList.push(position);
+      });
+      send.tellerPositionList=tellerPositionList;
+      singArray.tellerPositionList=tellerPositionList;
     }
 
     urlParams.send = send;
