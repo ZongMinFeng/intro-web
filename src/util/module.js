@@ -2837,6 +2837,118 @@ const updateGooTGoodsinfoById = (me, params) => {
   });
 };
 
+/**
+ * 1.3.2.6.4	根据主键查询  /getGoodsProductmanualById  位图索引220
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getGoodsProductmanualById = (me, params) => {
+  console.log("getGoodsProductmanualById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.getGoodsProductmanualById.url;
+    urlParams.txnId = cfg.service.getGoodsProductmanualById.txnId;
+    urlParams.noSing = true;
+
+    if (params.goodsId) {
+      send.goodsId = params.goodsId;
+      singArray.goodsId = params.goodsId;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ *1.3.2.6.1	新增 /addGoodsProductmanual   位图索引217
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const addGoodsProductmanual = (me, params) => {
+  console.log("addGoodsProductmanual params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.addGoodsProductmanual.url;
+    urlParams.txnId = cfg.service.addGoodsProductmanual.txnId;
+    // urlParams.noSing = true;
+
+    if (params.goodsId) {
+      send.goodsId = params.goodsId;
+      singArray.goodsId = params.goodsId;
+    }
+    if (params.productManual) {
+      send.productManual = params.productManual;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ *1.3.2.6.3	根据主键修改  /updateGoodsProductmanualById  位图索引219
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateGoodsProductmanualById = (me, params) => {
+  console.log("updateGoodsProductmanualById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.updateGoodsProductmanualById.url;
+    urlParams.txnId = cfg.service.updateGoodsProductmanualById.txnId;
+    // urlParams.noSing = true;
+
+    if (params.goodsId) {
+      send.goodsId = params.goodsId;
+      singArray.goodsId = params.goodsId;
+    }
+    if (params.version) {
+      send.version = params.version;
+      singArray.version = params.version;
+    }
+    if (params.productManual) {
+      send.productManual = params.productManual;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
 export {
   instGetAllById,
   instTellersGetByCons,
@@ -2921,5 +3033,8 @@ export {
   departmentLogin,
   deleteGooTGoodsinfoById,
   getGooTGoodsinfoById,
-  updateGooTGoodsinfoById
+  updateGooTGoodsinfoById,
+  getGoodsProductmanualById,
+  addGoodsProductmanual,
+  updateGoodsProductmanualById
 };

@@ -431,7 +431,6 @@
 
           }
         ).catch();
-
       },
 
       beforeAvatarUploadMain(file) {

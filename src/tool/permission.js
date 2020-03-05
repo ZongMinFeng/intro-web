@@ -180,6 +180,21 @@ const PERMISSIONS={
     index:217,
     name:'新增物资产品说明书'
   },
+  //218
+  deleteGoodsProductmanualById:{
+    index:218,
+    name:'删除物资产品说明书'
+  },
+  //219
+  updateGoodsProductmanualById:{
+    index:219,
+    name:'修改物资产品说明书'
+  },
+  //220
+  getGoodsProductmanualById:{
+    index:220,
+    name:'查询物资产品说明书'
+  },
 
   //无index
   genLoginId:{

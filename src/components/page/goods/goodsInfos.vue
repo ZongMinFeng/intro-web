@@ -4,7 +4,10 @@
       <el-tab-pane label="基础" name="first">
         <goods-base :create="create" :goodsId="goodsId"></goods-base>
       </el-tab-pane>
-      <el-tab-pane label="详情" name="second">
+      <el-tab-pane label="产品说明书" name="second" :create="create" :disabled="create">
+        <product-manual :goodsId="goodsId"></product-manual>
+      </el-tab-pane>
+      <el-tab-pane label="详情" name="third" :create="create" :disabled="create">
         <goods-details :goodsId="goodsId"></goods-details>
       </el-tab-pane>
     </el-tabs>
@@ -14,13 +17,15 @@
 <script>
   import goodsBase from './goodsBase';
   import goodsDetails from './goodsDetails';
+  import productManual from './productManual';
   import {genGoodsId} from "../../../util/module";
 
   export default {
     name: "goodsInfos",
     components: {
+      productManual,
       goodsBase,
-      goodsDetails
+      goodsDetails,
     },
 
     data() {

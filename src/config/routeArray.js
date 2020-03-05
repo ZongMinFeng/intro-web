@@ -148,7 +148,11 @@ module.exports = {
             'deleteGooTGoodsinfoById',
             'updateGooTGoodsinfoById',
             'getGooTGoodsinfoById',
-            'listGoodsinfosByConditions'
+            'listGoodsinfosByConditions',
+            'addGoodsProductmanual',
+            'deleteGoodsProductmanualById',
+            'updateGoodsProductmanualById',
+            'getGoodsProductmanualById'
           ]
         },
       ],

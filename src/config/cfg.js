@@ -6,6 +6,7 @@ module.exports = {
   service: {
     uploadUrl:'http://139.196.162.158:10081',//测试
     // uploadUrl:'http://139.196.162.158:10080',//生产 v-uu
+    pictureUrl:'http://139.196.162.158:10081',//测试
 
     checkTellerId: {
       url: baseUrl+'/system/checkTellerId',
@@ -190,6 +191,22 @@ module.exports = {
     updateGooTGoodsinfoById: {
       url: baseUrl+'/goods/updateGooTGoodsinfoById',
       txnId: 'updateGooTGoodsinfoById'
+    },
+    addGoodsProductmanual: {
+      url: baseUrl+'/goods/addGoodsProductmanual',
+      txnId: 'addGoodsProductmanual'
+    },
+    deleteGoodsProductmanualById: {
+      url: baseUrl+'/goods/deleteGoodsProductmanualById',
+      txnId: 'deleteGoodsProductmanualById'
+    },
+    updateGoodsProductmanualById: {
+      url: baseUrl+'/goods/updateGoodsProductmanualById',
+      txnId: 'updateGoodsProductmanualById'
+    },
+    getGoodsProductmanualById: {
+      url: baseUrl+'/goods/getGoodsProductmanualById',
+      txnId: 'getGoodsProductmanualById'
     },
 
 
