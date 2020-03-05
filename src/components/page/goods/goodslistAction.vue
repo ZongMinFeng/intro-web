@@ -19,13 +19,11 @@
             </el-select>
           </el-form-item>
         </el-col>
-        <el-row>
-          <el-col :span="12">
-            <el-form-item label="分类" prop="categoryId ">
-              <category-selection @click="categoryClick"></category-selection>
-            </el-form-item>
-          </el-col>
-        </el-row>
+        <el-col :span="12">
+          <el-form-item label="分类" prop="categoryId ">
+            <category-selection @click="categoryClick"></category-selection>
+          </el-form-item>
+        </el-col>
       </el-row>
       <el-row>
         <el-col :span="6">

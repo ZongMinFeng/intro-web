@@ -334,7 +334,8 @@
             params.mainPicture  = this.searchForm.mainPicture ;
           }
           if (this.searchForm.imgs.join(',') !== this.searchFormOld.imgs.join(',')) {
-            params.goodsImgs  = this.searchForm.imgs.join(',');
+            console.log('old', this.searchFormOld.imgs.join(','), 'new', this.searchForm.imgs.join(','));//debug
+            params.goodsImgs  = this.searchForm.goodsImgs= this.searchForm.imgs.join(',');
           }
           if (this.searchForm.goodsType !== this.searchFormOld.goodsType) {
             params.goodsType = this.searchForm.goodsType;

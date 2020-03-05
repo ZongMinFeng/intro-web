@@ -1,22 +1,22 @@
 const inArrayByCons = (objects, object, option) => {
-  if (!objects instanceof Array) {
-    return false;
-  }
-  if (object[option] == null) {
-    return false;
-  }
-  let haveIt = false;
-  objects.forEach((value) => {
-    if (value[option] === object[option]) {
-      haveIt = true;
-      return false;
+    if (!objects instanceof Array) {
+        return false;
     }
-  });
-  if (haveIt) {
-    return true;
-  } else {
-    return false;
-  }
+    if (object[option] == null) {
+        return false;
+    }
+    let haveIt = false;
+    objects.forEach((value) => {
+        if (value[option] === object[option]) {
+            haveIt = true;
+            return false;
+        }
+    });
+    if (haveIt) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 /**
@@ -27,99 +27,99 @@ const inArrayByCons = (objects, object, option) => {
  * @returns true 表示value在objects中
  */
 const inArrayOptionByCons = (objects, value, option) => {
-  if (!objects instanceof Array) {
-    return false;
-  }
-  if (value == null) {
-    return false;
-  }
-  let haveIt = false;
-  objects.forEach((res) => {
-    if (res[option] === value) {
-      haveIt = true;
-      return false;
+    if (!objects instanceof Array) {
+        return false;
     }
-  });
-  if (haveIt) {
-    return true;
-  } else {
-    return false;
-  }
+    if (value == null) {
+        return false;
+    }
+    let haveIt = false;
+    objects.forEach((res) => {
+        if (res[option] === value) {
+            haveIt = true;
+            return false;
+        }
+    });
+    if (haveIt) {
+        return true;
+    } else {
+        return false;
+    }
 };
 
 const indexByCons = (objects, object, option) => {
-  let indexReturn = -1;
-  if (!objects instanceof Array) {
-    return -1;
-  }
-
-  objects.forEach((item, index) => {
-    if (item[option] === object[option]) {
-      indexReturn = index;
+    let indexReturn = -1;
+    if (!objects instanceof Array) {
+        return -1;
     }
-    return -1;
-  });
 
-  return indexReturn;
+    objects.forEach((item, index) => {
+        if (item[option] === object[option]) {
+            indexReturn = index;
+        }
+        return -1;
+    });
+
+    return indexReturn;
 };
 
 
 const sortByNum = (a, b) => {
-  let numA = parseInt(a);
-  let numB = parseInt(b);
-  if (!isNaN(numA) && !isNaN(numB)) {
-    return numA - numB;
-  } else if (!isNaN(numA) && isNaN(numB)) {
-    return -1;
-  } else if (isNaN(numA) && !isNaN(numB)) {
-    return 1;
-  } else {
-    return (a).localeCompare(b);
-  }
+    let numA = parseInt(a);
+    let numB = parseInt(b);
+    if (!isNaN(numA) && !isNaN(numB)) {
+        return numA - numB;
+    } else if (!isNaN(numA) && isNaN(numB)) {
+        return -1;
+    } else if (isNaN(numA) && !isNaN(numB)) {
+        return 1;
+    } else {
+        return (a).localeCompare(b);
+    }
 };
 
 const getArrayObjectByObject = (objects, object, option) => {
-  let indexReturn = -1;
-  if (!objects instanceof Array) {
-    return null;
-  }
-
-  objects.forEach((item, index) => {
-    if (item[option] === object[option]) {
-      indexReturn = index;
+    let indexReturn = -1;
+    if (!objects instanceof Array) {
+        return null;
     }
-    return null;
-  });
 
-  return objects[indexReturn];
+    objects.forEach((item, index) => {
+        if (item[option] === object[option]) {
+            indexReturn = index;
+        }
+        return null;
+    });
+
+    return objects[indexReturn];
 };
 
 const getArrayObjectByCon = (objects, con, option) => {
-  let indexReturn = -1;
-  if (!objects instanceof Array) {
-    return null;
-  }
-
-  objects.forEach((item, index) => {
-    if (item[option] === con) {
-      indexReturn = index;
+    let indexReturn = -1;
+    if (!objects instanceof Array) {
+        return null;
     }
-    return null;
-  });
 
-  return objects[indexReturn];
+    objects.forEach((item, index) => {
+        if (item[option] === con) {
+            indexReturn = index;
+        }
+        return null;
+    });
+
+    return objects[indexReturn];
 };
 
 //去除数组空字符串
 function trimSpace(array) {
-  for (var i = 0; i < array.length; i++) {
-    if (array[i] === " " || array[i] == null || typeof (array[i]) == "undefined") {
-      array.splice(i, 1);
-      i = i - 1;
+    for (var i = 0; i < array.length; i++) {
+        if (array[i] === "" || array[i] === " " || array[i] == null || typeof(array[i]) == "undefined") {
+            array.splice(i, 1);
+            i = i - 1;
 
+        }
     }
-  }
-  return array;
+    return array;
 }
 
 /**
@@ -133,37 +133,37 @@ function trimSpace(array) {
  * @param b
  * @returns {boolean}
  */
-const aEb = function (a, b, funcArray) {
-  console.log('------aEb开始啦----');//debug
-  let isObj=a instanceof Object && b instanceof Object;
-  if (!isObj) {
-    return false;
-  }
-  for (let key in a) {
-    //特殊字段对比方法
-    let _funcArray=funcArray||[];
-    if (_funcArray[key]) {
-      let equalFunc=_funcArray[key];
-      if (!equalFunc(a[key], b[key])){
-        console.log(key, a[key], b[key]);//debug
+const aEb = function(a, b, funcArray) {
+    console.log('------aEb开始啦----'); //debug
+    let isObj = a instanceof Object && b instanceof Object;
+    if (!isObj) {
         return false;
-      }
-    }else {
-      //不对比数组成员
-      if (a[key] instanceof Array) {
-        continue;
-      }
-      //不对比对象成员
-      if (a[key] instanceof Object) {
-        continue;
-      }
-      if (a[key] !== b[key]) {
-        console.log(key, a[key], b[key]);//debug
-        return false;
-      }
     }
-  }
-  return true;
+    for (let key in a) {
+        //特殊字段对比方法
+        let _funcArray = funcArray || [];
+        if (_funcArray[key]) {
+            let equalFunc = _funcArray[key];
+            if (!equalFunc(a[key], b[key])) {
+                console.log(key, a[key], b[key]); //debug
+                return false;
+            }
+        } else {
+            //不对比数组成员
+            if (a[key] instanceof Array) {
+                continue;
+            }
+            //不对比对象成员
+            if (a[key] instanceof Object) {
+                continue;
+            }
+            if (a[key] !== b[key]) {
+                console.log(key, a[key], b[key]); //debug
+                return false;
+            }
+        }
+    }
+    return true;
 };
 
 //---------------------------测试--开始-------------------------
@@ -192,12 +192,12 @@ console.log(aEb(a, b, funcArray));
 //---------------------------测试--结束-------------------------
 
 export {
-  inArrayByCons,
-  inArrayOptionByCons,
-  indexByCons,
-  sortByNum,
-  getArrayObjectByCon,
-  getArrayObjectByObject,
-  trimSpace,
-  aEb
+    inArrayByCons,
+    inArrayOptionByCons,
+    indexByCons,
+    sortByNum,
+    getArrayObjectByCon,
+    getArrayObjectByObject,
+    trimSpace,
+    aEb
 };

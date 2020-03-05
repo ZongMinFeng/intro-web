@@ -7,8 +7,8 @@
       <el-tab-pane label="产品说明书" name="second" :create="create" :disabled="create">
         <product-manual :goodsId="goodsId"></product-manual>
       </el-tab-pane>
-      <el-tab-pane label="详情" name="third" :create="create" :disabled="create">
-        <goods-details :goodsId="goodsId"></goods-details>
+      <el-tab-pane label="质保证书" name="third" :create="create" :disabled="create">
+        <quality-certify :goodsId="goodsId"></quality-certify>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -16,7 +16,7 @@
 
 <script>
   import goodsBase from './goodsBase';
-  import goodsDetails from './goodsDetails';
+  import qualityCertify from './qualityCertify';
   import productManual from './productManual';
   import {genGoodsId} from "../../../util/module";
 
@@ -25,7 +25,7 @@
     components: {
       productManual,
       goodsBase,
-      goodsDetails,
+      qualityCertify,
     },
 
     data() {
