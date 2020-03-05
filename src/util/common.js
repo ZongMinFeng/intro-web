@@ -85,7 +85,7 @@ const sendServer = (urlParams, me) => {
       loading.close();
       if (res.status === 200) {
         const data = res.data;
-        if (data.returnCode === 501&&urlParams.txnId !== cfg.service.login.txnId) {
+        if (data.returnCode === 501&&urlParams.txnId !== cfg.service.getLoginStatus.txnId) {
           me.Toast({
             message: data.returnMsg,
             duration: 2000
@@ -103,8 +103,8 @@ const sendServer = (urlParams, me) => {
           me.$store.commit('loginOut');
           me.$router.replace('/login');
           return
-        } else if (data.returnCode !== 200 && data.returnCode !== 400) {
-          if (!urlParams.errInfoFlag) {
+        } else if (data.returnCode !== 200 && data.returnCode !== 400 ) {
+          if (!urlParams.errInfoFlag && data.returnCode !== 601 ) {
             me.$message.error(data.returnMsg);
           }
           reject(data);
@@ -113,19 +113,19 @@ const sendServer = (urlParams, me) => {
         resolve(data);
         return true
       } else {
-        console.log('res:', res)
+        console.log('res:', res);
         reject(false)
         return false
       }
     }, (res) => {
-      console.log('res:', res)
-      loading.close()
+      console.log('res:', res);
+      loading.close();
       if (res.message.includes('timeout')) {
-        me.$message.error('网络异常，结果未知，请稍后再试!')
-        reject('timeout')
+        me.$message.error('网络异常，结果未知，请稍后再试!');
+        reject('timeout');
         return
       }
-      me.$message.error('网络故障，请稍后再试!')
+      me.$message.error('网络故障，请稍后再试!');
       reject(false)
     })
   })

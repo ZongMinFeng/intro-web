@@ -2778,6 +2778,65 @@ const getGooTGoodsinfoById = (me, params) => {
   });
 };
 
+/**
+ * 1.3.2.5.3	根据主键修改  /updateGooTGoodsinfoById   位图索引214
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateGooTGoodsinfoById = (me, params) => {
+  console.log("updateGooTGoodsinfoById params", params);//debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.updateGooTGoodsinfoById.url;
+    urlParams.txnId = cfg.service.updateGooTGoodsinfoById.txnId;
+    // urlParams.noSing = true;
+
+    if (params.goodsId) {
+      send.goodsId = params.goodsId;
+      singArray.goodsId = params.goodsId;
+    }
+    if (params.categoryId) {
+      send.categoryId = params.categoryId;
+      singArray.categoryId = params.categoryId;
+    }
+    if (params.goodsName) {
+      send.goodsName = params.goodsName;
+    }
+    if (params.mainPicture) {
+      send.mainPicture = params.mainPicture;
+      singArray.mainPicture = params.mainPicture;
+    }
+    if (params.goodsImgs) {
+      send.goodsImgs = params.goodsImgs;
+      singArray.goodsImgs = params.goodsImgs;
+    }
+    if (params.goodsType) {
+      send.goodsType = params.goodsType;
+    }
+    if (params.unitId) {
+      send.unitId = params.unitId;
+      singArray.unitId = params.unitId;
+    }
+    if (params.memo) {
+      send.memo = params.memo;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
 export {
   instGetAllById,
   instTellersGetByCons,
@@ -2861,5 +2920,6 @@ export {
   addTellerDepartment,
   departmentLogin,
   deleteGooTGoodsinfoById,
-  getGooTGoodsinfoById
+  getGooTGoodsinfoById,
+  updateGooTGoodsinfoById
 };

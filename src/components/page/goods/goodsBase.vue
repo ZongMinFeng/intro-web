@@ -105,7 +105,7 @@
       </el-row>
 
       <el-form-item class="form-bot">
-        <el-button v-if="!create" type="primary" :disabled="saveDisabled" @click="addConfirm">保存</el-button>
+        <el-button v-if="addFlag===2" type="primary" :disabled="saveDisabled" @click="addConfirm">保存</el-button>
         <el-button v-else type="success" :disabled="addDisabled" @click="addConfirm">新增</el-button>
         <!--测试按钮-->
         <!--<el-button type="success" @click="testClick">测试</el-button>-->
@@ -121,7 +121,7 @@
     addGooUnitinfo,
     getGooTGoodsinfoById,
     listAllUnitinfos,
-    sendPicture
+    sendPicture, updateGooTGoodsinfoById
   } from "../../../util/module";
   import draggable from 'vuedraggable';
   import CategorySelection from '../../common/selection/CategorySelection';
@@ -146,6 +146,10 @@
           imgs: [],
           memo: null,
           unitId: null,
+          goodsType:null,
+          version:null,
+          categoryId:null,
+          goodsName:null
         },
         searchFormOld: {
           goodsId: null,
@@ -154,6 +158,8 @@
           imgs: [],
           memo: null,
           unitId: null,
+          goodsType:null,
+          version:null
         },
         pictureUrl: '',
         flag: 1,//1：新增主图
@@ -171,11 +177,12 @@
 
     computed: {
       addDisabled() {
-        return !(this.searchForm.goodsId != null && this.searchForm.categoryId != null && this.searchForm.goodsName != null && this.searchForm.mainPicture != null && this.searchForm.imgs.length > 0 && this.searchForm.goodsType != null && this.searchForm.unitId != null) || this.addFlag === 2;
+        console.log('addDisabled 新增检查', this.searchForm);//debug
+        return !(this.searchForm.goodsId != null && this.searchForm.categoryId != null && this.searchForm.goodsName != null && this.searchForm.mainPicture != null && this.searchForm.imgs.length > 0 && this.searchForm.goodsType != null && this.searchForm.unitId != null && this.addFlag === 1);
       },
 
       saveDisabled(){
-        return aEb(this.searchFormOld, this.searchForm);
+        return this.create||aEb(this.searchFormOld, this.searchForm, this.funcArray());
       }
     },
 
@@ -186,7 +193,7 @@
     },
 
     created() {
-      if (this.created) {
+      if (this.create) {
         this.addFlag = 1;
       } else {
         this.addFlag = 2;
@@ -200,6 +207,13 @@
     },
 
     methods: {
+      funcArray(){
+        let funcArray=[];
+        funcArray['imgs']=function (a, b) {
+          return a.join(',')===b.join(',');
+        };
+        return funcArray;
+      },
       getGoods() {
         let params = {};
         params.goodsId = this.searchForm.goodsId;
@@ -213,12 +227,14 @@
             this.searchForm.goodsType = res.data.goodsType;
             this.searchForm.unitId = res.data.unitId;
             this.searchForm.memo = res.data.memo;
+            this.searchForm.version=res.data.version;
             let tmp = [];
             tmp = this.searchForm.goodsImgs.split(',');
             this.searchForm.imgs=trimSpace(tmp);
             console.log('图片', this.searchForm.imgs);//debug
 
             //老数据
+            this.searchFormOld.goodsId=res.data.goodsId;
             this.searchFormOld.categoryId = res.data.categoryId;
             this.searchFormOld.goodsName = res.data.goodsName;
             this.searchFormOld.mainPicture = res.data.mainPicture;
@@ -226,6 +242,7 @@
             this.searchFormOld.goodsType = res.data.goodsType;
             this.searchFormOld.unitId = res.data.unitId;
             this.searchFormOld.memo = res.data.memo;
+            this.searchFormOld.version=res.data.version;
             let tmp2 = [];
             tmp2 = this.searchFormOld.goodsImgs.split(',');
             this.searchFormOld.imgs=trimSpace(tmp2);
@@ -282,24 +299,75 @@
       },
 
       addConfirm() {
-        let params = {};
-        params.goodsId = this.searchForm.goodsId;
-        params.categoryId = this.searchForm.categoryId;
-        params.goodsName = this.searchForm.goodsName;
-        params.mainPicture = this.searchForm.mainPicture;
-        params.goodsImgs = this.searchForm.imgs.join(',');
-        params.goodsType = this.searchForm.goodsType;
-        params.unitId = this.searchForm.unitId;
-        params.memo = this.searchForm.memo;
-        addGooTGoodsinfo(this, params).then(
-          res => {
-            this.$message.success('新增成功!');
-            this.addFlag = 2;
-          },
-          res => {
+        if (this.create) {
+          //新增
+          let params = {};
+          params.goodsId = this.searchForm.goodsId;
+          params.categoryId = this.searchForm.categoryId;
+          params.goodsName = this.searchForm.goodsName;
+          params.mainPicture = this.searchForm.mainPicture;
+          params.goodsImgs = this.searchForm.goodsImgs = this.searchForm.imgs.join(',');
+          params.goodsType = this.searchForm.goodsType;
+          params.unitId = this.searchForm.unitId;
+          params.memo = this.searchForm.memo;
+          addGooTGoodsinfo(this, params).then(
+            res => {
+              this.$message.success('新增成功!');
+              this.addFlag = 2;
+            },
+            res => {
 
+            }
+          ).catch();
+        }else{
+          //修改
+          let params = {};
+          params.goodsId = this.searchForm.goodsId;
+          params.version=this.searchForm.version;
+          if (this.searchForm.categoryId !== this.searchFormOld.categoryId) {
+            params.categoryId = this.searchForm.categoryId;
           }
-        ).catch();
+          if (this.searchForm.goodsName !== this.searchFormOld.goodsName) {
+            params.goodsName = this.searchForm.goodsName;
+          }
+          if (this.searchForm.mainPicture  !== this.searchFormOld.mainPicture ) {
+            params.mainPicture  = this.searchForm.mainPicture ;
+          }
+          if (this.searchForm.imgs.join(',') !== this.searchFormOld.imgs.join(',')) {
+            params.goodsImgs  = this.searchForm.imgs.join(',');
+          }
+          if (this.searchForm.goodsType !== this.searchFormOld.goodsType) {
+            params.goodsType = this.searchForm.goodsType;
+          }
+          if (this.searchForm.unitId  !== this.searchFormOld.unitId ) {
+            params.unitId  = this.searchForm.unitId ;
+          }
+          if (this.searchForm.memo !== this.searchFormOld.memo) {
+            params.memo = this.searchForm.memo;
+          }
+          updateGooTGoodsinfoById(this, params).then(
+            res => {
+              this.$message.success('保存成功!');
+            },
+            res => {
+
+            }
+          ).catch();
+        }
+
+        //老数据
+        this.searchFormOld.goodsId=this.searchForm.goodsId;
+        this.searchFormOld.categoryId = this.searchForm.categoryId;
+        this.searchFormOld.goodsName = this.searchForm.goodsName;
+        this.searchFormOld.mainPicture = this.searchForm.mainPicture;
+        this.searchFormOld.goodsImgs = this.searchForm.goodsImgs;
+        this.searchFormOld.goodsType = this.searchForm.goodsType;
+        this.searchFormOld.unitId = this.searchForm.unitId;
+        this.searchFormOld.memo = this.searchForm.memo;
+        this.searchFormOld.version=this.searchForm.version;
+        let tmp2 = [];
+        tmp2 = this.searchFormOld.goodsImgs.split(',');
+        this.searchFormOld.imgs=trimSpace(tmp2);
       },
 
       handelPicturePost(data) {

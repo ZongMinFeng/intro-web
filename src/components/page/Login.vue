@@ -158,7 +158,7 @@
               return true;
             }, (res) => {
               // 失败
-              this.$message.error('请求失败');
+              // this.$message.error('请求失败');
               reject(false);
             }
           );

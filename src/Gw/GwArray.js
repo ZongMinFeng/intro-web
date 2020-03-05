@@ -123,23 +123,73 @@ function trimSpace(array) {
 }
 
 /**
- * a对象和b对象按照a对象的成员对比，如果值一样，返回true
+ * 简单对比。a对象和b对象按照a对象的成员对比，如果值一样，返回true
+ * funcArray提供了特殊成员的对比方法。比如有个成员为数组，z:[1, 2, 3]，可以将数组转成字符串对比
+ * let funcArray=[];
+ * funcArray['z']=function(a, b){
+ *     return a.join(',')===b.join(',');
+ * }
  * @param a
  * @param b
  * @returns {boolean}
  */
-const aEb = function (a, b) {
+const aEb = function (a, b, funcArray) {
+  console.log('------aEb开始啦----');//debug
   let isObj=a instanceof Object && b instanceof Object;
   if (!isObj) {
     return false;
   }
   for (let key in a) {
-    if (a[key] !== b[key]) {
-      return false;
+    //特殊字段对比方法
+    let _funcArray=funcArray||[];
+    if (_funcArray[key]) {
+      let equalFunc=_funcArray[key];
+      if (!equalFunc(a[key], b[key])){
+        console.log(key, a[key], b[key]);//debug
+        return false;
+      }
+    }else {
+      //不对比数组成员
+      if (a[key] instanceof Array) {
+        continue;
+      }
+      //不对比对象成员
+      if (a[key] instanceof Object) {
+        continue;
+      }
+      if (a[key] !== b[key]) {
+        console.log(key, a[key], b[key]);//debug
+        return false;
+      }
     }
   }
   return true;
 };
+
+//---------------------------测试--开始-------------------------
+//export为es6语法，无法使用nodeJS直接运行，所以测试的时候，将export注释掉
+/*
+let a={
+  x:1,
+  y:2,
+  z:[1, 2, 3]
+};
+
+let b={
+  x:1,
+  y:2,
+  z:[1, 2, 3]
+};
+
+let equalFunc=function (a, b) {
+  return a.join(',')===b.join(',');
+};
+
+let funcArray=[];
+funcArray['z']=equalFunc;
+console.log(aEb(a, b, funcArray));
+*/
+//---------------------------测试--结束-------------------------
 
 export {
   inArrayByCons,
