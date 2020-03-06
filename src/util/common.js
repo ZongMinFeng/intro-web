@@ -85,6 +85,9 @@ const sendServer = (urlParams, me) => {
       loading.close();
       if (res.status === 200) {
         const data = res.data;
+        if (urlParams.txnId === cfg.service.getTellerInfoById.txnId) {
+          console.log('getTellerInfoById', res);//debug
+        }
         if (data.returnCode === 501&&urlParams.txnId !== cfg.service.getLoginStatus.txnId) {
           me.Toast({
             message: data.returnMsg,
@@ -114,7 +117,7 @@ const sendServer = (urlParams, me) => {
         return true
       } else {
         console.log('res:', res);
-        reject(false)
+        reject(false);
         return false
       }
     }, (res) => {

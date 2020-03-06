@@ -250,6 +250,7 @@
         params.specTellerId = this.tellerId;
         getTellerInfoById(this, params).then(
           res => {
+            console.log('兼职', res);//debug
             this.tellerInfo = res.data.sysTellerInfo;
             let tableDataTmp = [];
             let sysTellerInstInfoList = res.data.sysTellerInstInfoList;

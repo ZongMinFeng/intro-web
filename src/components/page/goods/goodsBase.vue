@@ -214,6 +214,7 @@
         };
         return funcArray;
       },
+
       getGoods() {
         let params = {};
         params.goodsId = this.searchForm.goodsId;

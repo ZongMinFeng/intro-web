@@ -1,4 +1,3 @@
-
 var signRValue = require("./../config/signRValue");
 var functionDetail = require("./../config/functionDetail");
 
@@ -284,9 +283,9 @@ const expandArray = function (signArray) {
 const expandArrayOnce = function (signArrayNew, signArray, head) {
   for (let key in signArray) {
     if (signArray[key] instanceof Array && signArray[key].length > 0) {
-      signArray[key].forEach(item=>{
+      signArray[key].forEach(item => {
         if (item instanceof Object) {
-          expandArrayOnce(signArrayNew, item, head+key+item.recycleSeq);
+          expandArrayOnce(signArrayNew, item, head + key + item.recycleSeq);
         }
       });
     } else {
