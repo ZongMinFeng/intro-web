@@ -85,7 +85,7 @@
       <el-table-column label="系列" width="80">
         <template slot-scope="props">
           <el-button v-if="props.row.isSerial==='Y'" type="primary" @click="serialTap(props.row)">&gt;&gt;</el-button>
-          <span v-else>无</span>
+          <el-button v-else type="success" @click="addSerialTap(props.row)">新增</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -157,6 +157,10 @@
     methods: {
       initData() {
         this.goodsList();
+      },
+
+      addSerialTap(item){
+        this.$router.push({path:'goodsSerail', query:{goodsId:item.goodsId, create:true}});
       },
 
       serialTap(item){

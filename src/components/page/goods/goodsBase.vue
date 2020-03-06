@@ -1,24 +1,22 @@
 <template>
   <div>
     <span v-if="create===true">新增物资</span>
-    <span v-else>基础</span>
+    <div class="list-name">基础</div>
     <el-form :model="searchForm" ref="searchForm" label-width="80px">
       <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="名称" prop="goodsName">
             <el-input v-model="searchForm.goodsName" placeholder="请输入物资名称"></el-input>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="分类" prop="categoryId ">
             <category-selection @click="categoryClick"></category-selection>
           </el-form-item>
         </el-col>
       </el-row>
       <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="单位">
             <el-select v-model="searchForm.unitId" placeholder="请选择单位"
                        style="width: 100%;"
@@ -29,9 +27,7 @@
             </el-select>
           </el-form-item>
         </el-col>
-      </el-row>
-      <el-row>
-        <el-col :span="24">
+        <el-col :span="12">
           <el-form-item label="型号" prop="goodsType">
             <el-input v-model="searchForm.goodsType" placeholder="请输入物资型号"></el-input>
           </el-form-item>

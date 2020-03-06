@@ -116,7 +116,6 @@ function trimSpace(array) {
         if (array[i] === "" || array[i] === " " || array[i] == null || typeof(array[i]) == "undefined") {
             array.splice(i, 1);
             i = i - 1;
-
         }
     }
     return array;

@@ -2,16 +2,18 @@
   <div class="container">
     <div class="handle-box">
       <el-button type="success" icon="el-icon-plus" @click="onAddNewTap">新增</el-button>
+      <el-button type="danger" @click="onDeleteAllTap" style="float: right;">清空系列</el-button>
     </div>
 
     <el-table :data="tableData" border stripe>
-      <el-table-column label="颜色" prop="specColor"></el-table-column>
+      <el-table-column label="名称" prop="goodsName"></el-table-column>
       <el-table-column label="系列主图" width="120" align="center" header-align="left">
         <template slot-scope="scope">
           <img style="height: 80px; width: 80px;background-color: white;" :preview="scope.$index"
                :src="pictureUrl + scope.row.goodsId + '/'+scope.row.mainPicture">
         </template>
       </el-table-column>
+      <el-table-column label="颜色" prop="specColor"></el-table-column>
       <el-table-column label="系列价格" width="160" align="right" header-align="left">
         <template slot-scope="props">
           <p>￥{{formatPrice(props.row.specNowPrice)}}元</p>
@@ -19,6 +21,12 @@
       </el-table-column>
       <el-table-column label="材质" prop="specMaterial"></el-table-column>
       <el-table-column label="尺寸" prop="specSize"></el-table-column>
+      <el-table-column label="操作" width="340">
+        <template slot-scope="props">
+          <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
+          <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
+        </template>
+      </el-table-column>
     </el-table>
 
     <h3 style="margin-top:20px; color: #909399;">主商品信息</h3>
@@ -42,7 +50,7 @@
         </el-col>
         <el-col :sm="24" :md="12" :xl="8">
           <el-form-item label="单位">
-            <el-input :disabled="true" v-model="goodsInfo.unitId"></el-input>
+            <div class="itemDisplayDiv">{{getUnitName(goodsInfo.unitId)}}</div>
           </el-form-item>
         </el-col>
       </el-row>
@@ -50,6 +58,13 @@
 
     <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
       <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
+        <el-row v-if="flag===2">
+          <el-col :span="24">
+            <el-form-item label="名称" prop="goodsName" :rules="[{required:true, message:'请输入名称', trigger: 'blur'} ]">
+              <el-input v-model="dialogForm.goodsName"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
         <el-row>
           <el-col :span="24">
             <el-form-item label="颜色" prop="specColor" :rules="[{required:true, message:'请输入颜色', trigger: 'blur'} ]">
@@ -71,6 +86,14 @@
             </el-form-item>
           </el-col>
         </el-row>
+        <el-row v-if="flag===2">
+          <el-col :span="24">
+            <el-form-item label="型号" prop="goodsType" :rules="[{required:true, message:'请输入型号', trigger: 'blur'} ]">
+              <el-input v-model="dialogForm.goodsType"></el-input>
+            </el-form-item>
+          </el-col>
+        </el-row>
+
 
         <div class="picture">
           <div class="list-name">商品轮播信息（拖动可调换顺序）</div>
@@ -97,7 +120,7 @@
                   <el-button v-if="item.endsWith('.mp4')" class="drag-list-button">视频</el-button>
                   <!--目前不用设置主图，默认轮播图第一章为主图-->
                   <!--<el-button v-if="item !== dialogForm.mainPicture&&!item.endsWith('.mp4')" type="primary"-->
-                             <!--class="drag-list-button" @click="onMainPicTap(item)">设为主图-->
+                  <!--class="drag-list-button" @click="onMainPicTap(item)">设为主图-->
                   <!--</el-button>-->
                   <el-button type="danger" @click="deletePicTap(item, index)">删除</el-button>
                 </div>
@@ -105,6 +128,19 @@
             </draggable>
           </div>
         </div>
+
+        <div class="list-name">备注信息</div>
+        <el-row :gutter="10">
+          <el-col :span="24">
+            <el-input
+              type="textarea"
+              class="goods-memo"
+              :autosize="{ minRows: 2}"
+              placeholder="请输入备注信息"
+              v-model="dialogForm.memo">
+            </el-input>
+          </el-col>
+        </el-row>
       </el-form>
       <span slot="footer" class="dialog_footer">
         <el-button @click="dialogVisible=false">取消</el-button>
@@ -115,7 +151,13 @@
 </template>
 
 <script>
-  import {addGoodsserial, getGooTGoodsinfoById, listGoodsserialsByGoodsId, sendPicture} from "../../../util/module";
+  import {
+    addGoodsserial, deleteGoodsserialByGoodsId,
+    deleteGoodsserialById,
+    getGooTGoodsinfoById, listAllUnitinfos,
+    listGoodsserialsByGoodsId,
+    sendPicture, updateGoodsserialById
+  } from "../../../util/module";
   import {trimSpace} from "../../../Gw/GwArray";
   import * as cfg from "../../../config/cfg";
   import _String from '../../../util/string';
@@ -123,7 +165,7 @@
 
   export default {
     name: "goodsSerail",
-    components:{
+    components: {
       draggable
     },
     data() {
@@ -138,24 +180,48 @@
           unitId: null,
           memo: null,
           version: null,
-          pictureUrl: '',
         },
         goodsId: null,
         tableData: [],
         dialogVisible: false,
         dialogForm: {
-          specColor: null,
           goodsId: null,
+          categoryId: null,
+          goodsName: null,
+          mainPicture: null,
+          goodsImgs: null,
+          goodsType: null,
+          unitId: null,
+          memo: null,
+          specColor: null,
           imgs: [],
-          mainPicture:null,
+          specSize: null,
+          specMaterial: null,
         },
-        flag:1,//1.新增  2.修改
+        dialogFormOld: {
+          goodsId: null,
+          categoryId: null,
+          goodsName: null,
+          mainPicture: null,
+          goodsImgs: null,
+          goodsType: null,
+          unitId: null,
+          memo: null,
+          specColor: null,
+          imgs: [],
+          specSize: null,
+          specMaterial: null,
+        },
+        flag: 1,//1.新增  2.修改
         dragOptions: {
           animation: 120,
           scroll: true,
           group: 'sortlist',
           ghostClass: 'ghost-style'
         },
+        pictureUrl: '',
+        create: false,
+        units: [],
       }
     },
 
@@ -172,18 +238,135 @@
     created() {
       this.pictureUrl = cfg.service.uploadUrl + '/';
       this.goodsId = this.$route.query.goodsId;
+      this.create = this.$route.query.create || false;
       if (this.goodsId && this.goodsId !== '') {
         this.getGoodsInfo();
         this.getSerail();
       }
+      this.getUnits();
     },
 
     methods: {
+      initData() {
+        this.getSerail();
+      },
+
+      getUnitName(unitId) {
+        let unitInfo = {};
+        this.units.forEach(item => {
+          if (item.unitId === unitId) {
+            unitInfo = item;
+            return false;
+          }
+        });
+        return unitInfo.unitName;
+      },
+
+      modifyTap(item) {
+        this.flag = 2;
+        this.dialogForm.goodsId = item.goodsId;
+        this.dialogForm.specGoodsId = item.specGoodsId;
+        this.dialogForm.version = item.version;
+        this.dialogForm.specColor = item.specColor;
+        this.dialogForm.specSize = item.specSize;
+        this.dialogForm.specMaterial = item.specMaterial;
+        this.dialogForm.goodsImgs = item.goodsImgs;
+        this.dialogForm.goodsName = item.goodsName;
+        this.dialogForm.goodsType = item.goodsType;
+        this.dialogForm.memo = item.memo;
+        let tmp = [];
+        tmp = item.goodsImgs.split(',');
+        this.dialogForm.imgs = trimSpace(tmp);
+
+        //老数据
+        this.dialogFormOld.goodsId = item.goodsId;
+        this.dialogFormOld.specGoodsId = item.specGoodsId;
+        this.dialogFormOld.version = item.version;
+        this.dialogFormOld.specColor = item.specColor;
+        this.dialogFormOld.specSize = item.specSize;
+        this.dialogFormOld.specMaterial = item.specMaterial;
+        this.dialogFormOld.goodsImgs = item.goodsImgs;
+        this.dialogFormOld.goodsName = item.goodsName;
+        this.dialogFormOld.goodsType = item.goodsType;
+        this.dialogFormOld.memo = item.memo;
+        let tmpOld = [];
+        tmpOld = item.goodsImgs.split(',');
+        this.dialogFormOld.imgs = trimSpace(tmpOld);
+
+        this.dialogVisible = true;
+      },
+
       onAddNewTap() {
         this.dialogForm.goodsId = this.goodsInfo.goodsId;
         this.dialogForm.imgs = [];
         this.dialogForm.imgs.push(...this.goodsInfo.imgs);
+        this.flag = 1;
         this.dialogVisible = true;
+
+        this.create = false;
+      },
+
+      getUnits() {
+        let params = {};
+        listAllUnitinfos(this, params).then(
+          res => {
+            this.units = res.data;
+          },
+          res => {
+
+          }
+        ).catch();
+      },
+
+      onDeleteAllTap() {
+        this.$confirm('此操作将清空物资系列，是否确认?', '清空物资系列', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            this.deleteAllCommit();
+          }
+        );
+      },
+
+      deleteAllCommit() {
+        let params = {};
+        params.goodsId = this.goodsInfo.goodsId;
+        deleteGoodsserialByGoodsId(this, params).then(
+          res => {
+            this.$message.success('清空成功！');
+            this.tableData = [];
+          },
+          res => {
+
+          }
+        ).catch();
+      },
+
+      deleteTap(item) {
+        this.$confirm('此操作将删除物资系列，是否确认?', '删除物资系列', {
+          confirmButtonText: '确认',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(
+          () => {
+            this.deleteCommit(item);
+          }
+        );
+      },
+
+      deleteCommit(item) {
+        let params = {};
+        params.specGoodsId = item.specGoodsId;
+        deleteGoodsserialById(this, params).then(
+          res => {
+            this.$message.success('删除成功');
+            this.initData();
+          },
+          res => {
+          }
+        ).catch();
       },
 
       onMove({relatedContext, draggedContext}) {
@@ -196,10 +379,10 @@
         //   this.$message.error("无法删除主图，请先选择其他图作为主图，然后再删除此图");
         //   return;
         // }
-        this.searchForm.imgs.splice(index, 1);
+        this.dialogForm.imgs.splice(index, 1);
       },
 
-      dialogFormConfirm(){
+      dialogFormConfirm() {
         this.$refs.dialogForm.validate((valid) => {
           if (valid) {
             this.formCommit();
@@ -209,32 +392,66 @@
         });
       },
 
-      formCommit(){
-        let params={};
+      formCommit() {
+        let params = {};
         if (this.flag === 1) {
           //新增
-          params.goodsId=this.dialogForm.goodsId;
-          params.serialList=[];
-          let serailInfo={};
-          serailInfo.recycleSeq='1';
-          serailInfo.goodsImgs=this.dialogForm.imgs.join(',');
-          serailInfo.mainPicture=this.dialogForm.imgs[0];
-          serailInfo.specColor=this.dialogForm.specColor;
-          serailInfo.specSize=this.dialogForm.specSize;
-          serailInfo.specMaterial=this.dialogForm.specMaterial;
+          params.goodsId = this.dialogForm.goodsId;
+          params.serialList = [];
+          let serailInfo = {};
+          serailInfo.recycleSeq = '1';
+          serailInfo.goodsImgs = this.dialogForm.imgs.join(',');
+          serailInfo.mainPicture = this.dialogForm.imgs[0];
+          serailInfo.specColor = this.dialogForm.specColor;
+          serailInfo.specSize = this.dialogForm.specSize;
+          serailInfo.specMaterial = this.dialogForm.specMaterial;
           params.serialList.push(serailInfo);
           addGoodsserial(this, params).then(
-            res=>{
+            res => {
               this.$message.success('新增成功');
-              this.tableData=res.data;
-              this.dialogVisible=false;
+              this.tableData = res.data;
+              this.dialogVisible = false;
             },
-            res=>{
+            res => {
             }
           ).catch();
         }
 
         if (this.flag === 2) {
+          // 修改
+          params.specGoodsId = this.dialogForm.specGoodsId;
+          params.version = this.dialogForm.version;
+          if (this.dialogForm.specColor !== this.dialogFormOld.specColor) {
+            params.specColor = this.dialogForm.specColor;
+          }
+          if (this.dialogForm.specSize !== this.dialogFormOld.specSize) {
+            params.specSize = this.dialogForm.specSize;
+          }
+          if (this.dialogForm.specMaterial !== this.dialogFormOld.specMaterial) {
+            params.specMaterial = this.dialogForm.specMaterial;
+          }
+          this.dialogForm.goodsImgs = this.dialogForm.imgs.join(',');
+          if (this.dialogForm.goodsImgs !== this.dialogFormOld.goodsImgs) {
+            params.goodsImgs = this.dialogForm.goodsImgs;
+          }
+          if (this.dialogForm.goodsName !== this.dialogFormOld.goodsName) {
+            params.goodsName = this.dialogForm.goodsName;
+          }
+          if (this.dialogForm.goodsType !== this.dialogFormOld.goodsType) {
+            params.goodsType = this.dialogForm.goodsType;
+          }
+          if (this.dialogForm.memo !== this.dialogFormOld.memo) {
+            params.memo = this.dialogForm.memo;
+          }
+          updateGoodsserialById(this, params).then(
+            res => {
+              this.$message.success('修改成功');
+              this.initData();
+              this.dialogVisible = false;
+            },
+            res => {
+            }
+          ).catch();
         }
       },
 
@@ -331,6 +548,9 @@
             let tmp = [];
             tmp = this.goodsInfo.goodsImgs.split(',');
             this.goodsInfo.imgs = trimSpace(tmp);
+            if (this.create) {
+              this.onAddNewTap();
+            }
           },
 
           res => {
@@ -479,5 +699,18 @@
 
   .item-ul::-webkit-scrollbar {
     width: 0;
+  }
+
+  .itemDisplayDiv {
+    border: 1px solid rgb(228, 231, 237);
+    width: 100%;
+    padding-left: 15px;
+    border-radius: 5px;
+    height: 32px;
+    line-height: 32px;
+    background-color: rgb(245,247,250);
+    color: rgb(192,196,204);
+    font-size: 13.3333px;
+    font-weight: 400;
   }
 </style>

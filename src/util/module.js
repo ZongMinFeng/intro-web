@@ -3092,7 +3092,7 @@ const getGoodsQualitycertifyById = (me, params) => {
 };
 
 /**
- *1.3.2.8.1	新增 /addGoodsserial  位图索引225
+ *1.3.2.8.1  新增 /addGoodsserial  位图索引225
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3114,11 +3114,11 @@ const addGoodsserial = (me, params) => {
     }
     if (params.serialList) {
       send.serialList = params.serialList;
-      singArray.serialList=[];
-      let serailInfo={};
-      serailInfo.recycleSeq=params.serialList[0].recycleSeq;
-      serailInfo.goodsImgs=params.serialList[0].goodsImgs;
-      serailInfo.mainPicture=params.serialList[0].mainPicture;
+      singArray.serialList = [];
+      let serailInfo = {};
+      serailInfo.recycleSeq = params.serialList[0].recycleSeq;
+      serailInfo.goodsImgs = params.serialList[0].goodsImgs;
+      serailInfo.mainPicture = params.serialList[0].mainPicture;
       singArray.serialList.push(serailInfo);
     }
 
@@ -3135,7 +3135,7 @@ const addGoodsserial = (me, params) => {
 };
 
 /**
- * 1.3.2.8.6	根据物资id查询系列信息  /listGoodsserialsByGoodsId  位图索引230
+ * 1.3.2.8.6  根据物资id查询系列信息  /listGoodsserialsByGoodsId  位图索引230
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3154,6 +3154,134 @@ const listGoodsserialsByGoodsId = (me, params) => {
     if (params.goodsId) {
       send.goodsId = params.goodsId;
       singArray.goodsId = params.goodsId;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.8.2  主键删除  /deleteGoodsserialById   位图索引226
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteGoodsserialById = (me, params) => {
+  console.log("deleteGoodsserialById params", params); //debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.deleteGoodsserialById.url;
+    urlParams.txnId = cfg.service.deleteGoodsserialById.txnId;
+    // urlParams.noSing = true;
+
+    if (params.specGoodsId) {
+      send.specGoodsId = params.specGoodsId;
+      singArray.specGoodsId = params.specGoodsId;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.8.3  根据物资id删除  /deleteGoodsserialByGoodsId   位图索引227
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteGoodsserialByGoodsId = (me, params) => {
+  console.log("deleteGoodsserialByGoodsId params", params); //debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.deleteGoodsserialByGoodsId.url;
+    urlParams.txnId = cfg.service.deleteGoodsserialByGoodsId.txnId;
+    // urlParams.noSing = true;
+
+    if (params.goodsId) {
+      send.goodsId = params.goodsId;
+      singArray.goodsId = params.goodsId;
+    }
+
+    urlParams.send = send;
+    urlParams.singArray = singArray;
+    common.sendServer(urlParams, me).then(
+      (res) => {
+        resolve(res)
+      }, (res) => {
+        reject(res)
+      }
+    );
+  });
+};
+
+/**
+ * 1.3.2.8.4  根据主键修改  /updateGoodsserialById   位图索引228
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateGoodsserialById = (me, params) => {
+  console.log("updateGoodsserialById params", params); //debug
+  return new Promise((resolve, reject) => {
+    let urlParams = {};
+    let send = {};
+    let singArray = {};
+
+    urlParams.url = cfg.service.updateGoodsserialById.url;
+    urlParams.txnId = cfg.service.updateGoodsserialById.txnId;
+    // urlParams.noSing = true;
+
+    if (params.specGoodsId) {
+      send.specGoodsId = params.specGoodsId;
+      singArray.specGoodsId = params.specGoodsId;
+    }
+    if (params.version) {
+      send.version = params.version;
+      singArray.version = params.version;
+    }
+    if (params.specColor) {
+      send.specColor = params.specColor;
+    }
+    if (params.specSize) {
+      send.specSize = params.specSize;
+    }
+    if (params.specMaterial) {
+      send.specMaterial = params.specMaterial;
+    }
+    if (params.goodsImgs) {
+      send.goodsImgs = params.goodsImgs;
+      singArray.goodsImgs = params.goodsImgs;
+    }
+    if (params.goodsName) {
+      send.goodsName = params.goodsName;
+    }
+    if (params.goodsType) {
+      send.goodsType = params.goodsType;
+    }
+    if (params.memo) {
+      send.memo = params.memo;
     }
 
     urlParams.send = send;
@@ -3261,5 +3389,8 @@ export {
   updateGoodsQualitycertifyById,
   getGoodsQualitycertifyById,
   addGoodsserial,
-  listGoodsserialsByGoodsId
+  listGoodsserialsByGoodsId,
+  deleteGoodsserialById,
+  deleteGoodsserialByGoodsId,
+  updateGoodsserialById
 };
