@@ -339,7 +339,7 @@
         resetTellerPwd(this, params).then(
           res=>{
             this.$message.success('重置成功');
-            this.passwordForm.tellerPwd=res.tellerPwd;
+            this.passwordForm.tellerPwd=res.data;
             this.passwordVisible=true;
           },
           res=>{

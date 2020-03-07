@@ -4,6 +4,9 @@
  */
 import {hex_to_bin} from "../Gw/GwString";
 import store from '../store'
+import * as cfg from "../config/cfg";
+
+let BASE_URL=cfg.baseUrl;
 
 //所有权限
 //属性index为funcMap位图的位置，从1开始；index为null表示此权限默认存在
@@ -11,7 +14,100 @@ const PERMISSIONS = {
   //1
   addSystemChannel: {
     index: 1,
-    name: '系统交易渠道信息表新增'
+    name: '系统交易渠道信息表新增',
+    url: BASE_URL + '/system/addSystemChannel',
+    txnId: 'addSystemChannel'
+  },
+  //31
+  listBatchsByCon: {
+    index: 31,
+    name: '分页查询批次信息',
+    url: BASE_URL + '/batch/listBatchsByCon',
+    txnId: 'listBatchsByCon'
+  },
+  //32
+  addBatchinfo: {
+    index: 32,
+    name: '新增批次(集装箱)',
+    url: BASE_URL + '/batch/addBatchinfo',
+    txnId: 'addBatchinfo'
+  },
+  //33
+  updateBatchinfo: {
+    index: 33,
+    name: '主键修改批次(集装箱)',
+    url: BASE_URL + '/batch/updateBatchinfo',
+    txnId: 'updateBatchinfo'
+  },
+  //34
+  deleteBatchinfoById: {
+    index: 34,
+    name: '主键删除批次(集装箱)',
+    url: BASE_URL + '/batch/deleteBatchinfoById',
+    txnId: 'deleteBatchinfoById'
+  },
+  //31
+  getBatchinfoById: {
+    index: 35,
+    name: '主键查询批次(集装箱)',
+    url: BASE_URL + '/batch/getBatchinfoById',
+    txnId: 'getBatchinfoById'
+  },
+  //36
+  listBatchGoodsByCon: {
+    index: 36,
+    name: '分页查询批次(集装箱)对应物资',
+    url: BASE_URL + '/batch/listBatchGoodsByCon',
+    txnId: 'listBatchGoodsByCon'
+  },
+  //37
+  addBatchGoods : {
+    index: 37,
+    name: '批次(集装箱)录入采购物资',
+    url: BASE_URL + '/batch/addBatchGoods',
+    txnId: 'addBatchGoods'
+  },
+  //38
+  updateBatchGoodsById: {
+    index: 38,
+    name: '主键修改采购批次物资信息',
+    url: BASE_URL + '/batch/updateBatchGoodsById',
+    txnId: 'updateBatchGoodsById'
+  },
+  //39
+  deleteBatchGoodsById: {
+    index: 39,
+    name: '主键删除批次物资',
+    url: BASE_URL + '/batch/deleteBatchGoodsById',
+    txnId: 'deleteBatchGoodsById'
+  },
+  //40
+  getBatchGoodsById: {
+    index: 40,
+    name: '主键查询批次物资',
+    url: BASE_URL + '/batch/getBatchGoodsById',
+    txnId: 'getBatchGoodsById'
+  },
+  //41
+  uptBatchLadingBill: {
+    index: 41,
+    name: '提交批次运单号',
+    url: BASE_URL + '/batch/uptBatchLadingBill',
+    txnId: 'uptBatchLadingBill'
+  },
+  //42
+  uptBatchRealCount: {
+    index: 42,
+    name: '批次物资入库',
+    url: BASE_URL + '/batch/uptBatchRealCount',
+    txnId: 'uptBatchRealCount'
+  },
+  //43
+  listSerialsByConditions: {
+    index: 43,
+    name: '分页查询指定条件的系列',
+    url: BASE_URL + '/batch/listSerialsByConditions',
+    txnId: 'listSerialsByConditions'
   },
   //102
   addInst: {

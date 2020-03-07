@@ -49,13 +49,13 @@
 
     <el-table :data="tableData" border stripe>
       <el-table-column label="名称" prop="goodsName"></el-table-column>
-      <el-table-column prop="goodsId" label="商品ID" width="170"></el-table-column>
-      <el-table-column label="商品主图" width="120" align="center" header-align="left">
+      <el-table-column prop="goodsId" label="物资ID" width="170"></el-table-column>
+      <el-table-column label="物资主图" width="120" align="center" header-align="left">
         <template slot-scope="scope">
           <img style="height: 80px; width: 80px;background-color: white;"  :preview="scope.$index" :src="pictureUrl + scope.row.goodsId + '/'+scope.row.mainPicture" >
         </template>
       </el-table-column>
-      <el-table-column label="商品价格" width="160" align="right" header-align="left">
+      <el-table-column label="物资价格" width="160" align="right" header-align="left">
         <template slot-scope="props">
           <p>￥{{formatPrice(props.row.specNowPrice)}}元</p>
         </template>
@@ -76,7 +76,7 @@
           <p>
             <el-button type="primary" @click="doInfos(props.row, 2)">查看●修改</el-button>
           </p>
-          <!--有系列、锁定库存不允许删除商品-->
+          <!--有系列、锁定库存不允许删除物资-->
           <p style="margin-top: 5px;" v-if="canDelete(props.row)">
             <el-button type="danger" style="width: 90px;" @click="deleteTap(props.row)">删除</el-button>
           </p>
@@ -286,17 +286,17 @@
       },
 
       onAddNewTap() {
-        this.$router.push({path: '/goodsInfos'});
+        this.$router.push({path: '/goodsInfos', query:{create:true}});
       },
 
       handleSizeChange() {
-        this.initData();
-      },
+            this.initData();
+        },
 
-      handleCurrentChange(options) {
-        this.currentPage = options;
-        this.initData();
-      },
+        handleCurrentChange(options) {
+            this.currentPage = options;
+            this.initData();
+        },
 
       doInfos(item) {
         let goodsId = item.goodsId;

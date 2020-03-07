@@ -35,7 +35,7 @@
       </el-row>
 
       <div class="picture">
-        <div class="list-name">商品轮播信息（拖动可调换顺序）</div>
+        <div class="list-name">物资轮播信息（拖动可调换顺序）</div>
         <el-upload
           :action="pictureUrl"
           multiple
@@ -68,7 +68,7 @@
       </div>
 
       <div class="picture">
-        <div class="list-name">商品主图</div>
+        <div class="list-name">物资主图</div>
         <el-upload
           :action="pictureUrl"
           multiple
@@ -311,6 +311,7 @@
             res => {
               this.$message.success('新增成功!');
               this.addFlag = 2;
+              this.$emit('createOk');
             },
             res => {
 
@@ -464,7 +465,7 @@
         if (num < 5) {
           return true;
         } else {
-          this.$message.error("商品轮播信息不能大于5条");
+          this.$message.error("物资轮播信息不能大于5条");
           return false;
         }
       },

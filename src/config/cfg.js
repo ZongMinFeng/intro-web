@@ -3,6 +3,7 @@ const baseUrl = '/adminTest'; //生产
 // const baseUrl='';//DJ测试
 
 module.exports = {
+  baseUrl,
   service: {
     uploadUrl: 'http://139.196.162.158:10081', //测试
     // uploadUrl:'http://139.196.162.158:10080',//生产 v-uu

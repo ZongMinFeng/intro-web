@@ -2,13 +2,13 @@
   <div>
     <el-tabs type="border-card" v-model="activeName" :before-leave="beforeLeave">
       <el-tab-pane label="基础" name="first">
-        <goods-base :create="create" :goodsId="goodsId"></goods-base>
+        <goods-base :create="create" :goodsId="goodsId" @createOk="createOk"></goods-base>
       </el-tab-pane>
-      <el-tab-pane label="产品说明书" name="second" :create="create" :disabled="create">
-        <product-manual :goodsId="goodsId"></product-manual>
+      <el-tab-pane label="产品说明书" name="second"  :disabled="create">
+        <product-manual :goodsId="goodsId" :create="create"></product-manual>
       </el-tab-pane>
-      <el-tab-pane label="质保证书" name="third" :create="create" :disabled="create">
-        <quality-certify :goodsId="goodsId"></quality-certify>
+      <el-tab-pane label="质保证书" name="third" :disabled="create">
+        <quality-certify :goodsId="goodsId" :create="create"></quality-certify>
       </el-tab-pane>
     </el-tabs>
   </div>
@@ -48,6 +48,11 @@
     methods: {
       beforeLeave() {
 
+      },
+
+      createOk(){
+        console.log('createOk');//debug
+        this.create=false;
       },
 
       getGoodsId(){

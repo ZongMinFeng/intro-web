@@ -75,6 +75,16 @@ module.exports = {
         meta: {title: '物资系列', function: 'goodsSerail'}
       },
       {
+        path: '/batchListAction',
+        component: resolve => require(['../components/page/batch/batchListAction.vue'], resolve),
+        meta: {title: '批次列表', function: 'batchListAction'}
+      },
+      {
+        path: '/batchInfoAction',
+        component: resolve => require(['../components/page/batch/batchInfoAction.vue'], resolve),
+        meta: {title: '批次信息', function: 'batchInfoAction'}
+      },
+      {
         path: '/test',
         component: resolve => require(['../test/Test.vue'], resolve),
         meta: {title: '测试页面', function: 'test'}
@@ -170,21 +180,60 @@ module.exports = {
     },
 
     {
+      icon: 'el-icon-school',
+      index: 'batch',
+      title: '采购管理',
+      flag: false,
+      subs: [
+        {
+          index: 'batchListAction',
+          title: '批次列表',
+          flag: false,
+          function: 'batchListAction',
+          permissions: [
+            'listBatchsByCon',
+            'addBatchinfo',
+            'updateBatchinfo',
+            'deleteBatchinfoById',
+            'getBatchinfoById',
+            'listBatchGoodsByCon',
+          ]
+        },
+        {
+          index: 'batchInfoAction',
+          title: '批次信息',
+          flag: false,
+          function: 'batchInfoAction',
+          permissions: [
+            'addBatchGoods',
+            'updateBatchGoodsById',
+            'deleteBatchGoodsById',
+            'getBatchGoodsById',
+            'uptBatchLadingBill',
+            'uptBatchRealCount',
+            'listSerialsByConditions'
+          ]
+        },
+      ],
+    },
+
+    {
       icon: 'el-icon-setting',
       index: 'setting',
       title: '系统设置',
       flag: false,
-      subs: [{
-        index: 'instAction',
-        title: '机构设置',
-        flag: false,
-        function: 'instAction',
-        permissions: [
-          'addInst',
-          'getAllInstById',
-          'getInstById'
-        ]
-      },
+      subs: [
+        {
+          index: 'instAction',
+          title: '机构设置',
+          flag: false,
+          function: 'instAction',
+          permissions: [
+            'addInst',
+            'getAllInstById',
+            'getInstById'
+          ]
+        },
         {
           index: 'departmentAction',
           title: '部门设置',
