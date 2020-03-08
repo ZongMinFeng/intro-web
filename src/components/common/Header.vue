@@ -13,7 +13,7 @@
           <span class="div-sapn" v-if="tellerToParentInst">
             <span v-if="tellerName" class="span-tellername">{{tellerName}}</span> 你好，欢迎进入：
             <span class="span-iinstname">{{sysInstInfo.instName}}</span>
-            &nbsp;&nbsp;部门:<span class="span-iinstname">{{sysInstDepartment.departmentName}}</span>
+            &nbsp;&nbsp;部门:&nbsp;&nbsp;<span class="span-iinstname">{{sysInstDepartment.departmentName}}</span>
           </span>
         </div>
         <!-- 全屏显示 -->

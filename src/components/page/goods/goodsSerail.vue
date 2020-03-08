@@ -29,7 +29,7 @@
       </el-table-column>
     </el-table>
 
-    <h3 style="margin-top:20px; color: #909399;">主商品信息</h3>
+    <h3 style="margin-top:20px; color: #909399;">主物资信息</h3>
     <div class="line"></div>
     <el-form :model="goodsInfo" label-width="100px" class="goodInfo">
       <el-row>
@@ -96,7 +96,7 @@
 
 
         <div class="picture">
-          <div class="list-name">商品轮播信息（拖动可调换顺序）</div>
+          <div class="list-name">物资轮播信息（拖动可调换顺序）</div>
           <el-upload
             :action="pictureUrl"
             multiple
@@ -507,7 +507,7 @@
         if (num < 5) {
           return true;
         } else {
-          this.$message.error("商品轮播信息不能大于5条");
+          this.$message.error("物资轮播信息不能大于5条");
           return false;
         }
       },

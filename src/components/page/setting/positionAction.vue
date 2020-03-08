@@ -28,8 +28,10 @@
       <el-table-column label="操作">
         <template slot-scope="props">
           <el-button type="primary" @click="positionDetail(props.row)">权限明细</el-button>
-          <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
-          <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
+            <!--总公司管理部门职位不可修改-->
+          <el-button type="primary" v-if="searchForm.departmentId!=='AdminSID200217000'" @click="modifyTap(props.row)">修改</el-button>
+            <!--总公司管理部门职位不可删除-->
+          <el-button type="danger" v-if="searchForm.departmentId!=='AdminSID200217000'" @click="deleteTap(props.row)">删除</el-button>
         </template>
       </el-table-column>
     </el-table>
@@ -61,10 +63,11 @@
       <div>
         职位：{{detailForm.positionName}}
       </div>
-      <div>
-        权限值：{{detailForm.positionShow}}
-      </div>
-      <position-selection v-model="detailForm.positionShow"></position-selection>
+        <!--测试的时候可以展示权限内容-->
+      <!--<div>-->
+        <!--权限值：{{detailForm.positionShow}}-->
+      <!--</div>-->
+      <position-selection disabled v-model="detailForm.positionShow"></position-selection>
     </el-dialog>
   </div>
 </template>

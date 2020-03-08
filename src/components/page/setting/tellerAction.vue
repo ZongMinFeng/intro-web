@@ -99,7 +99,7 @@
 
 <script>
   import {
-    addTellerInfo, checkTellerId, deleteDepartmentTeller, getTellerInfoById,
+    addTellerInfo, checkTellerId, deleteDepartmentTeller,
     listDepartmentPosition,
     listDepartmentTeller,
     listInstDepartments, resetTellerPwd,
@@ -381,6 +381,8 @@
               this.$message.success('新增成功');
               this.initData();
               this.dialogVisible=false;
+              this.passwordForm.tellerPwd=res.data;
+              this.passwordVisible=true;
             },
             res=>{
             }

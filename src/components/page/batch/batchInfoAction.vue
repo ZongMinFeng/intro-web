@@ -14,7 +14,9 @@
                     &nbsp;
                 </el-col>
                 <el-col :span="6">
-                    <el-button type="success" icon="el-icon-plus" @click="onAddNewTap" style="float: right;">录入物资
+                    <el-button v-if="batchInfo.status==='9'||batchInfo.status==='8'" type="primary" @click="uptBatchInfoTap" style="float: right; margin-left: 5px;">提交运单号
+                    </el-button>
+                    <el-button v-if="batchInfo.status==='9'||batchInfo.status==='8'" type="success" icon="el-icon-plus" @click="onAddNewTap" style="float: right;">录入物资
                     </el-button>
                 </el-col>
             </el-row>
@@ -27,6 +29,7 @@
                 <el-col :span="6">名称:{{batchInfo.batchName}}</el-col>
                 <el-col :span="6">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
                 <el-col :span="6">状态:{{getStatusName(batchInfo.status)}}</el-col>
+                <el-col :span="6">提单号:{{batchInfo.ladingBill}}</el-col>
             </el-row>
         </div>
 
@@ -34,7 +37,20 @@
             <el-table-column label="名字" prop="batchName"></el-table-column>
             <el-table-column label="备注" prop="memo"></el-table-column>
             <el-table-column label="价格" prop="tellerBuyPrice"></el-table-column>
-            <el-table-column label="数量" prop="tellerBuyCount"></el-table-column>
+            <el-table-column label="采购数量" prop="tellerBuyCount"></el-table-column>
+            <el-table-column label="已入库数量" prop="realCount"></el-table-column>
+            <el-table-column label="操作" width="340">
+                <template slot-scope="props">
+                    <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
+                    <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="batchInfo.status==='8'" label="入库数量      操作" width="340">
+                <template slot-scope="props">
+                    <el-input v-model="realCountIns[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-button type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
+                </template>
+            </el-table-column>
         </el-table>
         <div class="pagination">
             <el-pagination @current-change="handleCurrentChange"
@@ -101,11 +117,34 @@
         <el-dialog title="选择物资" :visible.sync="goodsVisible">
             <goods-selection @row-dblclick="dbClick"></goods-selection>
         </el-dialog>
+
+        <el-dialog title="提交订单号" :visible.sync="ladingVisible">
+            <el-form :model="ladingForm" label-width="80px" ref="ladingForm">
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="运单号" prop="ladingBill"
+                                      :rules="[{required:true, message:'请输入采购价格', trigger: 'blur'}]">
+                            <el-input v-model="ladingForm.ladingBill"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <span slot="footer" class="dialog_footer">
+                <el-button @click="ladingVisible=false">取消</el-button>
+                <el-button type="primary" @click="ladingFormConfirm">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {addBatchGoods, getBatchinfoById, listBatchGoodsByCon} from "../../../util/module";
+    import {
+        addBatchGoods,
+        deleteBatchGoodsById,
+        getBatchinfoById,
+        listBatchGoodsByCon,
+        updateBatchGoodsById, uptBatchLadingBill, uptBatchRealCount
+    } from "../../../util/module";
     import GoodsSelection from "../../common/selection/GoodsSelection";
 
     export default {
@@ -117,7 +156,7 @@
             return {
                 searchForm: {
                     batchId: null,
-                    batchName:null
+                    batchName: null
                 },
                 batchInfo: {},
                 batchFlags: [
@@ -134,9 +173,14 @@
                     {id: '7', value: '入库'},
                     {id: '8', value: '海运'},
                     {id: '9', value: '初始'},
+                    {id: 'B', value: '本地价格正在提交'},
+                    {id: 'C', value: '物资正在入库'},
+                    {id: 'D', value: '零售价申报中'},
+                    {id: 'E', value: '物资上架中'},
                 ],
                 flag: 1,//1.新增  2.修改
                 dialogForm: {
+                    id: null,
                     recycleSeq: null,
                     batchGoodsId: null,
                     tellerBuyPrice: null,
@@ -146,10 +190,17 @@
                 },
                 dialogVisible: false,
                 goodsVisible: false,
-                currentPage:1,
-                pageSize:10,
-                AllCount:0,
-                tableData:[],
+                currentPage: 1,
+                pageSize: 10,
+                AllCount: 0,
+                tableData: [],
+                ladingVisible: false,
+                ladingForm: {
+                    batchId: null,
+                    version: null,
+                    ladingBill: null,
+                },
+                realCountIns:[],
             }
         },
 
@@ -164,29 +215,124 @@
         },
 
         created() {
-
+            if (this.$route.query.batchId) {
+                this.searchForm.batchId = this.$route.query.batchId;
+                this.getBatchInfo();
+            }
         },
 
         methods: {
-            initData(){
+            initData() {
                 this.getGoodsSerials();
             },
 
-            getGoodsSerials(){
-                if (this.batchInfo.batchId == null||this.batchInfo.batchName == null) {
-                    return;
-                }
+            changeRealCount(item, index){
                 let params={};
-                params.currentPage=this.currentPage;
-                params.pageSize=this.pageSize;
                 params.batchId=this.batchInfo.batchId;
-                // params.batchName=this.batchInfo.batchName;
-                listBatchGoodsByCon(this, params).then(
+                params.goodsList=[];
+                let obj={};
+                obj.recycleSeq='1';
+                obj.batchGoodsId=item.batchGoodsId;
+                obj.realCount=this.realCountIns[index];
+                params.goodsList.push(obj);
+                uptBatchRealCount(this, params).then(
                     res=>{
-                        this.tableData=res.data.records;
-                        this.AllCount=res.data.total;
+                       this.getBatchInfo();
                     },
                     res=>{
+
+                    }
+                ).catch();
+            },
+
+            uptBatchInfoTap() {
+                this.ladingForm.batchId = this.batchInfo.batchId;
+                this.ladingForm.version = this.batchInfo.version;
+                this.ladingVisible = true;
+            },
+
+            ladingFormConfirm() {
+                let params = {};
+                params.batchId = this.ladingForm.batchId;
+                params.version = this.ladingForm.version;
+                params.ladingBill = this.ladingForm.ladingBill;
+                uptBatchLadingBill(this, params).then(
+                    res => {
+                        this.$message.success('提交成功！');
+                        this.ladingVisible=false;
+                        this.getBatchInfo();
+                    },
+                    res => {
+
+                    }
+                ).catch();
+            },
+
+            handleSizeChange() {
+                this.initData();
+            },
+
+            handleCurrentChange(options) {
+                this.currentPage = options;
+                this.initData();
+            },
+
+            modifyTap(item) {
+                this.flag = 2;
+                this.dialogForm.id = item.id;
+                this.dialogForm.batchGoodsId = item.batchGoodsId;
+                this.dialogForm.version = item.version;
+                this.dialogForm.tellerBuyPrice = item.tellerBuyPrice;
+                this.dialogForm.tellerBuyCount = item.tellerBuyCount;
+                this.dialogForm.memo = item.memo;
+                this.dialogVisible = true;
+            },
+
+            deleteTap(item) {
+                this.$confirm('此操作将删除物资，是否确认?', '删除物资', {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(
+                    () => {
+                        this.deleteCommit(item);
+                    }
+                );
+            },
+
+            deleteCommit(item) {
+                let params = {};
+                params.id = item.id;
+                deleteBatchGoodsById(this, params).then(
+                    res => {
+                        this.$message.error('删除成功！');
+                        this.initData();
+                    },
+                    res => {
+
+                    }
+                ).catch();
+            },
+
+            getGoodsSerials() {
+                if (this.batchInfo.batchId == null || this.batchInfo.batchName == null) {
+                    return;
+                }
+                let params = {};
+                params.currentPage = this.currentPage;
+                params.pageSize = this.pageSize;
+                params.batchId = this.batchInfo.batchId;
+                // params.batchName=this.batchInfo.batchName;
+                listBatchGoodsByCon(this, params).then(
+                    res => {
+                        this.tableData = res.data.records;
+                        for (let i = 0; i < this.tableData.length; i++) {
+                            // this.tableData[i].realCountIn=this.tableData[i].tellerBuyCount-this.tableData[i].realCount;
+                            this.$set(this.realCountIns, i, this.tableData[i].tellerBuyCount-this.tableData[i].realCount);
+                        }
+                        this.AllCount = res.data.total;
+                    },
+                    res => {
 
                     }
                 ).catch();
@@ -206,7 +352,7 @@
                 ).catch();
             },
 
-            dialogFormConfirm(){
+            dialogFormConfirm() {
                 this.$refs.dialogForm.validate((valid) => {
                     if (valid) {
                         this.formCommit();
@@ -221,17 +367,35 @@
                 if (this.flag === 1) {
                     //新增
                     params.batchId = this.dialogForm.batchId;
-                    params.goodsList=[];
-                    let item={};
-                    item.recycleSeq='1';
-                    item.batchGoodsId=this.dialogForm.batchGoodsId;
-                    item.tellerBuyPrice=this.dialogForm.tellerBuyPrice;
-                    item.tellerBuyCount=this.dialogForm.tellerBuyCount;
-                    item.memo=this.dialogForm.memo;
+                    params.goodsList = [];
+                    let item = {};
+                    item.recycleSeq = '1';
+                    item.batchGoodsId = this.dialogForm.batchGoodsId;
+                    item.tellerBuyPrice = this.dialogForm.tellerBuyPrice;
+                    item.tellerBuyCount = this.dialogForm.tellerBuyCount;
+                    item.memo = this.dialogForm.memo;
                     params.goodsList.push(item);
                     addBatchGoods(this, params).then(
                         res => {
                             this.$message.success('新增成功');
+                            this.initData();
+                            this.dialogVisible = false;
+                        },
+                        res => {
+                        }
+                    ).catch();
+                }
+
+                if (this.flag === 2) {
+                    //修改
+                    params.id = this.dialogForm.id;
+                    params.version = this.dialogForm.version;
+                    params.tellerBuyPrice = this.dialogForm.tellerBuyPrice;
+                    params.tellerBuyCount = this.dialogForm.tellerBuyCount;
+                    params.memo = this.dialogForm.memo;
+                    updateBatchGoodsById(this, params).then(
+                        res => {
+                            this.$message.success('修改成功');
                             this.initData();
                             this.dialogVisible = false;
                         },
@@ -252,6 +416,7 @@
             },
 
             onAddNewTap() {
+                this.flag = 1;
                 this.dialogForm.batchId = this.batchInfo.batchId;
                 this.dialogVisible = true;
             },

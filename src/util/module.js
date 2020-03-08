@@ -1,6 +1,7 @@
 import * as md5 from "./md5";
 import * as jsonSha256 from "./jsonSha256";
 import {PERMISSIONS} from "../tool/permission";
+import {pubRandom} from "./pub";
 
 const common = require('./common.js');
 const cfg = require("../config/cfg.js");
@@ -3499,7 +3500,7 @@ const getBatchinfoById = (me, params) => {
 };
 
 /**
- * 1.3.3.7	批次(集装箱)录入采购物资 /addBatchGoods   位图索引37
+ * 1.3.3.7    批次(集装箱)录入采购物资 /addBatchGoods   位图索引37
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3522,13 +3523,13 @@ const addBatchGoods = (me, params) => {
 
         if (params.goodsList) {
             send.goodsList = params.goodsList;
-            singArray.goodsList=[];
-            let item={};
-            let itemTmp=params.goodsList[0];
-            item.recycleSeq=itemTmp.recycleSeq;
-            item.batchGoodsId=itemTmp.batchGoodsId;
-            item.tellerBuyPrice=itemTmp.tellerBuyPrice;
-            item.tellerBuyCount=itemTmp.tellerBuyCount;
+            singArray.goodsList = [];
+            let item = {};
+            let itemTmp = params.goodsList[0];
+            item.recycleSeq = itemTmp.recycleSeq;
+            item.batchGoodsId = itemTmp.batchGoodsId;
+            item.tellerBuyPrice = itemTmp.tellerBuyPrice;
+            item.tellerBuyCount = itemTmp.tellerBuyCount;
             singArray.goodsList.push(item);
         }
 
@@ -3545,7 +3546,7 @@ const addBatchGoods = (me, params) => {
 };
 
 /**
- *1.3.3.13	分页查询指定条件的系列  /listSerialsByConditions?currentPage=1&pageSize=10
+ *1.3.3.13    分页查询指定条件的系列  /listSerialsByConditions?currentPage=1&pageSize=10
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3562,17 +3563,17 @@ const listSerialsByConditions = (me, params) => {
         urlParams.txnId = PERMISSIONS.listSerialsByConditions.txnId;
         urlParams.noSing = true;
 
-        if (params.categoryId ) {
-            send.categoryId  = params.categoryId ;
+        if (params.categoryId) {
+            send.categoryId = params.categoryId;
         }
-        if (params.goodsName ) {
-            send.goodsName  = params.goodsName ;
+        if (params.goodsName) {
+            send.goodsName = params.goodsName;
         }
         if (params.goodsType) {
             send.goodsType = params.goodsType;
         }
-        if (params.status ) {
-            send.status  = params.status ;
+        if (params.status) {
+            send.status = params.status;
         }
 
         urlParams.send = send;
@@ -3588,7 +3589,7 @@ const listSerialsByConditions = (me, params) => {
 };
 
 /**
- * 1.3.3.6	分页查询批次(集装箱)对应物资 /listBatchGoodsByCon?currentPage=1&pageSize=40  位
+ * 1.3.3.6    分页查询批次(集装箱)对应物资 /listBatchGoodsByCon?currentPage=1&pageSize=40  位
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3605,11 +3606,324 @@ const listBatchGoodsByCon = (me, params) => {
         urlParams.txnId = PERMISSIONS.listBatchGoodsByCon.txnId;
         urlParams.noSing = true;
 
-        if (params.batchId ) {
-            send.batchId  = params.batchId ;
+        if (params.batchId) {
+            send.batchId = params.batchId;
         }
-        if (params.batchName  ) {
-            send.batchName   = params.batchName  ;
+        if (params.batchName) {
+            send.batchName = params.batchName;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.8    主键修改采购批次物资信息 /updateBatchGoodsById   位图索引38
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateBatchGoodsById = (me, params) => {
+    console.log("updateBatchGoodsById params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.updateBatchGoodsById.url;
+        urlParams.txnId = PERMISSIONS.updateBatchGoodsById.txnId;
+        // urlParams.noSing = true;
+
+        if (params.id) {
+            send.id = params.id;
+            singArray.id = params.id;
+        }
+        if (params.version) {
+            send.version = params.version;
+            singArray.version = params.version;
+        }
+        if (params.tellerBuyPrice) {
+            send.tellerBuyPrice = params.tellerBuyPrice;
+            singArray.tellerBuyPrice = params.tellerBuyPrice;
+        }
+        if (params.tellerBuyCount) {
+            send.tellerBuyCount = params.tellerBuyCount;
+            singArray.tellerBuyCount = params.tellerBuyCount;
+        }
+        if (params.memo) {
+            send.memo = params.memo;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.9    主键删除批次物资 /deleteBatchGoodsById  位图索引39
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteBatchGoodsById = (me, params) => {
+    console.log("deleteBatchGoodsById params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.deleteBatchGoodsById.url;
+        urlParams.txnId = PERMISSIONS.deleteBatchGoodsById.txnId;
+        // urlParams.noSing = true;
+
+        if (params.id) {
+            send.id = params.id;
+            singArray.id = params.id;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.10    主键查询批次物资 /getBatchGoodsById 位图索引40
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getBatchGoodsById = (me, params) => {
+    console.log("getBatchGoodsById params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.getBatchGoodsById.url;
+        urlParams.txnId = PERMISSIONS.getBatchGoodsById.txnId;
+        urlParams.noSing = true;
+
+        if (params.id) {
+            send.id = params.id;
+            singArray.id = params.id;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.11    提交批次运单号 /uptBatchLadingBill 位图索引41
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const uptBatchLadingBill = (me, params) => {
+    console.log("uptBatchLadingBill params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.uptBatchLadingBill.url;
+        urlParams.txnId = PERMISSIONS.uptBatchLadingBill.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
+        }
+        if (params.version) {
+            send.version = params.version;
+            singArray.version = params.version;
+        }
+        if (params.ladingBill) {
+            send.ladingBill = params.ladingBill;
+            singArray.ladingBill = params.ladingBill;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.12    批次物资入库 /uptBatchRealCount 位图索引42
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const uptBatchRealCount = (me, params) => {
+    console.log("uptBatchRealCount params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.uptBatchRealCount.url;
+        urlParams.txnId = PERMISSIONS.uptBatchRealCount.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
+        }
+        if (params.goodsList) {
+            send.goodsList = params.goodsList;
+            singArray.goodsList = params.goodsList;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.1.3.2    修改公司信息 /updateInstInfo    索引122  验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateInstInfo = (me, params) => {
+    console.log("updateInstInfo params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.updateInstInfo.url;
+        urlParams.txnId = PERMISSIONS.updateInstInfo.txnId;
+        // urlParams.noSing = true;
+
+        if (params.specInstId) {
+            send.specInstId = params.specInstId;
+            singArray.specInstId = params.specInstId;
+        }
+        if (params.version) {
+            send.version = params.version;
+            singArray.version = params.version;
+        }
+        if (params.instName) {
+            send.instName = params.instName;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.1.4.4	删除部门信息 /deleteDepartmentInfo  索引124  验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const deleteDepartmentInfo = (me, params) => {
+    console.log("deleteDepartmentInfo params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.deleteDepartmentInfo.url;
+        urlParams.txnId = PERMISSIONS.deleteDepartmentInfo.txnId;
+        // urlParams.noSing = true;
+
+        if (params.specDepartmentId ) {
+            send.specDepartmentId  = params.specDepartmentId ;
+            singArray.specDepartmentId  = params.specDepartmentId ;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.1.4.3	修改部门信息 /updateDepartmentInfo  索引123  验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateDepartmentInfo = (me, params) => {
+    console.log("updateDepartmentInfo params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.updateDepartmentInfo.url;
+        urlParams.txnId = PERMISSIONS.updateDepartmentInfo.txnId;
+        // urlParams.noSing = true;
+
+        if (params.specDepartmentId ) {
+            send.specDepartmentId  = params.specDepartmentId ;
+            singArray.specDepartmentId  = params.specDepartmentId ;
+        }
+        if (params.version  ) {
+            send.version   = params.version  ;
+            singArray.version   = params.version  ;
+        }
+        if (params.departmentName  ) {
+            send.departmentName   = params.departmentName  ;
         }
 
         urlParams.send = send;
@@ -3728,5 +4042,13 @@ export {
     getBatchinfoById,
     addBatchGoods,
     listSerialsByConditions,
-    listBatchGoodsByCon
+    listBatchGoodsByCon,
+    updateBatchGoodsById,
+    deleteBatchGoodsById,
+    getBatchGoodsById,
+    uptBatchLadingBill,
+    uptBatchRealCount,
+    updateInstInfo,
+    deleteDepartmentInfo,
+    updateDepartmentInfo
 };
