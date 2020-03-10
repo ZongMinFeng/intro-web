@@ -109,6 +109,13 @@ const PERMISSIONS = {
         url: BASE_URL + '/batch/listSerialsByConditions',
         txnId: 'listSerialsByConditions'
     },
+    //51
+    submitLocalPrice: {
+        index: 51,
+        name: '提交本地价格',
+        url: BASE_URL + '/fixPrice/submitLocalPrice',
+        txnId: 'submitLocalPrice'
+    },
     //102
     addInst: {
         index: 102,

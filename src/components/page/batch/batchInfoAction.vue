@@ -38,17 +38,24 @@
             <el-table-column label="备注" prop="memo"></el-table-column>
             <el-table-column label="价格" prop="tellerBuyPrice"></el-table-column>
             <el-table-column label="采购数量" prop="tellerBuyCount"></el-table-column>
-            <el-table-column label="已入库数量" prop="realCount"></el-table-column>
-            <el-table-column label="操作" width="340">
+            <el-table-column v-if="batchInfo.status!=='9'" label="已入库数量" prop="realCount"></el-table-column>
+            <el-table-column v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'||batchInfo.status!=='7'||batchInfo.status!=='A'||batchInfo.status!=='B'" label="本地金额" prop="localPrice"></el-table-column>
+            <el-table-column v-if="batchInfo.status==='9'" label="操作" width="340">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
                     <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='8'" label="入库数量      操作" width="340">
+            <el-table-column v-if="batchInfo.status==='8'||batchInfo.status==='A'||batchInfo.status==='7'" label="入库数量      操作" width="340">
                 <template slot-scope="props">
                     <el-input v-model="realCountIns[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="batchInfo.status==='7'||batchInfo.status==='B'||batchInfo.status==='6'" label="本地价格      操作" width="340">
+                <template slot-scope="props">
+                    <el-input v-model="localPrices[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-button type="danger" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -142,7 +149,7 @@
         addBatchGoods,
         deleteBatchGoodsById,
         getBatchinfoById,
-        listBatchGoodsByCon,
+        listBatchGoodsByCon, submitLocalPrice,
         updateBatchGoodsById, uptBatchLadingBill, uptBatchRealCount
     } from "../../../util/module";
     import GoodsSelection from "../../common/selection/GoodsSelection";
@@ -170,11 +177,12 @@
                     {id: '4', value: '零售价已申报'},
                     {id: '5', value: '建议价格已计算'},
                     {id: '6', value: '本地价格已提交'},
-                    {id: '7', value: '入库'},
+                    {id: '7', value: '物资已入库'},
                     {id: '8', value: '海运'},
                     {id: '9', value: '初始'},
+                    {id: 'A', value: '物资正在入库'},
                     {id: 'B', value: '本地价格正在提交'},
-                    {id: 'C', value: '物资正在入库'},
+                    {id: 'C', value: '建议价格计算中'},
                     {id: 'D', value: '零售价申报中'},
                     {id: 'E', value: '物资上架中'},
                 ],
@@ -200,7 +208,8 @@
                     version: null,
                     ladingBill: null,
                 },
-                realCountIns:[],
+                realCountIns:[],//入库数量数组
+                localPrices:[],//本地价格数组
             }
         },
 
@@ -215,6 +224,7 @@
         },
 
         created() {
+            this.$route.query.batchId="BI685783182406328320";//debug
             if (this.$route.query.batchId) {
                 this.searchForm.batchId = this.$route.query.batchId;
                 this.getBatchInfo();
@@ -233,7 +243,7 @@
                 let obj={};
                 obj.recycleSeq='1';
                 obj.batchGoodsId=item.batchGoodsId;
-                obj.realCount=this.realCountIns[index];
+                obj.realCount=parseInt(this.realCountIns[index])+item.realCount;
                 params.goodsList.push(obj);
                 uptBatchRealCount(this, params).then(
                     res=>{
@@ -249,6 +259,27 @@
                 this.ladingForm.batchId = this.batchInfo.batchId;
                 this.ladingForm.version = this.batchInfo.version;
                 this.ladingVisible = true;
+            },
+
+            doSubmitLocalPrice(item, index){
+                console.log("本地价格",this.localPrices[index]);//debug
+                let params={};
+                params.batchId=this.batchInfo.batchId;
+                params.goodsList=[];
+                let obj={};
+                obj.recycleSeq='1';
+                obj.batchGoodsId=item.batchGoodsId;
+                obj.localPrice=parseInt(this.localPrices[index]);
+                params.goodsList.push(obj);
+                submitLocalPrice(this, params).then(
+                    res=>{
+                        this.$message.success('提交成功!');
+                        this.getBatchInfo();
+                    },
+                    res=>{
+
+                    }
+                ).catch();
             },
 
             ladingFormConfirm() {

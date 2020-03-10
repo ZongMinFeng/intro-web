@@ -3938,6 +3938,44 @@ const updateDepartmentInfo = (me, params) => {
     });
 };
 
+/**
+ * 1.3.4.1	批次物资提交本地价格 /submitLocalPrice  位图索引 51
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const submitLocalPrice = (me, params) => {
+    console.log("submitLocalPrice params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.submitLocalPrice.url;
+        urlParams.txnId = PERMISSIONS.submitLocalPrice.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId ) {
+            send.batchId  = params.batchId ;
+            singArray.batchId  = params.batchId ;
+        }
+        if (params.goodsList  ) {
+            send.goodsList   = params.goodsList  ;
+            singArray.goodsList   = params.goodsList  ;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4050,5 +4088,6 @@ export {
     uptBatchRealCount,
     updateInstInfo,
     deleteDepartmentInfo,
-    updateDepartmentInfo
+    updateDepartmentInfo,
+    submitLocalPrice
 };

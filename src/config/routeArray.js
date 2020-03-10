@@ -82,7 +82,7 @@ module.exports = {
             {
                 path: '/batchInfoAction',
                 component: resolve => require(['../components/page/batch/batchInfoAction.vue'], resolve),
-                meta: {title: '批次信息', function: 'batchInfoAction'}
+                meta: {title: '批次操作', function: 'batchInfoAction'}
             },
             {
                 path: '/test',
@@ -182,7 +182,7 @@ module.exports = {
         {
             icon: 'el-icon-school',
             index: 'batch',
-            title: '采购管理',
+            title: '业务管理',
             flag: false,
             subs: [
                 {
@@ -201,7 +201,7 @@ module.exports = {
                 },
                 {
                     index: 'batchInfoAction',
-                    title: '批次信息',
+                    title: '批次操作',
                     flag: false,
                     function: 'batchInfoAction',
                     permissions: [
@@ -211,7 +211,8 @@ module.exports = {
                         'getBatchGoodsById',
                         'uptBatchLadingBill',
                         'uptBatchRealCount',
-                        'listSerialsByConditions'
+                        'listSerialsByConditions',
+                        'submitLocalPrice'
                     ]
                 },
             ],
