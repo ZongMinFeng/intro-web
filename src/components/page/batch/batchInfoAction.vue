@@ -38,24 +38,65 @@
             <el-table-column label="备注" prop="memo"></el-table-column>
             <el-table-column label="价格" prop="tellerBuyPrice"></el-table-column>
             <el-table-column label="采购数量" prop="tellerBuyCount"></el-table-column>
-            <el-table-column v-if="batchInfo.status!=='9'" label="已入库数量" prop="realCount"></el-table-column>
-            <el-table-column v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'||batchInfo.status!=='7'||batchInfo.status!=='A'||batchInfo.status!=='B'" label="本地金额" prop="localPrice"></el-table-column>
-            <el-table-column v-if="batchInfo.status==='9'" label="操作" width="340">
+            <el-table-column v-if="showRealCount" label="已入库数量">
+                <template slot-scope="props">
+                    {{props.row.realCount}}
+                </template>
+            </el-table-column>
+            <el-table-column v-if="isShow(batchInfo.status, 'reportPrice')" label="内部使用数量">
+                <template slot-scope="props">
+                    {{props.row.companyCount}}
+                </template>
+            </el-table-column>
+            <el-table-column v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'&&batchInfo.status!=='7'&&batchInfo.status!=='A'&&batchInfo.status!=='B'" label="本地价格">
+                <template slot-scope="props">
+                    {{props.row.localPrice}}
+                </template>
+            </el-table-column>
+            <el-table-column v-if="isShow(batchInfo.status, 'cacSuggestPrice')" label="建议价格">
+                <template slot-scope="props">
+                    {{props.row.suggestPrice}}
+                </template>
+            </el-table-column>
+            <el-table-column v-if="isShow(batchInfo.status, 'reportPrice')" label="零售价">
+                <template slot-scope="props">
+                    {{props.row.reportPrice}}
+                </template>
+            </el-table-column>
+            <el-table-column v-if="showOperation" label="操作" width="340">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
                     <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='8'||batchInfo.status==='A'||batchInfo.status==='7'" label="入库数量      操作" width="340">
+            <el-table-column v-if="batchInfo.status==='8'||batchInfo.status==='A'||batchInfo.status==='7'" label="入库数量      操作" width="200">
                 <template slot-scope="props">
                     <el-input v-model="realCountIns[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='7'||batchInfo.status==='B'||batchInfo.status==='6'" label="本地价格      操作" width="340">
+            <el-table-column v-if="showLocalPriceOperation" label="本地价格      操作" width="200">
                 <template slot-scope="props">
                     <el-input v-model="localPrices[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="showSuggestPriceOperation" label="建议价格      操作" width="200">
+                <template slot-scope="props">
+                    <el-input v-model="suggestPrices[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-button type="danger" @click="doSuggestPrice(props.row, props.$index)">提交建议价格</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'" label="零售价  内部数量 操作" width="230">
+                <template slot-scope="props">
+                    <el-input v-model="reportPrices[props.$index]" style="width: 55px; margin-right: 4px;"></el-input>
+                    <el-input v-model="companyCounts[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-button type="danger" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
+                </template>
+            </el-table-column>
+            <el-table-column v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'" label="上架操作" width="80">
+                <template slot-scope="props">
+                    <el-button type="danger" @click="doPutonBatch(props.row)">上架</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -146,10 +187,10 @@
 
 <script>
     import {
-        addBatchGoods,
+        addBatchGoods, cacSuggestPrice,
         deleteBatchGoodsById,
         getBatchinfoById,
-        listBatchGoodsByCon, submitLocalPrice,
+        listBatchGoodsByCon, putonBatch, submitLocalPrice, submitReportPrice,
         updateBatchGoodsById, uptBatchLadingBill, uptBatchRealCount
     } from "../../../util/module";
     import GoodsSelection from "../../common/selection/GoodsSelection";
@@ -210,6 +251,9 @@
                 },
                 realCountIns:[],//入库数量数组
                 localPrices:[],//本地价格数组
+                suggestPrices:[],//建议价格
+                companyCounts:[],//内部数量
+                reportPrices:[],//零售价
             }
         },
 
@@ -220,11 +264,27 @@
                 } else {
                     return '修改';
                 }
-            }
+            },
+
+            showRealCount(){
+                return this.batchInfo.status!=='9';
+            },
+
+            showOperation(){
+                return this.batchInfo.status === '9';
+            },
+
+            showSuggestPriceOperation(){
+                return this.batchInfo.status==='6'||this.batchInfo.status==='C'||this.batchInfo.status==='5';
+            },
+
+            showLocalPriceOperation(){
+                return this.batchInfo.status==='7'||this.batchInfo.status==='B'||this.batchInfo.status==='6';
+            },
         },
 
         created() {
-            this.$route.query.batchId="BI685783182406328320";//debug
+            // this.$route.query.batchId="BI685783182406328320";//debug
             if (this.$route.query.batchId) {
                 this.searchForm.batchId = this.$route.query.batchId;
                 this.getBatchInfo();
@@ -234,6 +294,59 @@
         methods: {
             initData() {
                 this.getGoodsSerials();
+            },
+
+            //如果条件符合shows中的任意一个条件，那么就返回true
+            isShow(mStatus, tab){
+                let status=(mStatus+'').toUpperCase();
+                const shows=[
+                    {status:'C', tab:'cacSuggestPrice'},
+                    {status:'5', tab:'cacSuggestPrice'},
+                    {status:'D', tab:'cacSuggestPrice'},
+                    {status:'4', tab:'cacSuggestPrice'},
+                    {status:'E', tab:'cacSuggestPrice'},
+                    {status:'1', tab:'cacSuggestPrice'},
+                    {status:'D', tab:'reportPrice'},
+                    {status:'4', tab:'reportPrice'},
+                    {status:'E', tab:'reportPrice'},
+                    {status:'1', tab:'reportPrice'},
+                ];
+
+                let flag=false;
+
+                shows.forEach(item=>{
+                    if (tab !== item.tab) {
+                        return true;
+                    }
+                    if (item.max&&item.min){
+                        if (status <= item.max&&status>=item.min){
+                            flag=true;
+                            return false;
+                        }
+                    }
+                    if (item.max) {
+                        if (status <= item.max) {
+                            flag=true;
+                            return false;
+                        }
+                    }
+                    if (item.min) {
+                        if (status >= item.min) {
+                            flag=true;
+                            return false;
+                        }
+                    }
+                    if (item.status) {
+                        if (status === item.status) {
+                            flag=true;
+                            return false;
+                        }
+                    }
+                });
+
+
+                return flag;
+
             },
 
             changeRealCount(item, index){
@@ -272,6 +385,70 @@
                 obj.localPrice=parseInt(this.localPrices[index]);
                 params.goodsList.push(obj);
                 submitLocalPrice(this, params).then(
+                    res=>{
+                        this.$message.success('提交成功!');
+                        this.getBatchInfo();
+                    },
+                    res=>{
+
+                    }
+                ).catch();
+            },
+
+            doSuggestPrice(item, index){
+                let params={};
+                params.batchId=this.batchInfo.batchId;
+                params.goodsList=[];
+                let obj={};
+                obj.recycleSeq='1';
+                obj.batchGoodsId=item.batchGoodsId;
+                obj.suggestPrice =parseInt(this.suggestPrices[index]);
+                params.goodsList.push(obj);
+                cacSuggestPrice(this, params).then(
+                    res=>{
+                        this.$message.success('提交成功!');
+                        this.getBatchInfo();
+                    },
+                    res=>{
+
+                    }
+                ).catch();
+            },
+
+            doReportPrices(item, index){
+                let params={};
+                params.batchId=this.batchInfo.batchId;
+                params.goodsList=[];
+                let obj={};
+                obj.recycleSeq='1';
+                obj.batchGoodsId=item.batchGoodsId;
+                if (this.reportPrices[index] && this.reportPrices[index] !== '') {
+                    obj.reportPrice  =parseInt(this.reportPrices[index]);
+                }
+                if (this.companyCounts[index] && this.companyCounts[index] !== '') {
+                    obj.companyCount  =parseInt(this.companyCounts[index]);
+                }
+                params.goodsList.push(obj);
+                submitReportPrice(this, params).then(
+                    res=>{
+                        this.$message.success('提交成功!');
+                        this.getBatchInfo();
+                    },
+                    res=>{
+
+                    }
+                ).catch();
+            },
+
+            doPutonBatch(item){
+                let params={};
+                params.batchId=this.batchInfo.batchId;
+                params.goodsList=[];
+                let obj={};
+                obj.recycleSeq='1';
+                obj.batchGoodsId=item.batchGoodsId;
+                params.goodsList.push(obj);
+                putonBatch(this, params).then(
                     res=>{
                         this.$message.success('提交成功!');
                         this.getBatchInfo();
@@ -378,7 +555,8 @@
                         this.getGoodsSerials();
                     },
                     res => {
-
+                        //无批次，将物资信息清空
+                        this.tableData=[];
                     }
                 ).catch();
             },

@@ -3976,6 +3976,144 @@ const submitLocalPrice = (me, params) => {
     });
 };
 
+/**
+ * 1.3.4.2批次物资计算建议价格 /cacSuggestPrice  位图索引 52
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const cacSuggestPrice = (me, params) => {
+    console.log("cacSuggestPrice params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.cacSuggestPrice.url;
+        urlParams.txnId = PERMISSIONS.cacSuggestPrice.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId ) {
+            send.batchId  = params.batchId ;
+            singArray.batchId  = params.batchId ;
+        }
+        if (params.goodsList  ) {
+            send.goodsList   = params.goodsList  ;
+            singArray.goodsList   = params.goodsList  ;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 批次物资提交申报零售价 /submitReportPrice  位图索引 53
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const submitReportPrice = (me, params) => {
+    console.log("submitReportPrice params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.submitReportPrice.url;
+        urlParams.txnId = PERMISSIONS.submitReportPrice.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId ) {
+            send.batchId  = params.batchId ;
+            singArray.batchId  = params.batchId ;
+        }
+        if (params.goodsList  ) {
+            send.goodsList   = params.goodsList  ;
+            singArray.goodsList   = params.goodsList  ;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.4.4批次物资上架 /putonBatch  位图索引 54
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const putonBatch = (me, params) => {
+    console.log("putonBatch params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.putonBatch.url;
+        urlParams.txnId = PERMISSIONS.putonBatch.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId ) {
+            send.batchId  = params.batchId ;
+            singArray.batchId  = params.batchId ;
+        }
+        if (params.goodsList  ) {
+            send.goodsList   = params.goodsList  ;
+            singArray.goodsList   = params.goodsList  ;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+const wxIndexContent = (me, params) => {
+    console.log("wxIndexContent params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.wxIndexContent.url;
+        urlParams.url += '?currentPage=' + params.currentPage;
+        urlParams.txnId = PERMISSIONS.wxIndexContent.txnId;
+        // urlParams.noSing = true;
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4089,5 +4227,9 @@ export {
     updateInstInfo,
     deleteDepartmentInfo,
     updateDepartmentInfo,
-    submitLocalPrice
+    submitLocalPrice,
+    cacSuggestPrice,
+    submitReportPrice,
+    putonBatch,
+    wxIndexContent
 };

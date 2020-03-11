@@ -116,6 +116,27 @@ const PERMISSIONS = {
         url: BASE_URL + '/fixPrice/submitLocalPrice',
         txnId: 'submitLocalPrice'
     },
+    //52
+    cacSuggestPrice: {
+        index: 52,
+        name: '提交建议价格',
+        url: BASE_URL + '/fixPrice/cacSuggestPrice',
+        txnId: 'cacSuggestPrice'
+    },
+    //53
+    submitReportPrice: {
+        index: 53,
+        name: '提交申报零售价',
+        url: BASE_URL + '/fixPrice/submitReportPrice',
+        txnId: 'submitReportPrice'
+    },
+    //54
+    putonBatch: {
+        index: 54,
+        name: '批次物资上架',
+        url: BASE_URL + '/fixPrice/putonBatch',
+        txnId: 'putonBatch'
+    },
     //102
     addInst: {
         index: 102,
@@ -378,6 +399,11 @@ const PERMISSIONS = {
     getLoginStatus: {
         index: null,
         name: '查询二维码登录状态'
+    },
+    wxIndexContent: {
+        name: '首页内容',
+        url: BASE_URL + '/wxBase/wxIndexContent',
+        txnId: 'wxIndexContent'
     },
 };
 
