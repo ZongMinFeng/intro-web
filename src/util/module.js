@@ -4090,6 +4090,12 @@ const putonBatch = (me, params) => {
     });
 };
 
+/**
+ * 1.2.1.2	 首页内容--/wxIndexContent?currentPage=1 无权限无验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
 const wxIndexContent = (me, params) => {
     console.log("wxIndexContent params", params); //debug
     return new Promise((resolve, reject) => {

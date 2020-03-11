@@ -7,6 +7,7 @@ import store from '../store'
 import * as cfg from "../config/cfg";
 
 let BASE_URL = cfg.baseUrl;
+let BASE_URL_API = cfg.baseUrlApi;
 
 //所有权限
 //属性index为funcMap位图的位置，从1开始；index为null表示此权限默认存在
@@ -402,7 +403,7 @@ const PERMISSIONS = {
     },
     wxIndexContent: {
         name: '首页内容',
-        url: BASE_URL + '/wxBase/wxIndexContent',
+        url: BASE_URL_API + '/wxBase/wxIndexContent',
         txnId: 'wxIndexContent'
     },
 };

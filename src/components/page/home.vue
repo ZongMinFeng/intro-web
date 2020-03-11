@@ -1,45 +1,41 @@
 <template>
-    <div>
-        <el-card shadow="hover" class="mgb20 cont-top">
-            <!--<div class="user-info">-->
-                <!--&lt;!&ndash;<img src="static/img/img.png" class="user-avator" alt="">&ndash;&gt;-->
-                <!--<div class="user-info-cont">-->
-                    <!--&lt;!&ndash;<div class="user-info-name">{{name}}</div>&ndash;&gt;-->
-                    <!--<div>{{role}}</div>-->
-                <!--</div>-->
-            <!--</div>-->
-            <!--<div class="user-info-list">欢迎登录：<span>物业后台管理</span></div>-->
-          <div class="user-info-list">欢迎登录：<span>用户测试系统</span></div>
-
-        </el-card>
+    <div class="container">
     </div>
 </template>
 
 <script>
-    import Schart from 'vue-schart';
-    import {sendServer} from './../../util/common';
-    import cfg from '../../config/cfg';
-    import moment from 'moment'
+    import {wxIndexContent} from "../../util/module";
 
     export default {
         data() {
             return {
-                name: localStorage.getItem('adminFlag')
+                currentPage: 1,
+                pageSize: 10,
+                AllCount: 0,
+                goodsList:[],
             }
         },
-        components: {
-
-            // Schart
-        },
-        computed: {
-            role() {
-                return this.name === 'Admin' ? '管理员' : '普通用户';
-            }
-        },
+        components: {},
+        computed: {},
         created() {
+            this.getOrders();
         },
         methods: {
+            getOrders(){
+                let params={};
+                params.currentPage=this.currentPage;
+                wxIndexContent(this, params).then(
+                    res=>{
+                        if (res.data.goodsList) {
+                            this.goodsList=res.data.goodsList;
+                        }
+                        console.log('goodsList', this.goodsList)//debug
+                    },
+                    res=>{
 
+                    }
+                ).catch();
+            },
         }
     }
 
@@ -109,10 +105,10 @@
         font-size: 22px;
         color: #1f2f3d;
         /*min-width: 400px;*/
-        word-break:keep-all;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
+        word-break: keep-all;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
 </style>
