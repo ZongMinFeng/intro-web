@@ -1,97 +1,103 @@
 module.exports = {
-    routes: [{
-        path: '',
-        component: resolve => require(['../components/common/Home.vue'], resolve),
-        redirect: '/home',
-        meta: {title: '自述文件'},
-        children: [{
-            path: '/home',
-            component: resolve => require(['../components/page/home.vue'], resolve),
-            meta: {title: '欢迎'}
+    routes: [
+        {
+            path: '',
+            component: resolve => require(['../components/common/Home.vue'], resolve),
+            redirect: '/home',
+            meta: {title: '自述文件'},
+            children: [
+                {
+                    path: '/home',
+                    component: resolve => require(['../components/page/home.vue'], resolve),
+                    meta: {title: '欢迎'}
+                },
+
+                {
+                    path: '/instAction',
+                    component: resolve => require(['../components/page/setting/instActionSet.vue'], resolve),
+                    meta: {title: '公司设置', function: 'instAction'}
+                },
+
+                {
+                    path: '/departmentAction',
+                    component: resolve => require(['../components/page/setting/departmentAction.vue'], resolve),
+                    meta: {title: '部门设置', function: 'departmentAction'}
+                },
+
+                {
+                    path: '/positionAction',
+                    component: resolve => require(['../components/page/setting/positionAction.vue'], resolve),
+                    meta: {title: '职位设置', function: 'positionAction'}
+                },
+
+                {
+                    path: '/tellerAction',
+                    component: resolve => require(['../components/page/setting/tellerAction.vue'], resolve),
+                    meta: {title: '员工管理', function: 'tellerAction'}
+                },
+
+                {
+                    path: '/categoryAction',
+                    component: resolve => require(['../components/page/goods/categoryAction.vue'], resolve),
+                    meta: {title: '物资分类', function: 'categoryAction'}
+                },
+                {
+                    path: '/unitAction',
+                    component: resolve => require(['../components/page/goods/unitAction.vue'], resolve),
+                    meta: {title: '物资单位', function: 'unitAction'}
+                },
+                {
+                    path: '/goodslistAction',
+                    component: resolve => require(['../components/page/goods/goodslistAction.vue'], resolve),
+                    meta: {title: '物资列表', function: 'goodslistAction'}
+                },
+                {
+                    path: '/goodsInfos',
+                    component: resolve => require(['../components/page/goods/goodsInfos.vue'], resolve),
+                    meta: {title: '物资信息', function: 'goodsInfos'}
+                },
+                {
+                    path: '/partTimeJob',
+                    component: resolve => require(['../components/page/setting/partTimeJob.vue'], resolve),
+                    meta: {title: '员工兼职', function: 'goodsInfos'}
+                },
+                {
+                    path: '/userPassword',
+                    component: resolve => require(['../components/page/setting/userPassword.vue'], resolve),
+                    meta: {title: '修改密码', function: 'userPassword'}
+                },
+                {
+                    path: '/departmentLogin',
+                    component: resolve => require(['../components/page/setting/departmentLogin.vue'], resolve),
+                    meta: {title: '切换部门', function: 'departmentLogin'}
+                },
+                {
+                    path: '/goodsSerail',
+                    component: resolve => require(['../components/page/goods/goodsSerail.vue'], resolve),
+                    meta: {title: '物资系列', function: 'goodsSerail'}
+                },
+                {
+                    path: '/batchListAction',
+                    component: resolve => require(['../components/page/batch/batchListAction.vue'], resolve),
+                    meta: {title: '批次列表', function: 'batchListAction'}
+                },
+                {
+                    path: '/batchInfoAction',
+                    component: resolve => require(['../components/page/batch/batchInfoAction.vue'], resolve),
+                    meta: {title: '批次操作', function: 'batchInfoAction'}
+                },
+                {
+                    path: '/goodsSale',
+                    component: resolve => require(['../components/page/sale/goodsSale.vue'], resolve),
+                    meta: {title: '商品销售', function: 'batchInfoAction'}
+                },
+                {
+                    path: '/test',
+                    component: resolve => require(['../test/Test.vue'], resolve),
+                    meta: {title: '测试页面', function: 'test'}
+                },
+            ]
         },
-
-            {
-                path: '/instAction',
-                component: resolve => require(['../components/page/setting/instActionSet.vue'], resolve),
-                meta: {title: '公司设置', function: 'instAction'}
-            },
-
-            {
-                path: '/departmentAction',
-                component: resolve => require(['../components/page/setting/departmentAction.vue'], resolve),
-                meta: {title: '部门设置', function: 'departmentAction'}
-            },
-
-            {
-                path: '/positionAction',
-                component: resolve => require(['../components/page/setting/positionAction.vue'], resolve),
-                meta: {title: '职位设置', function: 'positionAction'}
-            },
-
-            {
-                path: '/tellerAction',
-                component: resolve => require(['../components/page/setting/tellerAction.vue'], resolve),
-                meta: {title: '员工管理', function: 'tellerAction'}
-            },
-
-            {
-                path: '/categoryAction',
-                component: resolve => require(['../components/page/goods/categoryAction.vue'], resolve),
-                meta: {title: '物资分类', function: 'categoryAction'}
-            },
-            {
-                path: '/unitAction',
-                component: resolve => require(['../components/page/goods/unitAction.vue'], resolve),
-                meta: {title: '物资单位', function: 'unitAction'}
-            },
-            {
-                path: '/goodslistAction',
-                component: resolve => require(['../components/page/goods/goodslistAction.vue'], resolve),
-                meta: {title: '物资列表', function: 'goodslistAction'}
-            },
-            {
-                path: '/goodsInfos',
-                component: resolve => require(['../components/page/goods/goodsInfos.vue'], resolve),
-                meta: {title: '物资信息', function: 'goodsInfos'}
-            },
-            {
-                path: '/partTimeJob',
-                component: resolve => require(['../components/page/setting/partTimeJob.vue'], resolve),
-                meta: {title: '员工兼职', function: 'goodsInfos'}
-            },
-            {
-                path: '/userPassword',
-                component: resolve => require(['../components/page/setting/userPassword.vue'], resolve),
-                meta: {title: '修改密码', function: 'userPassword'}
-            },
-            {
-                path: '/departmentLogin',
-                component: resolve => require(['../components/page/setting/departmentLogin.vue'], resolve),
-                meta: {title: '切换部门', function: 'departmentLogin'}
-            },
-            {
-                path: '/goodsSerail',
-                component: resolve => require(['../components/page/goods/goodsSerail.vue'], resolve),
-                meta: {title: '物资系列', function: 'goodsSerail'}
-            },
-            {
-                path: '/batchListAction',
-                component: resolve => require(['../components/page/batch/batchListAction.vue'], resolve),
-                meta: {title: '批次列表', function: 'batchListAction'}
-            },
-            {
-                path: '/batchInfoAction',
-                component: resolve => require(['../components/page/batch/batchInfoAction.vue'], resolve),
-                meta: {title: '批次操作', function: 'batchInfoAction'}
-            },
-            {
-                path: '/test',
-                component: resolve => require(['../test/Test.vue'], resolve),
-                meta: {title: '测试页面', function: 'test'}
-            },
-        ]
-    },
-
         {
             path: '/login',
             component: resolve => require(['../components/page/Login.vue'], resolve)

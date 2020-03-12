@@ -406,6 +406,11 @@ const PERMISSIONS = {
         url: BASE_URL_API + '/wxBase/wxIndexContent',
         txnId: 'wxIndexContent'
     },
+    getAllConfig: {
+        name: '获取所有配置',
+        url: BASE_URL_API + '/wxCache/getAllConfig',
+        txnId: 'getAllConfig'
+    },
 };
 
 const handelPermission = function (funcMap) {

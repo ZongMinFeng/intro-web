@@ -4120,6 +4120,36 @@ const wxIndexContent = (me, params) => {
     });
 };
 
+/**
+ *1.2.4.1获取所有配置--getAllConfig  无需授权无验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getAllConfig = (me, params) => {
+    console.log("getAllConfig params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.getAllConfig.url;
+        urlParams.url += '?currentPage=' + params.getAllConfig;
+        urlParams.txnId = PERMISSIONS.getAllConfig.txnId;
+        // urlParams.noSing = true;
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4237,5 +4267,6 @@ export {
     cacSuggestPrice,
     submitReportPrice,
     putonBatch,
-    wxIndexContent
+    wxIndexContent,
+    getAllConfig
 };
