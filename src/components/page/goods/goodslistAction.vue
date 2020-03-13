@@ -60,7 +60,14 @@
             </el-table-column>
             <el-table-column label="物资价格" width="160" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p>￥{{formatPrice(props.row.specNowPrice)}}元</p>
+                    <div v-if="props.row.specNowPrice>0.005">
+                        <p>人民币:￥{{formatPrice(props.row.specNowPrice)}}</p>
+                        <p>泰拉:{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
+                        <p>美元:${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
+                    </div>
+                    <div v-else style="color:red">
+                        未定价
+                    </div>
                 </template>
             </el-table-column>
             <el-table-column label="型号" prop="goodsType"></el-table-column>
@@ -129,10 +136,10 @@
                     {id: 'Y', value: '有'},
                 ],
                 statusList: [
-                    {id: '1', value: '正常--上架'},
+                    {id: '1', value: '上架'},
                     {id: '2', value: '注销'},
-                    {id: '3', value: '停用--下架'},
-                    {id: '4', value: '新增--初始状态'},
+                    {id: '3', value: '下架'},
+                    {id: '4', value: '新增'},
                 ],
                 tableData: [],
                 currentPage: 1,
@@ -140,6 +147,8 @@
                 AllCount: 0,
                 pictureUrl: '',
                 units: [],
+                dollarRate:0,
+                nalaRate:0,
             }
         },
 
@@ -154,6 +163,8 @@
 
         created() {
             this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.nalaRate=localStorage.getItem('nalaRate')||0;
+            this.dollarRate=localStorage.getItem('dollarRate')||0;
             this.getUnits();
             this.initData();
         },

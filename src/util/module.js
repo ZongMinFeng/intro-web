@@ -4150,6 +4150,39 @@ const getAllConfig = (me, params) => {
     });
 };
 
+/**
+ * 1.3.2.1.4根据主键查询  /getGooCategoryById  位图索引204
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getGooCategoryById = (me, params) => {
+    console.log("getGooCategoryById params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.getGooCategoryById.url;
+        urlParams.txnId = PERMISSIONS.getGooCategoryById.txnId;
+        urlParams.noSing = true;
+
+        if (params.categoryId != null) {
+            send.categoryId=params.categoryId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4268,5 +4301,6 @@ export {
     submitReportPrice,
     putonBatch,
     wxIndexContent,
-    getAllConfig
+    getAllConfig,
+    getGooCategoryById
 };

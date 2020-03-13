@@ -131,30 +131,7 @@ module.exports = {
             index: 'goods',
             title: '物资管理',
             flag: false,
-            subs: [{
-                index: 'categoryAction',
-                title: '物资分类',
-                flag: true,
-                function: 'categoryAction',
-                permissions: [
-                    'getGooCategoryById',
-                    'addGooCategory',
-                    'deleteGooCategoryById',
-                    'updateGooCategoryById'
-                ]
-            },
-                {
-                    index: 'unitAction',
-                    title: '物资单位',
-                    flag: true,
-                    function: 'unitAction',
-                    permissions: [
-                        'addGooUnitinfo',
-                        'deleteGooUnitinfoById',
-                        'getGooUnitinfoById',
-                        'listAllUnitinfos'
-                    ]
-                },
+            subs: [
                 {
                     index: 'goodslistAction',
                     title: '物资列表',
@@ -182,13 +159,38 @@ module.exports = {
                         'listGoodsserialsByGoodsId'
                     ]
                 },
+                {
+                    index: 'categoryAction',
+                    title: '物资分类',
+                    flag: true,
+                    function: 'categoryAction',
+                    permissions: [
+                        'getGooCategoryById',
+                        'addGooCategory',
+                        'deleteGooCategoryById',
+                        'updateGooCategoryById',
+                        'getGooCategoryById',
+                    ]
+                },
+                {
+                    index: 'unitAction',
+                    title: '物资单位',
+                    flag: true,
+                    function: 'unitAction',
+                    permissions: [
+                        'addGooUnitinfo',
+                        'deleteGooUnitinfoById',
+                        'getGooUnitinfoById',
+                        'listAllUnitinfos'
+                    ]
+                },
             ],
         },
 
         {
             icon: 'el-icon-school',
             index: 'batch',
-            title: '业务管理',
+            title: '采购管理',
             flag: false,
             subs: [
                 {

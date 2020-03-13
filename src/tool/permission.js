@@ -186,7 +186,7 @@ const PERMISSIONS = {
     //112
     getInstById: {
         index: 112,
-        name: '查询机构信息'
+        name: '查询公司信息'
     },
     //113
     addTellerDepartment: {
@@ -259,10 +259,19 @@ const PERMISSIONS = {
         index: 203,
         name: '修改物资分类'
     },
-    //205
+    //204
     getGooCategoryById: {
+        index: 204,
+        name: '查询物资分类',
+        url: BASE_URL + '/goods/getGooCategoryById',
+        txnId: 'getGooCategoryById'
+    },
+    //205
+    listGooCategorysByPid: {
         index: 205,
-        name: '查询物资分类'
+        name: '查询物资所有子分类',
+        url: BASE_URL + '/goods/listGooCategorysByPid',
+        txnId: 'listGooCategorysByPid'
     },
     //206
     addGooUnitinfo: {

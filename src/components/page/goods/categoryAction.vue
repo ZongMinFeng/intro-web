@@ -5,8 +5,8 @@
     </div>
 
     <ul class="levels">
-      <li v-for="item in levels" :key="item.id">
-        <button @click="goToLevel(item)">{{item.label}}</button>
+      <li v-for="(item) in levels" :key="item.id">
+        <button @click="goToLevel(item)">{{item.level}}.{{item.label}}</button>
         <span>&nbsp;>>&nbsp;&nbsp;</span>
       </li>
     </ul>
@@ -69,7 +69,7 @@
         levels: [
           {
             level: 0,
-            label: '基础分类',
+            label: '全部',
             categoryId: 'root',
           },
         ],

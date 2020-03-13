@@ -22,31 +22,41 @@
                     <el-form-item label="子公司名称" prop="instName">
                         <el-input v-model="dialogForm.instName" maxlength="64" auto-complete="off"></el-input>
                     </el-form-item>
-                    <el-form-item v-if="flag===1" label="总经理名称" prop="tellerName">
-                        <el-input v-model="dialogForm.tellerName" maxlength="64" auto-complete="off"></el-input>
-                    </el-form-item>
                     <el-form-item v-if="flag===1" label="总经理登录名" prop="tellerId">
                         <el-input v-model="dialogForm.tellerId" maxlength="64" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="flag===1" label="总经理名称" prop="tellerName">
+                        <el-input v-model="dialogForm.tellerName" maxlength="64" auto-complete="off"></el-input>
                     </el-form-item>
                     <el-form-item v-if="flag===1" label="总经理手机号" prop="tellerPhone">
                         <el-input v-model="dialogForm.tellerPhone" maxlength="11" auto-complete="off"></el-input>
                     </el-form-item>
                     <div>
-                    <!--<el-form-item v-if="flag===1" label="管理员权限" prop="tellerFuncMap">-->
+                        <!--<el-form-item v-if="flag===1" label="管理员权限" prop="tellerFuncMap">-->
                         请赋予子公司总经理权限:
                         <position-selection v-model="dialogForm.tellerFuncMap"></position-selection>
-                        已选择：{{dialogForm.tellerFuncMap}}
-                    <!--</el-form-item>-->
+                        <!--测试使用-->
+                        <!--已选择：{{dialogForm.tellerFuncMap}}-->
+                        <!--</el-form-item>-->
                     </div>
                 </el-form>
                 <span slot="footer" class="dialog-footer">
-        <el-button @click="dialogVisible = false">取 消</el-button>
-        <el-button type="primary" @click="handleConfirm('instPreservationForm')">确 定</el-button>
-      </span>
+                    <el-button @click="dialogVisible = false">取 消</el-button>
+                    <el-button type="primary" @click="handleConfirm('instPreservationForm')">确 定</el-button>
+                </span>
             </el-dialog>
 
-            <el-dialog title="新密码" :visible.sync="passwordVisible">
-                {{passwordForm.tellerPwd}}
+            <el-dialog title="请记录登录信息" :visible.sync="passwordVisible">
+                <div class="passWordDiv">
+                    倒计时:&nbsp;{{passwordForm.time}}<br>
+                    <br>
+                    用户名:&nbsp;{{passwordForm.tellerId}}<br>
+                    <br>
+                    密&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;{{passwordForm.tellerPwd}}
+                </div>
+                <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="passwordVisible = false">确 定</el-button>
+                </span>
             </el-dialog>
 
         </div>
@@ -71,20 +81,15 @@
         },
         data() {
             const validateUsername = (rule, value, callback) => {
+                if (!value) {
+                    callback();
+                }
                 if (!validUsername(value)) {
                     callback(new Error('请填写纯数字手机号！'))
                 } else if (value.substr(0, 1) !== '1') {
                     callback(new Error('手机号格式错误！'))
                 } else if (value.length !== 11) {
                     callback(new Error('手机号必须为11位！'))
-                } else {
-                    callback()
-                }
-            };
-
-            const validateAliasName = (rule, value, callback) => {
-                if (!value) {
-                    callback(new Error('请填写管理员名称！'))
                 } else {
                     callback()
                 }
@@ -115,7 +120,6 @@
                 uptDisabled: false,
                 rules: {
                     instName: [{required: true, validate: '', trigger: 'blur', validator: validateInstName}],
-                    tellerName: [{required: true, validate: '', trigger: 'blur', validator: validateAliasName}],
                     tellerId: [{required: true, message: '请输入管理员ID', trigger: 'blur'}],
                     tellerPhone: [{required: false, trigger: 'blur', validator: validateUsername}]
                 },
@@ -131,8 +135,12 @@
                 flag: 1,
                 passwordVisible: false,
                 passwordForm: {
-                    tellerPwd: ''
+                    tellerId: '',
+                    tellerPwd: '',
+                    time:'',
                 },
+                timer:'',
+                timerData:'',
             }
         },
 
@@ -173,6 +181,7 @@
 
         beforeDestroy() {
             bus.$off('sysInstInfo');
+            clearTimeout(this.timer);
         },
 
         methods: {
@@ -220,17 +229,6 @@
                 this.titleStatus = 0
             },
 
-            onUpdateNewTap() {
-                this.dialogVisible = true;
-                this.dialogTitle = this.getDialogTitle('upt');
-                this.titleStatus = 1;
-                this.instPreservationForm = {
-                    aliasName: this.sysInstInfo.aliasName,
-                    instName: this.sysInstInfo.instName,
-                    adminPhone: this.sysInstInfo.adminPhone
-                }
-            },
-
             onRefresh() {
                 this.DestroyIncomeStatistics = false;
                 this.dialogForm = {
@@ -268,9 +266,20 @@
                         res => {
                             this.$message.success('新增成功');
                             this.passwordForm.tellerPwd = res.data.tellerPwd;
+                            this.passwordForm.tellerId = this.dialogForm.tellerId;
                             this.onRefresh();
                             this.dialogVisible = false;
                             this.passwordVisible = true;
+
+                            //倒计时
+                            this.passwordForm.time=30;
+                            this.timerData=setInterval(()=>{
+                                this.passwordForm.time--;
+                            }, 1000);
+                            this.timer=setTimeout(()=>{
+                                this.passwordVisible=false;
+                                clearInterval(this.timerData);
+                            }, 30000);
                         },
                         res => {
                         }
@@ -279,13 +288,13 @@
 
                 if (this.flag === 2) {
                     //修改
-                    params.specInstId  = this.dialogForm.specInstId ;
-                    params.version  = this.dialogForm.version ;
+                    params.specInstId = this.dialogForm.specInstId;
+                    params.version = this.dialogForm.version;
                     params.instName = this.dialogForm.instName;
                     updateInstInfo(this, params).then(
                         res => {
                             this.$message.success('修改成功');
-                            let sysInstDepartment=res.data;
+                            let sysInstDepartment = res.data;
                             localStorage.setItem('sysInstDepartment', JSON.stringify(sysInstDepartment));
                             this.onRefresh();
                             this.dialogVisible = false;
@@ -461,7 +470,7 @@
 
             createTap(instInfo) {
                 console.log('createTap instInfo', instInfo);//debug
-                this.flag=1;
+                this.flag = 1;
                 this.dialogForm.specInstId = instInfo.instId;
                 this.dialogForm.instLevel = parseInt(instInfo.instLevel) + 1 + '';
                 this.dialogVisible = true;
@@ -469,10 +478,10 @@
 
             updateTap(instInfo) {
                 console.log('updateTap instInfo', instInfo);//debug
-                this.flag=2;
+                this.flag = 2;
                 this.dialogForm.specInstId = instInfo.instId;
-                this.dialogForm.version=instInfo.version;
-                this.dialogForm.instName=instInfo.instName;
+                this.dialogForm.version = instInfo.version;
+                this.dialogForm.instName = instInfo.instName;
                 this.dialogVisible = true;
             },
         }
@@ -505,6 +514,11 @@
         align-items: center;
         justify-content: center;
         font-size: 15px;
+    }
+
+    .passWordDiv {
+        width: 120px;
+        margin: 0 auto;
     }
 
 </style>
