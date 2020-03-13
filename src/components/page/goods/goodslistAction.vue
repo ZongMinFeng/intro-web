@@ -147,8 +147,8 @@
                 AllCount: 0,
                 pictureUrl: '',
                 units: [],
-                dollarRate:0,
-                nalaRate:0,
+                dollarRate:1,
+                nalaRate:1,
             }
         },
 
@@ -163,8 +163,8 @@
 
         created() {
             this.pictureUrl = cfg.service.uploadUrl + '/';
-            this.nalaRate=localStorage.getItem('nalaRate')||0;
-            this.dollarRate=localStorage.getItem('dollarRate')||0;
+            this.nalaRate=localStorage.getItem('nalaRate')||1;
+            this.dollarRate=localStorage.getItem('dollarRate')||1;
             this.getUnits();
             this.initData();
         },

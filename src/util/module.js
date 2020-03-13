@@ -4183,6 +4183,39 @@ const getGooCategoryById = (me, params) => {
     });
 };
 
+/**
+ * 1.3.2.8.5根据主键查询  /getGoodsserialById  位图索引229
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getGoodsserialById = (me, params) => {
+    console.log("getGoodsserialById params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.getGoodsserialById.url;
+        urlParams.txnId = PERMISSIONS.getGoodsserialById.txnId;
+        urlParams.noSing = true;
+
+        if (params.specGoodsId != null) {
+            send.specGoodsId=params.specGoodsId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4302,5 +4335,6 @@ export {
     putonBatch,
     wxIndexContent,
     getAllConfig,
-    getGooCategoryById
+    getGooCategoryById,
+    getGoodsserialById
 };

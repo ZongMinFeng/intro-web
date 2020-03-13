@@ -25,7 +25,7 @@
         <div>
             <ul class="itemUl">
                 <li v-for="item in goodsListShow" :key="item.specGoodsId" class="item">
-                    <a @click="goToBuy">
+                    <a @click="goToBuy(item)">
                         <div >
                             <div>
                                 <img :src="pictureUrl + item.goodsId + '/'+item.mainPicture">
@@ -33,12 +33,15 @@
                             <div>
                                 <div class="row1">
                                     <div class="price">
-                                        <span>￥</span>
-                                        <strong>{{item.specNowPrice}}</strong>
+                                        <span>人民币￥</span><strong>{{formatPrice(item.specNowPrice)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row2">
-
+                                    <div class="price2">
+                                        <span>泰拉 </span><strong>{{formatPrice(item.specNowPrice/nalaRate)}}</strong>
+                                        &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                                        <span>美元 $</span><strong>{{formatPrice(item.specNowPrice/dollarRate)}}</strong>
+                                    </div>
                                 </div>
                                 <div class="row3">
                                     <span>{{item.goodsName}}</span>
@@ -60,6 +63,7 @@
     import {getAllConfig, listGooCategorysByPid, wxIndexContent} from "../../util/module";
     import * as cfg from "../../config/cfg";
     import {getArrayObjectByCon, inArrayOptionByCons} from "../../Gw/GwArray";
+    import _String from '@/util/string';
 
     export default {
         data() {
@@ -83,7 +87,9 @@
                 },
                 categories:[],
                 categoryAll:[],
-                categoryShow:[]
+                categoryShow:[],
+                dollarRate:1,
+                nalaRate:1,
             }
         },
 
@@ -93,6 +99,8 @@
 
         created() {
             this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.nalaRate=localStorage.getItem('nalaRate')||1;
+            this.dollarRate=localStorage.getItem('dollarRate')||1;
             this.getGoods();
             this.getCategorys();
             this.getCategoryAll();
@@ -102,6 +110,11 @@
             getGoods() {
                 this.goodsList=[];
                 this.getGoodsOnce();
+            },
+
+            //格式化金额
+            formatPrice(price) {
+                return _String.number_format(price, 2);
             },
 
             getGoodsOnce(){
@@ -144,8 +157,9 @@
                 this.goodsListShow=goods;
             },
 
-            goToBuy(){
-                this.$router.push({path:'/goodsSale'});
+            goToBuy(item){
+                console.log('item', item);//debug
+                this.$router.push({path:'/goodsSale', query:{specGoodsId:item.specGoodsId}});
             },
 
             goToLevel(item) {
@@ -247,6 +261,7 @@
 
     .item:hover {
         border-color: rgb(255, 68, 0);
+        cursor: pointer;
     }
 
     .item img {
@@ -267,6 +282,7 @@
 
     .levels li button:hover {
         color: red;
+        cursor: pointer;
     }
 
     .categoryItem{
@@ -307,6 +323,23 @@
         color: rgb(128,111,102);
     }
 
+    .row1{
+        padding: 0 10px;
+    }
 
+    .price{
+        color: #F40;
+        font-size:18px;
+    }
+
+    .row2{
+        padding: 0 10px;
+        margin-top: 6px;
+    }
+
+    .row3{
+        padding: 0 10px;
+        margin-top: 6px;
+    }
 
 </style>

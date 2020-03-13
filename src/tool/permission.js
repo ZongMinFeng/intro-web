@@ -393,7 +393,9 @@ const PERMISSIONS = {
     //229
     getGoodsserialById: {
         index: 229,
-        name: '查询物资系列信息'
+        name: '查询物资系列信息',
+        url: BASE_URL + '/goods/getGoodsserialById',
+        txnId: 'getGoodsserialById'
     },
     //230
     listGoodsserialsByGoodsId: {
