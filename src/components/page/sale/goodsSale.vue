@@ -3,13 +3,15 @@
         <div>
             <div class="proinfoLeft">
                 <div class="imgzoom-main">
-                    <img :src="pictureUrl+goodsInfo.goodsId+'/'+imgShow">
+                    <img v-if="goodsInfo.goodsId" :src="pictureUrl+goodsInfo.goodsId+'/'+imgShow">
                 </div>
-                <ul class="imgzoom-thumb">
-                    <li v-for="item in goodsInfo.imgs" :key="item">
-                        <img :src="pictureUrl+goodsInfo.goodsId+'/'+item">
-                    </li>
-                </ul>
+                <div class="imgzoom-thumb">
+                    <ul>
+                        <li v-for="(item, index) in goodsInfo.imgs" :key="item">
+                            <img :class="{redBorder:index===imgIndex}" :src="pictureUrl+goodsInfo.goodsId+'/'+item" @mouseenter="mouseenter(item, index)" @mouseleave="mouseleave(index)">
+                        </li>
+                    </ul>
+                </div>
             </div>
             <div class="proinfoMain">
 
@@ -34,6 +36,8 @@
                 specGoodsId:'',
                 imgShow:'',
                 pictureUrl:'',
+                imgIndex:0,
+                timer:[],
             }
         },
 
@@ -61,6 +65,17 @@
 
                     }
                 ).catch();
+            },
+
+            mouseenter(item, index){
+                this.timer[index]=setTimeout(()=>{
+                    this.imgShow=item;
+                    this.imgIndex=index;
+                }, 200);
+            },
+
+            mouseleave(index){
+                clearTimeout(this.timer[index]);
             }
         }
     }
@@ -82,6 +97,12 @@
         width: 400px;
     }
 
+    .imgzoom-thumb{
+        width: 400px;
+        margin: 15px 32px 0 32px;
+        overflow: hidden;
+    }
+
     .imgzoom-thumb ul{
         list-style-type: none;
     }
@@ -96,5 +117,9 @@
     .imgzoom-thumb li img{
         height: 60px;
         width: 60px;
+    }
+
+    .redBorder{
+        border: 2px solid red;
     }
 </style>
