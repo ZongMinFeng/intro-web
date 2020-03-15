@@ -19,6 +19,48 @@ const PERMISSIONS = {
         url: BASE_URL + '/system/addSystemChannel',
         txnId: 'addSystemChannel'
     },
+    //10
+    createOrder: {
+        index: 10,
+        name: '下单',
+        url: BASE_URL_API + '/order/createOrder',
+        txnId: 'createOrder'
+    },
+    //11
+    listAllOrders: {
+        index: 11,
+        name: '查询所有订单',
+        url: BASE_URL + '/orderMng/listAllOrders',
+        txnId: 'listAllOrders'
+    },
+    //12
+    confirmOrderStock: {
+        index: 12,
+        name: '接单',
+        url: BASE_URL + '/orderMng/confirmOrderStock',
+        txnId: 'confirmOrderStock'
+    },
+    //13
+    confirmOrderPay: {
+        index: 13,
+        name: '确认订单收款',
+        url: BASE_URL + '/orderMng/confirmOrderPay',
+        txnId: 'confirmOrderPay'
+    },
+    //14
+    confirmOrderSend: {
+        index: 14,
+        name: '确认订单发货',
+        url: BASE_URL + '/orderMng/confirmOrderSend',
+        txnId: 'confirmOrderSend'
+    },
+    //15
+    closeOrder: {
+        index: 15,
+        name: '关闭订单',
+        url: BASE_URL + '/orderMng/closeOrder',
+        txnId: 'closeOrder'
+    },
     //31
     listBatchsByCon: {
         index: 31,

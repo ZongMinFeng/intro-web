@@ -8,7 +8,8 @@
                 <div class="imgzoom-thumb">
                     <ul>
                         <li v-for="(item, index) in goodsInfo.imgs" :key="item">
-                            <img :class="{redBorder:index===imgIndex}" :src="pictureUrl+goodsInfo.goodsId+'/'+item" @mouseenter="mouseenter(item, index)" @mouseleave="mouseleave(index)">
+                            <img :class="{redBorder:index===imgIndex}" :src="pictureUrl+goodsInfo.goodsId+'/'+item"
+                                 @mouseenter="mouseenter(item, index)" @mouseleave="mouseleave(index)">
                         </li>
                     </ul>
                 </div>
@@ -43,10 +44,10 @@
                             <span class="mainPrice">人民币: ￥{{formatPrice(goodsInfo.specNowPrice)}}</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="minorPrice">泰拉 </span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
+                            <span class="minorPrice">泰拉:&nbsp;</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
                         </el-col>
                         <el-col :span="4">
-                            <span class="minorPrice">美元 $</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/dollarRate)}}
+                            <span class="minorPrice">美元:&nbsp;$</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/dollarRate)}}
                         </strong></el-col>
                     </el-row>
                 </div>
@@ -56,68 +57,188 @@
                             <span class="i-header">数&nbsp;&nbsp;&nbsp;&nbsp;量</span>
                         </el-col>
                         <el-col :span="12">
-                            <div class="num-">&nbsp;-&nbsp;</div>&nbsp;
-                            <div class="numBuy">{{numBuy}}</div>
-                            <div class="numplus">&nbsp;+&nbsp;</div>&nbsp;
+                            <div :class="{numMinus:true, disabledDiv:numMinusDisableShow}" @click.stop="numMinus"
+                                 onselectstart="return false">&nbsp;-&nbsp;
+                            </div>&nbsp;
+                            <el-input class="numBuy" v-model="numBuy" :disabled="noStock"/>
+                            <div :class="{numplus:true, disabledDiv:numPlusDisableShow}" @click.stop="numPlus"
+                                 onselectstart="return false">&nbsp;+&nbsp;
+                            </div>
+                            <span v-if="noStock" style="color: red; margin-left: 10px; border: 1px solid red;">暂无库存</span>
+                        </el-col>
+                    </el-row>
+                </div>
+                <div class="proinfoMainBtn">
+                    <el-row>
+                        <el-col :span="3">&nbsp;</el-col>
+                        <el-col :span="6">
+                            <el-button class="mainBtn buyBtn" @click="buyNow" :disabled="noStock">立即购买</el-button>
+                        </el-col>
+                        <el-col :span="6">
+                            <el-button class="mainBtn preBuyBtn" :disabled="noStock">加入预购单</el-button>
                         </el-col>
                     </el-row>
                 </div>
             </div>
-
         </div>
+
+        <el-dialog title="确认购买" :visible.sync="dialogVisible">
+            <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
+                <el-row :gutter="10">
+                    <el-col :span="24">
+                        <el-input
+                            type="textarea"
+                            class="goods-memo"
+                            :autosize="{ minRows: 2}"
+                            placeholder="请输入备注信息"
+                            v-model="memo">
+                        </el-input>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <span slot="footer" class="dialog_footer">
+                <el-button @click="dialogVisible=false">取消</el-button>
+                <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
-    import {getGoodsserialById} from "../../../util/module";
+    import {createOrder, getGoodsserialById} from "../../../util/module";
     import * as cfg from "../../../config/cfg";
     import {trimSpace} from "../../../Gw/GwArray";
     import _String from '@/util/string';
 
     export default {
         name: "goodsSale",
-        data(){
+        data() {
             return {
-                goodsInfo:{
-                    specGoodsId:'',
-                    imgs:[],
+                goodsInfo: {
+                    specGoodsId: '',
+                    imgs: [],
                 },
-                specGoodsId:'',
-                imgShow:'',
-                pictureUrl:'',
-                imgIndex:0,
-                timer:[],
-                dollarRate:1,
-                nalaRate:1,
-                numBuy:0,
+                specGoodsId: '',
+                imgShow: '',
+                pictureUrl: '',
+                imgIndex: 0,
+                timer: [],
+                dollarRate: 1,
+                nalaRate: 1,
+                numBuy: 1,
+                numPlusDisableShow: false,
+                numMinusDisableShow: true,
+                dialogVisible: false,
+                memo: '',
+                dialogForm: {},
+                noStock:false,
             }
         },
 
-        created(){
-            this.specGoodsId=this.$route.query.specGoodsId;
+        watch: {
+            numBuy(val) {
+                let num = parseInt(val);
+                if (num === 0) {
+                    this.numPlusDisableShow = true;
+                    return;
+                }
+                if (num > this.goodsInfo.stockNum - this.goodsInfo.lockNum - 0.005) {
+                    this.numBuy = this.goodsInfo.stockNum - this.goodsInfo.lockNum;
+                    this.numPlusDisableShow = true;
+                } else {
+                    this.numPlusDisableShow = false;
+                }
+
+                this.numMinusDisableShow = num < 1.005;
+
+                if (num < 0.005) {
+                    this.numBuy = 1;
+                }
+            }
+        },
+
+        created() {
+            this.specGoodsId = this.$route.query.specGoodsId;
             this.pictureUrl = cfg.service.uploadUrl + '/';
-            this.nalaRate=localStorage.getItem('nalaRate')||1;
-            this.dollarRate=localStorage.getItem('dollarRate')||1;
+            this.nalaRate = localStorage.getItem('nalaRate') || 1;
+            this.dollarRate = localStorage.getItem('dollarRate') || 1;
             this.getGoodsInfo();
         },
 
-        methods:{
+        methods: {
+            buyNow() {
+                this.dialogVisible = true;
+            },
+
+            dialogFormConfirm() {
+                this.$refs.dialogForm.validate((valid) => {
+                    if (valid) {
+                        this.formCommit();
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+            formCommit() {
+                let params = {};
+                params.orderAmt=this.numBuy*this.goodsInfo.specNowPrice;
+                params.goodsAllNum=this.numBuy;
+                params.buyerMessage=this.memo;
+                params.orderDetailList=[];
+                let item={};
+                item.recycleSeq='1';
+                item.specGoodsId=this.goodsInfo.specGoodsId;
+                item.specNowPrice=this.goodsInfo.specNowPrice;
+                item.dealNum=this.numBuy+'';
+                params.orderDetailList.push(item);
+                createOrder(this, params).then(
+                    res => {
+                        this.$message.success('提交购买成功');
+                        this.dialogVisible = false;
+                    },
+                    res => {
+                    }
+                ).catch();
+
+            },
+
             getGoodsInfo() {
-                let params={};
-                params.specGoodsId=this.specGoodsId;
+                let params = {};
+                params.specGoodsId = this.specGoodsId;
                 getGoodsserialById(this, params).then(
-                    res=>{
-                        this.goodsInfo=res.data;
+                    res => {
+                        this.goodsInfo = res.data;
                         console.log('goodsInfo', this.goodsInfo);//debug
                         let tmp = [];
                         tmp = this.goodsInfo.goodsImgs.split(',');
-                        this.goodsInfo.imgs=trimSpace(tmp);
-                        this.imgShow=this.goodsInfo.mainPicture;
+                        this.goodsInfo.imgs = trimSpace(tmp);
+                        this.imgShow = this.goodsInfo.mainPicture;
+                        if (!this.goodsInfo.innerStockNum) {
+                            this.noStock=true;
+                            this.goodsInfo.innerStockNum=0;
+                            this.numBuy=0;
+                        }
+                        if (!this.goodsInfo.innerLockNum) {
+                            this.goodsInfo.innerLockNum=0;
+                        }
                     },
-                    res=>{
+                    res => {
 
                     }
                 ).catch();
+            },
+
+            numMinus() {
+                if (this.numBuy > 1.005) {
+                    this.numBuy--;
+                }
+            },
+
+            numPlus() {
+                if (this.numBuy < this.goodsInfo.innerStockNum - this.goodsInfo.innerLockNum - 0.005) {
+                    this.numBuy++;
+                }
             },
 
             //格式化金额
@@ -125,14 +246,14 @@
                 return _String.number_format(price, 2);
             },
 
-            mouseenter(item, index){
-                this.timer[index]=setTimeout(()=>{
-                    this.imgShow=item;
-                    this.imgIndex=index;
+            mouseenter(item, index) {
+                this.timer[index] = setTimeout(() => {
+                    this.imgShow = item;
+                    this.imgIndex = index;
                 }, 200);
             },
 
-            mouseleave(index){
+            mouseleave(index) {
                 clearTimeout(this.timer[index]);
             }
         }
@@ -140,132 +261,130 @@
 </script>
 
 <style scoped>
-    .mainDiv{
+    .mainDiv {
         position: relative;
     }
 
-    .proinfoLeft{
+    .proinfoLeft {
         position: absolute;
     }
 
-    .imgzoom-main{
-        border: 1px solid rgb(238,238,238);
+    .imgzoom-main {
+        border: 1px solid rgb(238, 238, 238);
         height: 400px;
         width: 400px;
     }
 
-    .imgzoom-main img{
+    .imgzoom-main img {
         height: 400px;
         width: 400px;
     }
 
-    .imgzoom-thumb{
+    .imgzoom-thumb {
         width: 350px;
         margin: 15px 20px 0 20px;
         overflow: hidden;
     }
 
-    .imgzoom-thumb ul{
+    .imgzoom-thumb ul {
         list-style-type: none;
     }
 
-    .imgzoom-thumb li{
+    .imgzoom-thumb li {
         display: inline-block;
-        border:2px solid transparent;
+        border: 2px solid transparent;
         margin-right: 5px;
         cursor: pointer;
     }
 
-    .imgzoom-thumb li img{
+    .imgzoom-thumb li img {
         height: 60px;
         width: 60px;
     }
 
 
-    .proinfoMain{
+    .proinfoMain {
         height: 692px;
         margin-left: 400px;
         padding-left: 10px;
-        font: normal 12px/1.5 Arial,Microsoft YaHei,SimSun;
+        font: normal 12px/1.5 Arial, Microsoft YaHei, SimSun;
         color: #666;
     }
 
-    .proinfo-title{
+    .proinfo-title {
         padding: 13px 10px 12px;
         background: #fff;
     }
 
-    .proinfo-title h1{
+    .proinfo-title h1 {
         font: 700 16px/1.5 \5FAE\8F6F\96C5\9ED1;
         color: #222;
         min-height: 24px;
     }
 
-    .goods-publish{
+    .goods-publish {
         border-top: 1px dotted #ddd;
         padding: 12px 0 0;
         margin-bottom: 16px;
     }
 
-    .i-header{
+    .i-header {
         color: #999;
         margin-left: 10px;
         height: 32px;
         line-height: 32px;
     }
 
-    .proinfo-focus{
+    .proinfo-focus {
         padding: 14px 0 8px;
         margin-bottom: 15px;
-        background-color: rgb(245,245,245);
+        background-color: rgb(245, 245, 245);
     }
 
-    .mainPrice{
+    .mainPrice {
         height: 28px;
         float: left;
         font: 700 30px/25px Tahoma;
         color: #e00;
     }
 
-    .minorPrice{
+    .minorPrice {
         height: 28px;
         float: left;
         font: 400 20px/25px Tahoma;
     }
 
-    .proinfo-num{
+    .proinfo-num {
         border-top: 1px dotted #ddd;
         vertical-align: middle;
     }
 
-    .num-{
+    .numMinus, .numplus {
         display: inline-block;
-        border: 1px solid rgb(221,221,221);
+        border: 1px solid rgb(221, 221, 221);
         height: 32px;
         width: 32px;
         vertical-align: middle;
         line-height: 32px;
         text-align: center;
-        background-color: rgb(241,241,241);
+        background-color: rgb(241, 241, 241);
         font-size: 20px;
     }
 
-    .numplus{
-        display: inline-block;
-        border: 1px solid rgb(221,221,221);
-        height: 32px;
-        width: 32px;
-        vertical-align: middle;
-        line-height: 32px;
-        text-align: center;
-        background-color: rgb(241,241,241);
+    .numplus {
         margin-left: 8px;
-        font-size: 20px;
     }
 
-    .numBuy{
+    .numMinus:hover, .numplus:hover {
+        cursor: pointer;
+    }
+
+    .disabledDiv {
+        color: rgb(218, 218, 218);
+    }
+
+    .numBuy {
         display: inline-block;
-        border: 1px solid rgb(221,221,221);
         height: 32px;
         width: 64px;
         vertical-align: middle;
@@ -273,7 +392,43 @@
         text-align: center;
     }
 
-    .redBorder{
+    .redBorder {
         border: 2px solid red;
+    }
+
+    .proinfoMainBtn {
+        padding: 8px 0 20px 80px;
+        margin-top: 110px;
+    }
+
+    .mainBtn {
+        height: 45px;
+        width: 140px;
+        font-size: 18px;
+        color: white;
+    }
+
+    .buyBtn {
+        background-color: rgb(102, 50, 0);
+    }
+
+    .buyBtn:hover {
+        background-color: rgb(75, 37, 0);
+    }
+
+    .preBuyBtn {
+        background-color: rgb(255, 85, 0);
+    }
+
+    .preBuyBtn:hover {
+        background-color: rgb(255, 48, 0);
+    }
+</style>
+
+<style>
+    /*修改浏览器代理的样式*/
+    .numBuy input {
+        text-align: center;
+        vertical-align: middle;
     }
 </style>

@@ -3864,7 +3864,7 @@ const updateInstInfo = (me, params) => {
 };
 
 /**
- * 1.3.1.4.4	删除部门信息 /deleteDepartmentInfo  索引124  验签
+ * 1.3.1.4.4    删除部门信息 /deleteDepartmentInfo  索引124  验签
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3880,9 +3880,9 @@ const deleteDepartmentInfo = (me, params) => {
         urlParams.txnId = PERMISSIONS.deleteDepartmentInfo.txnId;
         // urlParams.noSing = true;
 
-        if (params.specDepartmentId ) {
-            send.specDepartmentId  = params.specDepartmentId ;
-            singArray.specDepartmentId  = params.specDepartmentId ;
+        if (params.specDepartmentId) {
+            send.specDepartmentId = params.specDepartmentId;
+            singArray.specDepartmentId = params.specDepartmentId;
         }
 
         urlParams.send = send;
@@ -3898,7 +3898,7 @@ const deleteDepartmentInfo = (me, params) => {
 };
 
 /**
- * 1.3.1.4.3	修改部门信息 /updateDepartmentInfo  索引123  验签
+ * 1.3.1.4.3    修改部门信息 /updateDepartmentInfo  索引123  验签
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3914,16 +3914,16 @@ const updateDepartmentInfo = (me, params) => {
         urlParams.txnId = PERMISSIONS.updateDepartmentInfo.txnId;
         // urlParams.noSing = true;
 
-        if (params.specDepartmentId ) {
-            send.specDepartmentId  = params.specDepartmentId ;
-            singArray.specDepartmentId  = params.specDepartmentId ;
+        if (params.specDepartmentId) {
+            send.specDepartmentId = params.specDepartmentId;
+            singArray.specDepartmentId = params.specDepartmentId;
         }
-        if (params.version  ) {
-            send.version   = params.version  ;
-            singArray.version   = params.version  ;
+        if (params.version) {
+            send.version = params.version;
+            singArray.version = params.version;
         }
-        if (params.departmentName  ) {
-            send.departmentName   = params.departmentName  ;
+        if (params.departmentName) {
+            send.departmentName = params.departmentName;
         }
 
         urlParams.send = send;
@@ -3939,7 +3939,7 @@ const updateDepartmentInfo = (me, params) => {
 };
 
 /**
- * 1.3.4.1	批次物资提交本地价格 /submitLocalPrice  位图索引 51
+ * 1.3.4.1    批次物资提交本地价格 /submitLocalPrice  位图索引 51
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -3955,13 +3955,13 @@ const submitLocalPrice = (me, params) => {
         urlParams.txnId = PERMISSIONS.submitLocalPrice.txnId;
         // urlParams.noSing = true;
 
-        if (params.batchId ) {
-            send.batchId  = params.batchId ;
-            singArray.batchId  = params.batchId ;
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
         }
-        if (params.goodsList  ) {
-            send.goodsList   = params.goodsList  ;
-            singArray.goodsList   = params.goodsList  ;
+        if (params.goodsList) {
+            send.goodsList = params.goodsList;
+            singArray.goodsList = params.goodsList;
         }
 
         urlParams.send = send;
@@ -3993,13 +3993,13 @@ const cacSuggestPrice = (me, params) => {
         urlParams.txnId = PERMISSIONS.cacSuggestPrice.txnId;
         // urlParams.noSing = true;
 
-        if (params.batchId ) {
-            send.batchId  = params.batchId ;
-            singArray.batchId  = params.batchId ;
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
         }
-        if (params.goodsList  ) {
-            send.goodsList   = params.goodsList  ;
-            singArray.goodsList   = params.goodsList  ;
+        if (params.goodsList) {
+            send.goodsList = params.goodsList;
+            singArray.goodsList = params.goodsList;
         }
 
         urlParams.send = send;
@@ -4031,13 +4031,13 @@ const submitReportPrice = (me, params) => {
         urlParams.txnId = PERMISSIONS.submitReportPrice.txnId;
         // urlParams.noSing = true;
 
-        if (params.batchId ) {
-            send.batchId  = params.batchId ;
-            singArray.batchId  = params.batchId ;
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
         }
-        if (params.goodsList  ) {
-            send.goodsList   = params.goodsList  ;
-            singArray.goodsList   = params.goodsList  ;
+        if (params.goodsList) {
+            send.goodsList = params.goodsList;
+            singArray.goodsList = params.goodsList;
         }
 
         urlParams.send = send;
@@ -4069,13 +4069,13 @@ const putonBatch = (me, params) => {
         urlParams.txnId = PERMISSIONS.putonBatch.txnId;
         // urlParams.noSing = true;
 
-        if (params.batchId ) {
-            send.batchId  = params.batchId ;
-            singArray.batchId  = params.batchId ;
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
         }
-        if (params.goodsList  ) {
-            send.goodsList   = params.goodsList  ;
-            singArray.goodsList   = params.goodsList  ;
+        if (params.goodsList) {
+            send.goodsList = params.goodsList;
+            singArray.goodsList = params.goodsList;
         }
 
         urlParams.send = send;
@@ -4091,7 +4091,7 @@ const putonBatch = (me, params) => {
 };
 
 /**
- * 1.2.1.2	 首页内容--/wxIndexContent?currentPage=1 无权限无验签
+ * 1.2.1.2     首页内容--/wxIndexContent?currentPage=1 无权限无验签
  * @param me
  * @param params
  * @returns {Promise<any>}
@@ -4168,7 +4168,7 @@ const getGooCategoryById = (me, params) => {
         urlParams.noSing = true;
 
         if (params.categoryId != null) {
-            send.categoryId=params.categoryId;
+            send.categoryId = params.categoryId;
         }
 
         urlParams.send = send;
@@ -4201,7 +4201,254 @@ const getGoodsserialById = (me, params) => {
         urlParams.noSing = true;
 
         if (params.specGoodsId != null) {
-            send.specGoodsId=params.specGoodsId;
+            send.specGoodsId = params.specGoodsId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.2.5.3 下单 /createOrder 位图索引10
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const createOrder = (me, params) => {
+    console.log("createOrder params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.createOrder.url;
+        urlParams.txnId = PERMISSIONS.createOrder.txnId;
+        // urlParams.noSing = true;
+
+        //内部订单
+        params.orderFlag = '1';
+        if (params.orderFlag != null && params.orderFlag !== '') {
+            send.orderFlag = params.orderFlag;
+            singArray.orderFlag = params.orderFlag;
+        }
+        if (params.orderAmt != null && params.orderAmt !== '') {
+            send.orderAmt = params.orderAmt;
+            singArray.orderAmt = params.orderAmt;
+        }
+        if (params.goodsAllNum != null && params.goodsAllNum !== '') {
+            send.goodsAllNum = params.goodsAllNum + '';
+            singArray.goodsAllNum = params.goodsAllNum + '';
+        }
+        if (params.buyerMessage != null && params.buyerMessage !== '') {
+            send.buyerMessage = params.buyerMessage;
+        }
+        if (params.orderDetailList != null && params.orderDetailList !== '') {
+            send.orderDetailList = params.orderDetailList;
+            singArray.orderDetailList = params.orderDetailList;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.1查询所有订单  /listAllOrders?currentPage=1&pageSize=10   位图索引 11
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listAllOrders = (me, params) => {
+    console.log("listAllOrders params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+        urlParams.noSing = true;
+
+        urlParams.url = PERMISSIONS.listAllOrders.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listAllOrders.txnId;
+
+        send.status = params.status;
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.2确认订单库存  /confirmOrderStock 位图索引 12
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const confirmOrderStock = (me, params) => {
+    console.log("confirmOrderStock params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.confirmOrderStock.url;
+        urlParams.txnId = PERMISSIONS.confirmOrderStock.txnId;
+        // urlParams.noSing = true;
+
+        if (params.orderId != null && params.orderId !== '') {
+            send.orderId = params.orderId;
+            singArray.orderId = params.orderId;
+        }
+        // if (params.version != null && params.version !== '') {
+        //     send.version = params.version;
+        //     singArray.version = params.version;
+        // }
+        if (params.memo != null && params.memo !== '') {
+            send.memo = params.memo + '';
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.3确认订单收款  /confirmOrderPay  位图索引 13
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const confirmOrderPay = (me, params) => {
+    console.log("confirmOrderStock params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.confirmOrderPay.url;
+        urlParams.txnId = PERMISSIONS.confirmOrderPay.txnId;
+        // urlParams.noSing = true;
+
+        if (params.orderId != null && params.orderId !== '') {
+            send.orderId = params.orderId;
+            singArray.orderId = params.orderId;
+        }
+        // if (params.version != null && params.version !== '') {
+        //     send.version = params.version;
+        //     singArray.version = params.version;
+        // }
+        if (params.memo != null && params.memo !== '') {
+            send.memo = params.memo + '';
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.4确认订单发货  /confirmOrderSend  位图索引 14
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const confirmOrderSend = (me, params) => {
+    console.log("confirmOrderSend params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.confirmOrderSend.url;
+        urlParams.txnId = PERMISSIONS.confirmOrderSend.txnId;
+        // urlParams.noSing = true;
+
+        if (params.orderId != null && params.orderId !== '') {
+            send.orderId = params.orderId;
+            singArray.orderId = params.orderId;
+        }
+        // if (params.version != null && params.version !== '') {
+        //     send.version = params.version;
+        //     singArray.version = params.version;
+        // }
+        if (params.memo != null && params.memo !== '') {
+            send.memo = params.memo + '';
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.5关闭订单 /closeOrder   位图索引 15
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const closeOrder = (me, params) => {
+    console.log("closeOrder params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.closeOrder.url;
+        urlParams.txnId = PERMISSIONS.closeOrder.txnId;
+        // urlParams.noSing = true;
+
+        if (params.orderId != null && params.orderId !== '') {
+            send.orderId = params.orderId;
+            singArray.orderId = params.orderId;
+        }
+        // if (params.version != null && params.version !== '') {
+        //     send.version = params.version;
+        //     singArray.version = params.version;
+        // }
+        if (params.memo != null && params.memo !== '') {
+            send.memo = params.memo + '';
         }
 
         urlParams.send = send;
@@ -4336,5 +4583,11 @@ export {
     wxIndexContent,
     getAllConfig,
     getGooCategoryById,
-    getGoodsserialById
+    getGoodsserialById,
+    createOrder,
+    listAllOrders,
+    confirmOrderStock,
+    confirmOrderPay,
+    confirmOrderSend,
+    closeOrder
 };

@@ -92,6 +92,11 @@ module.exports = {
                     meta: {title: '商品销售', function: 'batchInfoAction'}
                 },
                 {
+                    path: '/orderlistAction',
+                    component: resolve => require(['../components/page/order/orderlistAction.vue'], resolve),
+                    meta: {title: '订单列表', function: 'orderlistAction'}
+                },
+                {
                     path: '/test',
                     component: resolve => require(['../test/Test.vue'], resolve),
                     meta: {title: '测试页面', function: 'test'}
@@ -119,12 +124,35 @@ module.exports = {
     //只需要存在permissions中的一个权限，那么就展示功能点
     //function是路由path
     //在Sidebar.vue中处理此Sidebar数组配置
-    Sidebar: [{
-        icon: 'el-icon-house',
-        index: 'home',
-        title: '欢迎',
-        flag: true,
-    },
+    Sidebar: [
+        {
+            icon: 'el-icon-house',
+            index: 'home',
+            title: '欢迎',
+            flag: true,
+        },
+
+        {
+            icon: 'el-icon-school',
+            index: 'order',
+            title: '订单管理',
+            flag: false,
+            subs: [
+                {
+                    index: 'orderlistAction',
+                    title: '订单列表',
+                    flag: true,
+                    function: 'orderlistAction',
+                    permissions: [
+                        'listAllOrders',
+                        'confirmOrderStock',
+                        'confirmOrderPay',
+                        'confirmOrderSend',
+                        'closeOrder',
+                    ]
+                },
+            ],
+        },
 
         {
             icon: 'el-icon-school',
