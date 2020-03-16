@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import vuex from 'vuex'
 import getters from "./getters";
+import {indexByCons} from "../Gw/GwArray";
 
 Vue.use(vuex);
 
@@ -16,6 +17,10 @@ export default new vuex.Store({
         ruleFunction: {},
         permissions: [],
         sysInstInfo: {},
+        myPreSells:[
+            {specGoodsId :'685085338930257920', goodsId :'685085338930257920', mainPicture:'M_687687512793292800.jpg', goodsName:'物资8',  specNowPrice:23, sellNum:2},
+            {specGoodsId :'685085716216291328', goodsId :'685085716216291328', mainPicture:'M_687687287592722432.jpg', goodsName:'物资7',  specNowPrice:34, sellNum:3},
+        ],
     },
     mutations: {
         loginIn(state) {
@@ -62,6 +67,19 @@ export default new vuex.Store({
         setSysInstInfo(state, sysInstInfo) {
             console.log('啦啦啦啦啦啦啦'); //debug
             state.sysInstInfo = sysInstInfo;
+        },
+
+        myPreSellsDeleteOne(state, index){
+            state.myPreSells.splice(index, 1);
+        },
+
+        myPreSellsDeleteSelect(state, selects){
+            selects.forEach(item=>{
+                console.log('item', item);//debug
+                let index=indexByCons(state.myPreSells, item, 'specGoodsId');
+                console.log('index', index);//debug
+                state.myPreSells.splice(index, 1);
+            });
         },
     },
 

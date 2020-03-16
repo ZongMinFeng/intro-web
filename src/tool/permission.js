@@ -464,6 +464,21 @@ const PERMISSIONS = {
         url: BASE_URL_API + '/wxCache/getAllConfig',
         txnId: 'getAllConfig'
     },
+    getManualCertify: {
+        name: '获取产品说明书和质保证书',
+        url: BASE_URL_API + '/wxCache/getManualCertify',
+        txnId: 'getManualCertify'
+    },
+    getSerialBySpecGoodsId: {
+        name: '获取上架物资具体信息',
+        url: BASE_URL_API + '/wxCache/getSerialBySpecGoodsId',
+        txnId: 'getSerialBySpecGoodsId'
+    },
+    listMyOrders: {
+        name: '我的订单',
+        url: BASE_URL_API + '/wxCache/listMyOrders',
+        txnId: 'listMyOrders'
+    },
 };
 
 const handelPermission = function (funcMap) {

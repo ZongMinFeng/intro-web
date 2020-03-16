@@ -46,14 +46,6 @@
             </el-table-column>
             <el-table-column label="买家留言" prop="buyerMessage"></el-table-column>
             <el-table-column label="备注" prop="memo"></el-table-column>
-            <el-table-column label="操作" width="340">
-                <template slot-scope="props">
-                    <el-button v-if="props.row.status==='9'" type="primary" @click="confirmOrderTap(props.row)">接单</el-button>
-                    <el-button v-if="props.row.status==='9'" type="danger" @click="closeOrderTap(props.row)">关闭订单</el-button>
-                    <el-button v-if="props.row.status==='8'" type="primary" @click="confirmOrderPayTap(props.row)">确认收款</el-button>
-                    <el-button v-if="props.row.status==='7'" type="primary" @click="confirmOrderSendTap(props.row)">确认发货</el-button>
-                </template>
-            </el-table-column>
         </el-table>
         <div class="pagination">
             <el-pagination @current-change="handleCurrentChange"

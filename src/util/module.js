@@ -4463,6 +4463,104 @@ const closeOrder = (me, params) => {
     });
 };
 
+/**
+ * 1.2.4.3获取产品说明书和质保证书--getManualCertify  无需授权无验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getManualCertify = (me, params) => {
+    console.log("getManualCertify params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.getManualCertify.url;
+        urlParams.txnId = PERMISSIONS.getManualCertify.txnId;
+        urlParams.noSing = true;
+
+        if (params.goodsId != null && params.goodsId !== '') {
+            send.goodsId = params.goodsId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.2.4.2获取上架物资具体信息--getSerialBySpecGoodsId  无需授权无验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getSerialBySpecGoodsId = (me, params) => {
+    console.log("getManualCertify params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.getSerialBySpecGoodsId.url;
+        urlParams.txnId = PERMISSIONS.getSerialBySpecGoodsId.txnId;
+        urlParams.noSing = true;
+
+        if (params.specGoodsId != null && params.specGoodsId !== '') {
+            send.specGoodsId = params.specGoodsId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.2.5.2我的订单  /listMyOrders?currentPage=1&pageSize=4 无权限无验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listMyOrders = (me, params) => {
+    console.log("listMyOrders params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+        urlParams.noSing = true;
+
+        urlParams.url = PERMISSIONS.listMyOrders.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listMyOrders.txnId;
+
+        send.status = params.status;
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4589,5 +4687,8 @@ export {
     confirmOrderStock,
     confirmOrderPay,
     confirmOrderSend,
-    closeOrder
+    closeOrder,
+    getManualCertify,
+    getSerialBySpecGoodsId,
+    listMyOrders
 };

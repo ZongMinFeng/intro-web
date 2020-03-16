@@ -41,13 +41,13 @@
                             <span class="i-header">定&nbsp;&nbsp;&nbsp;&nbsp;价</span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="mainPrice">人民币: ￥{{formatPrice(goodsInfo.specNowPrice)}}</span>
+                            <span class="mainPrice">￥{{formatPrice(goodsInfo.specNowPrice)}}</span>
                         </el-col>
                         <el-col :span="4">
-                            <span class="minorPrice">泰拉:&nbsp;</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
+                            <span class="minorPrice">₦</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
                         </el-col>
                         <el-col :span="4">
-                            <span class="minorPrice">美元:&nbsp;$</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/dollarRate)}}
+                            <span class="minorPrice">$</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/dollarRate)}}
                         </strong></el-col>
                     </el-row>
                 </div>
@@ -72,17 +72,28 @@
                     <el-row>
                         <el-col :span="3">&nbsp;</el-col>
                         <el-col :span="6">
-                            <el-button class="mainBtn buyBtn" @click="buyNow" :disabled="noStock">立即购买</el-button>
+                            <el-button class="mainBtn buyBtn" @click="buyNow" :disabled="noStock">立即申请</el-button>
                         </el-col>
                         <el-col :span="6">
-                            <el-button class="mainBtn preBuyBtn" :disabled="noStock">加入预购单</el-button>
+                            <el-button class="mainBtn preBuyBtn" :disabled="noStock">加入预申请单</el-button>
                         </el-col>
                     </el-row>
                 </div>
             </div>
         </div>
 
-        <el-dialog title="确认购买" :visible.sync="dialogVisible">
+        <div class="proinfoDetail">
+            <el-tabs type="border-card" v-model="activeName">
+                <el-tab-pane label="产品说明书" name="first">
+                    <product-manual-show :specGoodsId="specGoodsId" flag="productManual"></product-manual-show>
+                </el-tab-pane>
+                <el-tab-pane label="产品质保证书" name="second">
+                    <product-manual-show :specGoodsId="specGoodsId" flag="qualityCertificate"></product-manual-show>
+                </el-tab-pane>
+            </el-tabs>
+        </div>
+
+     <el-dialog title="确认购买" :visible.sync="dialogVisible">
             <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
                 <el-row :gutter="10">
                     <el-col :span="24">
@@ -109,9 +120,13 @@
     import * as cfg from "../../../config/cfg";
     import {trimSpace} from "../../../Gw/GwArray";
     import _String from '@/util/string';
+    import productManualShow from './productManualShow.vue';
 
     export default {
         name: "goodsSale",
+        components:{
+            productManualShow
+        },
         data() {
             return {
                 goodsInfo: {
@@ -132,6 +147,7 @@
                 memo: '',
                 dialogForm: {},
                 noStock:false,
+                activeName: 'first',
             }
         },
 
@@ -304,7 +320,7 @@
 
 
     .proinfoMain {
-        height: 692px;
+        height: 550px;
         margin-left: 400px;
         padding-left: 10px;
         font: normal 12px/1.5 Arial, Microsoft YaHei, SimSun;
@@ -422,6 +438,10 @@
 
     .preBuyBtn:hover {
         background-color: rgb(255, 48, 0);
+    }
+
+    .proinfoDetail{
+        /*margin-left: 400px;*/
     }
 </style>
 

@@ -97,6 +97,11 @@ module.exports = {
                     meta: {title: '订单列表', function: 'orderlistAction'}
                 },
                 {
+                    path: '/myOrderAction',
+                    component: resolve => require(['../components/page/order/myOrderAction.vue'], resolve),
+                    meta: {title: '我的订单', function: 'myOrderAction'}
+                },
+                {
                     path: '/test',
                     component: resolve => require(['../test/Test.vue'], resolve),
                     meta: {title: '测试页面', function: 'test'}
@@ -138,6 +143,15 @@ module.exports = {
             title: '订单管理',
             flag: false,
             subs: [
+                {
+                    index: 'myOrderAction',
+                    title: '我的订单',
+                    flag: true,
+                    function: 'myOrderAction',
+                    permissions: [
+                        'listMyOrders'
+                    ]
+                },
                 {
                     index: 'orderlistAction',
                     title: '订单列表',

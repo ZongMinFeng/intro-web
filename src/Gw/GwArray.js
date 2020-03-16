@@ -47,14 +47,14 @@ const inArrayOptionByCons = (objects, value, option) => {
     }
 };
 
-const indexByCons = (objects, object, option) => {
+const indexByCons = (objects, value, option) => {
     let indexReturn = -1;
     if (!objects instanceof Array) {
         return -1;
     }
 
     objects.forEach((item, index) => {
-        if (item[option] === object[option]) {
+        if (item[option] === value) {
             indexReturn = index;
         }
         return -1;
