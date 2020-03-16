@@ -65,17 +65,38 @@
                     </div>
                 </el-col>
                 <el-col :span="3">
-                    <div class="cart-checkout">去结算</div>
+                    <div class="cart-checkout" @click="commitTap">去申请</div>
                 </el-col>
             </el-row>
         </div>
+
+        <el-dialog title="确认申请" :visible.sync="dialogVisible">
+            <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
+                <el-row :gutter="10">
+                    <el-col :span="24">
+                        <el-input
+                            type="textarea"
+                            class="goods-memo"
+                            :autosize="{ minRows: 2}"
+                            placeholder="请输入备注信息"
+                            v-model="dialogForm.memo">
+                        </el-input>
+                    </el-col>
+                </el-row>
+            </el-form>
+            <span slot="footer" class="dialog_footer">
+                <el-button @click="dialogVisible=false">取消</el-button>
+                <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
+            </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import * as cfg from "../../../config/cfg";
     import _String from '../../../util/string';
-    import {indexByCons} from "../../../Gw/GwArray";
+    import {createOrder} from "../../../util/module";
+    import {getArrayObjectByCon} from "../../../Gw/GwArray";
 
     export default {
         name: "presellList",
@@ -86,6 +107,11 @@
                 nalaRate: 1,
                 pictureUrl:'',
                 goodsSelected:[],
+                dialogVisible:false,
+                dialogForm:{
+                    memo:null,
+                },
+                goodsAllNum:0,
             }
         },
 
@@ -116,9 +142,12 @@
 
             allPrice(){
                 let all=0;
+                let allNum=0;
                 this.tableData.forEach(item=>{
                     all+=item.specNowPrice*item.sellNum;
+                    allNum+=item.sellNum;
                 });
+                this.goodsAllNum=allNum;
                 return all;
             },
 
@@ -160,6 +189,58 @@
 
             deleteAllCommit(){
                 this.$store.commit('myPreSellsDeleteSelect', this.goodsSelected);
+            },
+
+            commitTap(){
+                if (this.goodsSelected.length < 1) {
+                    this.$message.error('请选择商品');
+                    return;
+                }
+                this.dialogVisible=true;
+            },
+
+            dialogFormConfirm() {
+                this.$refs.dialogForm.validate((valid) => {
+                    if (valid) {
+                        this.formCommit();
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+            formCommit() {
+                let params = {};
+                params.orderAmt = this.allPrice();
+                params.goodsAllNum = this.goodsAllNum;
+                params.buyerMessage = this.dialogForm.memo;
+                params.orderDetailList = [];
+                this.goodsSelected.forEach((specGoodsId, index)=>{
+                    let goodsInfo=getArrayObjectByCon(this.tableData, specGoodsId, 'specGoodsId');
+                    if (!goodsInfo) {
+                        return true;
+                    }
+                    let item = {};
+                    item.recycleSeq = index+1+'';
+                    item.specGoodsId = goodsInfo.specGoodsId;
+                    item.specNowPrice = goodsInfo.specNowPrice;
+                    item.dealNum = goodsInfo.sellNum;
+                    params.orderDetailList.push(item);
+                });
+                if (params.orderDetailList.length < 1) {
+                    this.$message.error('请选择商品');
+                    return;
+                }
+                createOrder(this, params).then(
+                    res => {
+                        this.$message.success('提交购买成功');
+                        this.$store.commit('myPreSellsDeleteSelect', this.goodsSelected);
+                        this.dialogVisible = false;
+                    },
+                    res => {
+                    }
+                ).catch();
+
             },
         }
     }
@@ -208,6 +289,10 @@
         font-family: "Microsoft YaHei";
         color: #fff;
         background-color: #f60;
+    }
+
+    .cart-checkout:hover{
+        cursor: pointer;
     }
 </style>
 

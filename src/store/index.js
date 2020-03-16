@@ -19,7 +19,7 @@ export default new vuex.Store({
         sysInstInfo: {},
         myPreSells:[
             {specGoodsId :'685085338930257920', goodsId :'685085338930257920', mainPicture:'M_687687512793292800.jpg', goodsName:'物资8',  specNowPrice:23, sellNum:2},
-            {specGoodsId :'685085716216291328', goodsId :'685085716216291328', mainPicture:'M_687687287592722432.jpg', goodsName:'物资7',  specNowPrice:34, sellNum:3},
+            {specGoodsId :'685085716216291328', goodsId :'685085716216291328', mainPicture:'M_687687287592722432.jpg', goodsName:'物资7',  specNowPrice:23, sellNum:3},
         ],
     },
     mutations: {

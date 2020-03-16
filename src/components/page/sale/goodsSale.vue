@@ -64,7 +64,8 @@
                             <div :class="{numplus:true, disabledDiv:numPlusDisableShow}" @click.stop="numPlus"
                                  onselectstart="return false">&nbsp;+&nbsp;
                             </div>
-                            <span v-if="noStock" style="color: red; margin-left: 10px; border: 1px solid red;">暂无库存</span>
+                            <span v-if="noStock"
+                                  style="color: red; margin-left: 10px; border: 1px solid red;">暂无库存</span>
                         </el-col>
                     </el-row>
                 </div>
@@ -93,7 +94,7 @@
             </el-tabs>
         </div>
 
-     <el-dialog title="确认购买" :visible.sync="dialogVisible">
+        <el-dialog title="确认申请" :visible.sync="dialogVisible">
             <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
                 <el-row :gutter="10">
                     <el-col :span="24">
@@ -124,7 +125,7 @@
 
     export default {
         name: "goodsSale",
-        components:{
+        components: {
             productManualShow
         },
         data() {
@@ -146,7 +147,7 @@
                 dialogVisible: false,
                 memo: '',
                 dialogForm: {},
-                noStock:false,
+                noStock: false,
                 activeName: 'first',
             }
         },
@@ -198,15 +199,15 @@
 
             formCommit() {
                 let params = {};
-                params.orderAmt=this.numBuy*this.goodsInfo.specNowPrice;
-                params.goodsAllNum=this.numBuy;
-                params.buyerMessage=this.memo;
-                params.orderDetailList=[];
-                let item={};
-                item.recycleSeq='1';
-                item.specGoodsId=this.goodsInfo.specGoodsId;
-                item.specNowPrice=this.goodsInfo.specNowPrice;
-                item.dealNum=this.numBuy+'';
+                params.orderAmt = this.numBuy * this.goodsInfo.specNowPrice;
+                params.goodsAllNum = this.numBuy;
+                params.buyerMessage = this.memo;
+                params.orderDetailList = [];
+                let item = {};
+                item.recycleSeq = '1';
+                item.specGoodsId = this.goodsInfo.specGoodsId;
+                item.specNowPrice = this.goodsInfo.specNowPrice;
+                item.dealNum = this.numBuy + '';
                 params.orderDetailList.push(item);
                 createOrder(this, params).then(
                     res => {
@@ -231,12 +232,12 @@
                         this.goodsInfo.imgs = trimSpace(tmp);
                         this.imgShow = this.goodsInfo.mainPicture;
                         if (!this.goodsInfo.innerStockNum) {
-                            this.noStock=true;
-                            this.goodsInfo.innerStockNum=0;
-                            this.numBuy=0;
+                            this.noStock = true;
+                            this.goodsInfo.innerStockNum = 0;
+                            this.numBuy = 0;
                         }
                         if (!this.goodsInfo.innerLockNum) {
-                            this.goodsInfo.innerLockNum=0;
+                            this.goodsInfo.innerLockNum = 0;
                         }
                     },
                     res => {
@@ -440,7 +441,7 @@
         background-color: rgb(255, 48, 0);
     }
 
-    .proinfoDetail{
+    .proinfoDetail {
         /*margin-left: 400px;*/
     }
 </style>
