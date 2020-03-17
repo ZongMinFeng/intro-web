@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" ref="container">
         <el-row>
             <el-col :span="20">
                 <div>
@@ -14,6 +14,7 @@
             <el-col :span="4">
                 <el-button v-if="!myPresellShow" style="float: right;" @click="showMyPresell">打开我的预申请</el-button>
                 <el-button v-else type="warning" style="float: right;" @click="closeShowMyPresell">关闭我的预申请</el-button>
+                <el-button type="primary" @click="reflesh">刷新</el-button>
             </el-col>
         </el-row>
 
@@ -32,9 +33,9 @@
             </el-row>
         </div>
 
-        <div v-if="myPresellShow" class="myPresellDiv">
+        <div v-if="myPresellShow" class="myPresellDiv" ref="myPresellDiv">
             <span style="color: rgb(255,102,0);">我的预申请单</span>
-            <my-presell-list></my-presell-list>
+            <my-presell-list @commitOk="commitOk"></my-presell-list>
         </div>
 
         <div>
@@ -48,21 +49,21 @@
                             <div>
                                 <div class="row1">
                                     <div class="price">
-                                        <span>人民币￥</span><strong>{{formatPrice(item.specNowPrice)}}</strong>
+                                        <span>￥</span><strong>{{formatPrice(item.specNowPrice)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row2">
                                     <div class="price2">
-                                        <span>泰拉 </span><strong>{{formatPrice(item.specNowPrice/nalaRate)}}</strong>
+                                        <span>₦</span><strong>{{formatPrice(item.specNowPrice/nalaRate)}}</strong>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span>美元 $</span><strong>{{formatPrice(item.specNowPrice/dollarRate)}}</strong>
+                                        <span>$</span><strong>{{formatPrice(item.specNowPrice/dollarRate)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row3">
                                     <span>{{item.goodsName}}</span>
                                 </div>
                                 <div class="row4">
-
+                                    <span>型号：{{item.goodsType}}</span>
                                 </div>
                             </div>
                         </div>
@@ -116,6 +117,19 @@
 
         computed: {},
 
+        watch:{
+            $route(to){
+                if (to.path !== '/home'){
+                    return;
+                }
+                if (this.$route.query.showMypresell) {
+                    this.myPresellShow=true;
+                    //滚动到我的订单
+                    this.$refs.container.scrollIntoView();
+                }
+            }
+        },
+
         created() {
             if (this.$route.query.showMypresell) {
                 this.myPresellShow=true;
@@ -129,9 +143,25 @@
         },
 
         methods: {
+            initData(){
+                this.currentPage=1;
+                this.getGoods();
+                this.getCategorys();
+                this.getCategoryAll();
+            },
+
+            commitOk(){
+                this.myPresellShow=false;
+            },
+
             getGoods() {
                 this.goodsList=[];
+                this.goodsListShow=[];
                 this.getGoodsOnce();
+            },
+
+            reflesh(){
+                this.initData();
             },
 
             showMyPresell(){
@@ -151,7 +181,7 @@
                 let params = {};
                 params.currentPage = this.currentPage;
                 wxIndexContent(this, params).then(
-                    res => {
+                    res =>  {
                         if (res.data.goodsList) {
                             this.goodsList.push(...res.data.goodsList);
                             this.goodsListShow.push(...res.data.goodsList);
@@ -159,7 +189,9 @@
                                 this.currentPage++;
                                 //处理汇率
                                 localStorage.setItem('dollarRate', res.data.sysRate.dollarRate);
+                                this.dollarRate=res.data.sysRate.dollarRate;
                                 localStorage.setItem('nalaRate', res.data.sysRate.nalaRate);
+                                this.nalaRate=res.data.sysRate.nalaRate;
                                 //递归调用
                                 this.getGoodsOnce();
                             }
@@ -176,11 +208,10 @@
             categoryFilter(){
                 this.categoryShow=[];
                 this.getCategoryShow(this.searchForm.categoryId);
-                console.log('categoryId',this.searchForm.categoryId);//debug
-                console.log('goodsList', this.goodsList);//debug
+                console.log('categoryShow', this.categoryShow);//debug
                 let goods=[];
                 this.goodsList.forEach(item=>{
-                    if (inArrayOptionByCons(this.categoryShow, item.categoryId, 'categoryId')>0) {
+                    if (inArrayOptionByCons(this.categoryShow, item.categoryId, 'categoryId')) {
                         goods.push(item);
                     }
                 });
@@ -188,7 +219,6 @@
             },
 
             goToBuy(item){
-                console.log('item', item);//debug
                 this.$router.push({path:'/goodsSale', query:{specGoodsId:item.specGoodsId}});
             },
 
@@ -354,7 +384,7 @@
     }
 
     .row1{
-        padding: 0 10px;
+        padding: 0 6px;
     }
 
     .price{
@@ -368,6 +398,11 @@
     }
 
     .row3{
+        padding: 0 10px;
+        margin-top: 6px;
+    }
+
+    .row4{
         padding: 0 10px;
         margin-top: 6px;
     }

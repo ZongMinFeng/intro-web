@@ -94,12 +94,12 @@ module.exports = {
                 {
                     path: '/orderlistAction',
                     component: resolve => require(['../components/page/order/orderlistAction.vue'], resolve),
-                    meta: {title: '订单列表', function: 'orderlistAction'}
+                    meta: {title: '订单列表', function: 'orderlistAction', keepAlive:true}
                 },
                 {
                     path: '/myOrderAction',
                     component: resolve => require(['../components/page/order/myOrderAction.vue'], resolve),
-                    meta: {title: '我的订单', function: 'myOrderAction'}
+                    meta: {title: '我的订单', function: 'myOrderAction', keepAlive:true}
                 },
                 {
                     path: '/test',

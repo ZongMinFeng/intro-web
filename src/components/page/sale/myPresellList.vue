@@ -35,7 +35,7 @@
                     <p>${{formatPrice(props.row.specNowPrice/dollarRate*props.row.sellNum)}}</p>
                 </template>
             </el-table-column>
-            <el-table-column label="操作" align="center"  width="340">
+            <el-table-column label="操作" align="center" width="340">
                 <template slot-scope="props">
                     <el-button type="warning" @click="deleteTap(props.row, props.$index)">删除</el-button>
                 </template>
@@ -52,16 +52,17 @@
                 </el-col>
                 <el-col :span="5">
                     <div class="split"></div>
-                    <div style="margin-top: 4px;">
-                        <p>
-                            <span style="font-size: 14px;">总价：</span><b style="color: red;">￥{{formatPrice(allPrice())}}</b>
-                        </p>
-                        <p>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 14px;">₦ {{formatPrice(allPrice()/nalaRate)}}</span>
-                        </p>
-                        <p>
-                            &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<span style="font-size: 14px;">$ {{formatPrice(allPrice()/dollarRate)}}</span>
-                        </p>
+                    <div class="priceAllShow">
+                        <div style="margin-bottom: 2px;">
+                            <span style="font-size: 14px; float: left;">已选总价：</span>
+                            <b style="color: red; float: right; line-height: 20px;">￥{{formatPrice(allPrice)}}</b>
+                        </div>
+                        <div>
+                            <span class="priceAllShohItem">₦ {{formatPrice(allPrice/nalaRate)}}</span>
+                        </div>
+                        <div>
+                            <span class="priceAllShohItem">$ {{formatPrice(allPrice/dollarRate)}}</span>
+                        </div>
                     </div>
                 </el-col>
                 <el-col :span="3">
@@ -96,62 +97,73 @@
     import * as cfg from "../../../config/cfg";
     import _String from '../../../util/string';
     import {createOrder} from "../../../util/module";
-    import {getArrayObjectByCon} from "../../../Gw/GwArray";
+    import {getArrayObjectByCon, indexByCons} from "../../../Gw/GwArray";
 
     export default {
         name: "presellList",
-        data(){
+        data() {
             return {
-                tableData:[],
+                tableData: [],
                 dollarRate: 1,
                 nalaRate: 1,
-                pictureUrl:'',
-                goodsSelected:[],
-                dialogVisible:false,
-                dialogForm:{
-                    memo:null,
+                pictureUrl: '',
+                goodsSelected: [],
+                dialogVisible: false,
+                dialogForm: {
+                    memo: null,
                 },
-                goodsAllNum:0,
+                goodsAllNum: 0,
+                allPrice:0,
             }
         },
 
-        computed:{
-            myPreSells(){
+        computed: {
+            myPreSells() {
                 return this.$store.getters.myPreSells;
+            },
+
+            goodsLength(){
+                return this.goodsSelected.length;
             }
         },
 
-        watch:{
-            myPreSells(){
-                this.tableData=this.myPreSells;
+        watch: {
+            myPreSells() {
+                this.tableData = this.myPreSells;
+            },
+
+            goodsLength:{
+                handler(){
+                    let all = 0;
+                    let allNum = 0;
+                    this.goodsSelected.forEach(selectedItem => {
+                        let index=indexByCons(this.myPreSells, selectedItem, 'specGoodsId');
+                        if (index > -0.005) {
+                            all += this.myPreSells[index].specNowPrice * this.myPreSells[index].sellNum;
+                            allNum += this.myPreSells[index].sellNum;
+                        }
+                    });
+                    this.goodsAllNum = allNum;
+                    this.allPrice=all;
+                },
+                deep:true
             }
         },
 
-        created(){
+        created() {
             this.pictureUrl = cfg.service.uploadUrl + '/';
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;
-            this.tableData=this.myPreSells;
+            this.tableData = this.myPreSells;
         },
 
-        methods:{
+        methods: {
             //格式化金额
             formatPrice(price) {
                 return _String.number_format(price, 2);
             },
 
-            allPrice(){
-                let all=0;
-                let allNum=0;
-                this.tableData.forEach(item=>{
-                    all+=item.specNowPrice*item.sellNum;
-                    allNum+=item.sellNum;
-                });
-                this.goodsAllNum=allNum;
-                return all;
-            },
-
-            deleteTap(item, index){
+            deleteTap(item, index) {
                 this.$confirm('确定要删除此商品吗?', '删除商品', {
                     confirmButtonText: '确认',
                     cancelButtonText: '取消',
@@ -167,15 +179,15 @@
                 this.$store.commit('myPreSellsDeleteOne', index);
             },
 
-            handleSelectionChange(val){
-                this.goodsSelected=[];
-                val.forEach(item=>{
+            handleSelectionChange(val) {
+                this.goodsSelected = [];
+                val.forEach(item => {
                     this.goodsSelected.push(item.specGoodsId);
                 });
                 console.log('goodsSelected', this.goodsSelected);//debug
             },
 
-            deleteAllTap(){
+            deleteAllTap() {
                 this.$confirm('确定要删除此商品吗?', '删除商品', {
                     confirmButtonText: '确认',
                     cancelButtonText: '取消',
@@ -187,16 +199,16 @@
                 );
             },
 
-            deleteAllCommit(){
+            deleteAllCommit() {
                 this.$store.commit('myPreSellsDeleteSelect', this.goodsSelected);
             },
 
-            commitTap(){
+            commitTap() {
                 if (this.goodsSelected.length < 1) {
                     this.$message.error('请选择商品');
                     return;
                 }
-                this.dialogVisible=true;
+                this.dialogVisible = true;
             },
 
             dialogFormConfirm() {
@@ -211,17 +223,17 @@
 
             formCommit() {
                 let params = {};
-                params.orderAmt = this.allPrice();
+                params.orderAmt = this.allPrice;
                 params.goodsAllNum = this.goodsAllNum;
                 params.buyerMessage = this.dialogForm.memo;
                 params.orderDetailList = [];
-                this.goodsSelected.forEach((specGoodsId, index)=>{
-                    let goodsInfo=getArrayObjectByCon(this.tableData, specGoodsId, 'specGoodsId');
+                this.goodsSelected.forEach((specGoodsId, index) => {
+                    let goodsInfo = getArrayObjectByCon(this.tableData, specGoodsId, 'specGoodsId');
                     if (!goodsInfo) {
                         return true;
                     }
                     let item = {};
-                    item.recycleSeq = index+1+'';
+                    item.recycleSeq = index + 1 + '';
                     item.specGoodsId = goodsInfo.specGoodsId;
                     item.specNowPrice = goodsInfo.specNowPrice;
                     item.dealNum = goodsInfo.sellNum;
@@ -236,6 +248,7 @@
                         this.$message.success('提交购买成功');
                         this.$store.commit('myPreSellsDeleteSelect', this.goodsSelected);
                         this.dialogVisible = false;
+                        this.$emit('commitOk');
                     },
                     res => {
                     }
@@ -247,14 +260,14 @@
 </script>
 
 <style scoped>
-    .cart-toolbar-box{
+    .cart-toolbar-box {
         margin-top: 20px;
         height: 66px;
         width: 100%;
         border: 1px solid #ddd;
     }
 
-    .cart-toolbar-deleteAll{
+    .cart-toolbar-deleteAll {
         margin-left: 50px;
         width: 100px;
         line-height: 66px;
@@ -262,11 +275,11 @@
         font-size: 14px;
     }
 
-    .cart-toolbar-deleteAll:hover{
+    .cart-toolbar-deleteAll:hover {
         cursor: pointer;
     }
 
-    .split{
+    .split {
         float: left;
         width: 1px;
         height: 38px;
@@ -276,7 +289,7 @@
         background: #ddd;
     }
 
-    .cart-checkout{
+    .cart-checkout {
         display: inline-block;
         line-height: 66px;
         text-align: center;
@@ -291,13 +304,28 @@
         background-color: #f60;
     }
 
-    .cart-checkout:hover{
+    .cart-checkout:hover {
         cursor: pointer;
+    }
+
+    .priceAllShow {
+        margin-top: 4px;
+    }
+
+    .priceAllShow > div {
+        width: 180px;
+        height: 20px;
+    }
+
+    .priceAllShohItem{
+        font-size: 12px;
+        float: right;
+        line-height: 18px;
     }
 </style>
 
 <style>
-    .el-table .rowClass{
-        background-color: rgb(255,251,242);
+    .el-table .rowClass {
+        background-color: rgb(255, 251, 242);
     }
 </style>

@@ -34,7 +34,7 @@
         </div>
 
         <el-table :data="tableData" border stripe>
-            <el-table-column label="名字" prop="batchName"></el-table-column>
+            <el-table-column label="名称" prop="goodsName"></el-table-column>
             <el-table-column label="备注" prop="memo"></el-table-column>
             <el-table-column label="价格" prop="tellerBuyPrice"></el-table-column>
             <el-table-column label="采购数量" prop="tellerBuyCount"></el-table-column>
@@ -71,26 +71,26 @@
             </el-table-column>
             <el-table-column v-if="batchInfo.status==='8'||batchInfo.status==='A'||batchInfo.status==='7'" label="入库数量      操作" width="200">
                 <template slot-scope="props">
-                    <el-input v-model="realCountIns[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-input v-model="realCountIns[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="showLocalPriceOperation" label="本地价格      操作" width="200">
+            <el-table-column v-if="showLocalPriceOperation" label="本地价格      操作" width="210">
                 <template slot-scope="props">
-                    <el-input v-model="localPrices[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-input v-model="localPrices[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="showSuggestPriceOperation" label="建议价格      操作" width="200">
+            <el-table-column v-if="showSuggestPriceOperation" label="建议价格      操作" width="210">
                 <template slot-scope="props">
-                    <el-input v-model="suggestPrices[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-input v-model="suggestPrices[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="doSuggestPrice(props.row, props.$index)">提交建议价格</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'" label="零售价  内部数量 操作" width="230">
+            <el-table-column v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'" label="零售价  内部数量 操作" width="250">
                 <template slot-scope="props">
-                    <el-input v-model="reportPrices[props.$index]" style="width: 55px; margin-right: 4px;"></el-input>
-                    <el-input v-model="companyCounts[props.$index]" style="width: 55px; margin-right: 8px;"></el-input>
+                    <el-input v-model="reportPrices[props.$index]" style="width: 68px; margin-right: 4px;"></el-input>
+                    <el-input v-model="companyCounts[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
                 </template>
             </el-table-column>

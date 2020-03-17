@@ -3769,7 +3769,6 @@ const uptBatchLadingBill = (me, params) => {
         }
         if (params.ladingBill) {
             send.ladingBill = params.ladingBill;
-            singArray.ladingBill = params.ladingBill;
         }
 
         urlParams.send = send;
@@ -4134,7 +4133,6 @@ const getAllConfig = (me, params) => {
         let singArray = {};
 
         urlParams.url = PERMISSIONS.getAllConfig.url;
-        urlParams.url += '?currentPage=' + params.getAllConfig;
         urlParams.txnId = PERMISSIONS.getAllConfig.txnId;
         // urlParams.noSing = true;
 

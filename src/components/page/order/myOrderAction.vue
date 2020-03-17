@@ -10,6 +10,12 @@
                         </el-select>
                     </el-form-item>
                 </el-col>
+                <el-col :span="12">
+                    &nbsp;
+                </el-col>
+                <el-col :span="6">
+                    <el-button type="primary" @click="reflash" style="float: right;">刷新</el-button>
+                </el-col>
             </el-row>
         </el-form>
 
@@ -17,31 +23,31 @@
             <el-table-column label="订单号" prop="orderId"></el-table-column>
             <el-table-column label="商品信息" width="170">
                 <template slot-scope="props">
-                    <div style="overflow-x: auto;">
+                    <div>
                         <div v-for="(item, index) in props.row.orderTDetailList" :key='item.specGoodsId'
-                             style="width: 44px; margin-right: 5px; float: left; padding: 1px;">
-                            <div style="width: 100%; float: left;">
-                                <img style="height: 40px; width: 40px;background-color: white;" :preview="index"
+                             style="width: 44px; margin-right: 5px; float: left; padding: 1px; margin-bottom: 5px;">
+                            <div>
+                                <img style="height: 40px; width: 40px; background-color: white;" :preview="index"
                                      :src="pictureUrl + item.goodsId + '/'+item.mainPicture">
                             </div>
-                            <div style="font-size: 8px;" :title="item.goodsName">{{item.goodsName.substring(0, 4)}}
+                            <div style="font-size: 8px; line-height: 10px;" :title="item.goodsName">{{item.goodsName.substring(0, 4)}}
                             </div>
-                            <div style="font-size: 8px;">数量: {{item.dealNum}}</div>
+                            <div style="font-size: 8px; line-height: 10px;">数量: {{item.dealNum}}</div>
                         </div>
                     </div>
                 </template>
             </el-table-column>
             <el-table-column label="订单金额" width="150" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p>人民币:<strong style="color:red">￥{{formatPrice(props.row.orderAmt)}}</strong></p>
-                    <p>泰拉:{{formatPrice(props.row.orderAmt/nalaRate)}}</p>
-                    <p>美元:${{formatPrice(props.row.orderAmt/dollarRate)}}</p>
+                    <p><strong style="color:red">￥{{formatPrice(props.row.orderAmt)}}</strong></p>
+                    <p>₦{{formatPrice(props.row.orderAmt/nalaRate)}}</p>
+                    <p>${{formatPrice(props.row.orderAmt/dollarRate)}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="时间" width="225">
                 <template slot-scope="props">
                     <p>创建时间：{{toDate(props.row.createTime)}}</p>
-                    <p>支付时间：{{toDate(props.row.payTime)}}</p>
+                    <p v-if="props.row.payTime">支付时间：{{toDate(props.row.payTime)}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="买家留言" prop="buyerMessage"></el-table-column>
@@ -142,6 +148,10 @@
         methods: {
             initData() {
                 this.getOrders();
+            },
+
+            reflash(){
+                this.initData();
             },
 
             getOrders() {

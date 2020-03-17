@@ -261,6 +261,10 @@
                         if (!this.goodsInfo.innerLockNum) {
                             this.goodsInfo.innerLockNum = 0;
                         }
+                        if (this.goodsInfo.innerStockNum - this.goodsInfo.innerLockNum < 0.005) {
+                            this.noStock=true;
+                            this.numBuy = 0;
+                        }
                     },
                     res => {
 
