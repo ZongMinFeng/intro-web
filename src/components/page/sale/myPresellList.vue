@@ -65,7 +65,7 @@
                     </div>
                 </el-col>
                 <el-col :span="3">
-                    <div class="cart-checkout" @click="commitTap">去申请</div>
+                    <div class="cart-checkout" @click="commitTap">提交申请</div>
                 </el-col>
             </el-row>
         </div>

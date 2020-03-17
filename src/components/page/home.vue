@@ -1,13 +1,22 @@
 <template>
     <div class="container">
-        <div>
-            <ul class="levels">
-                <li v-for="item in levels" :key="item.id">
-                    <button @click="goToLevel(item)">{{item.label}}</button>
-                    <span>&nbsp;>>&nbsp;&nbsp;</span>
-                </li>
-            </ul>
-        </div>
+        <el-row>
+            <el-col :span="20">
+                <div>
+                    <ul class="levels">
+                        <li v-for="item in levels" :key="item.id">
+                            <button @click="goToLevel(item)">{{item.label}}</button>
+                            <span>&nbsp;>>&nbsp;&nbsp;</span>
+                        </li>
+                    </ul>
+                </div>
+            </el-col>
+            <el-col :span="4">
+                <el-button v-if="!myPresellShow" style="float: right;" @click="showMyPresell">打开我的预申请</el-button>
+                <el-button v-else type="warning" style="float: right;" @click="closeShowMyPresell">关闭我的预申请</el-button>
+            </el-col>
+        </el-row>
+
         <div class="search">
             <el-row class="categoryDetail">
                 <el-col :span="2">
@@ -22,6 +31,12 @@
                 </el-col>
             </el-row>
         </div>
+
+        <div v-if="myPresellShow" class="myPresellDiv">
+            <span style="color: rgb(255,102,0);">我的预申请单</span>
+            <my-presell-list></my-presell-list>
+        </div>
+
         <div>
             <ul class="itemUl">
                 <li v-for="item in goodsListShow" :key="item.specGoodsId" class="item">
@@ -64,8 +79,13 @@
     import * as cfg from "../../config/cfg";
     import {getArrayObjectByCon, inArrayOptionByCons} from "../../Gw/GwArray";
     import _String from '@/util/string';
+    import myPresellList from '@/components/page/sale/myPresellList.vue'
 
     export default {
+        components:{
+            myPresellList
+        },
+
         data() {
             return {
                 currentPage: 1,
@@ -90,14 +110,16 @@
                 categoryShow:[],
                 dollarRate:1,
                 nalaRate:1,
+                myPresellShow:false,
             }
         },
-
-        components: {},
 
         computed: {},
 
         created() {
+            if (this.$route.query.showMypresell) {
+                this.myPresellShow=true;
+            }
             this.pictureUrl = cfg.service.uploadUrl + '/';
             this.nalaRate=localStorage.getItem('nalaRate')||1;
             this.dollarRate=localStorage.getItem('dollarRate')||1;
@@ -110,6 +132,14 @@
             getGoods() {
                 this.goodsList=[];
                 this.getGoodsOnce();
+            },
+
+            showMyPresell(){
+                this.myPresellShow=true;
+            },
+
+            closeShowMyPresell(){
+                this.myPresellShow=false;
             },
 
             //格式化金额
@@ -340,6 +370,15 @@
     .row3{
         padding: 0 10px;
         margin-top: 6px;
+    }
+
+    .itemUl{
+        margin-top: 20px;
+    }
+
+    .myPresellDiv{
+        border: 1px solid rgb(230,226,225);
+        padding: 10px;
     }
 
 </style>

@@ -81,6 +81,15 @@ export default new vuex.Store({
                 state.myPreSells.splice(index, 1);
             });
         },
+
+        myPreSellsAdd(state, item){
+            let index=indexByCons(state.myPreSells, item.specGoodsId, 'specGoodsId');
+            if (index < 0) {
+                state.myPreSells.push(item);
+            }else{
+                state.myPreSells[index].sellNum+=item.sellNum;
+            }
+        },
     },
 
     actions: {},

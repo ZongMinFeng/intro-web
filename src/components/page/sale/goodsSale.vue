@@ -76,7 +76,7 @@
                             <el-button class="mainBtn buyBtn" @click="buyNow" :disabled="noStock">立即申请</el-button>
                         </el-col>
                         <el-col :span="6">
-                            <el-button class="mainBtn preBuyBtn" :disabled="noStock">加入预申请单</el-button>
+                            <el-button class="mainBtn preBuyBtn" :disabled="noStock" @click="preBuy">加入预申请单</el-button>
                         </el-col>
                     </el-row>
                 </div>
@@ -149,6 +149,7 @@
                 dialogForm: {},
                 noStock: false,
                 activeName: 'first',
+                clickDisabled:false,
             }
         },
 
@@ -159,8 +160,8 @@
                     this.numPlusDisableShow = true;
                     return;
                 }
-                if (num > this.goodsInfo.stockNum - this.goodsInfo.lockNum - 0.005) {
-                    this.numBuy = this.goodsInfo.stockNum - this.goodsInfo.lockNum;
+                if (num > this.goodsInfo.innerStockNum - this.goodsInfo.innerLockNum - 0.005) {
+                    this.numBuy = this.goodsInfo.innerStockNum - this.goodsInfo.innerLockNum;
                     this.numPlusDisableShow = true;
                 } else {
                     this.numPlusDisableShow = false;
@@ -218,6 +219,27 @@
                     }
                 ).catch();
 
+            },
+
+            preBuy(){
+                if (this.numBuy < 1) {
+                    this.$message.error('没有库存');
+                    return;
+                }
+                //防止多次点击
+                if (this.clickDisabled) {
+                    return;
+                }
+                this.clickDisabled=true;
+                let preBuyItem={};
+                preBuyItem.goodsId=this.goodsInfo.goodsId;
+                preBuyItem.specGoodsId=this.goodsInfo.specGoodsId;
+                preBuyItem.mainPicture=this.goodsInfo.mainPicture;
+                preBuyItem.goodsName=this.goodsInfo.goodsName;
+                preBuyItem.specNowPrice=this.goodsInfo.specNowPrice;
+                preBuyItem.sellNum=this.numBuy;
+                this.$store.commit('myPreSellsAdd', preBuyItem);
+                this.$router.push({path:'/home', query:{showMypresell:true}})
             },
 
             getGoodsInfo() {

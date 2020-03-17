@@ -9,7 +9,7 @@ module.exports = {
                 {
                     path: '/home',
                     component: resolve => require(['../components/page/home.vue'], resolve),
-                    meta: {title: '欢迎'}
+                    meta: {title: '欢迎', keepAlive:true}
                 },
 
                 {
@@ -138,7 +138,7 @@ module.exports = {
         },
 
         {
-            icon: 'el-icon-school',
+            icon: 'el-icon-tickets',
             index: 'order',
             title: '订单管理',
             flag: false,
@@ -169,7 +169,7 @@ module.exports = {
         },
 
         {
-            icon: 'el-icon-school',
+            icon: 'el-icon-shopping-bag-2',
             index: 'goods',
             title: '物资管理',
             flag: false,
@@ -230,7 +230,7 @@ module.exports = {
         },
 
         {
-            icon: 'el-icon-school',
+            icon: 'el-icon-shopping-cart-full',
             index: 'batch',
             title: '采购管理',
             flag: false,
