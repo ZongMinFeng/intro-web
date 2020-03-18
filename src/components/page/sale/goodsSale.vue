@@ -1,5 +1,5 @@
 <template>
-    <div class="container">
+    <div class="container" ref="container">
         <div class="mainDiv">
             <div class="proinfoLeft">
                 <div class="imgzoom-main">
@@ -156,6 +156,12 @@
 
         watch: {
             numBuy(val) {
+                let reg=/[^0-9+-.]/g;
+                if (reg.test(val)) {
+                    this.numBuy=this.numBuy.replace(/[^0-9+-.]/g, '');
+                    return;
+                }
+
                 let num = parseInt(val);
                 if (num === 0) {
                     this.numPlusDisableShow = true;
@@ -182,6 +188,10 @@
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;
             this.getGoodsInfo();
+            this.$nextTick(()=>{
+                //滚动到顶部
+                this.$refs.container.scrollIntoView();
+            });
         },
 
         methods: {
@@ -250,7 +260,6 @@
                 getGoodsserialById(this, params).then(
                     res => {
                         this.goodsInfo = res.data;
-                        console.log('goodsInfo', this.goodsInfo);//debug
                         let tmp = [];
                         tmp = this.goodsInfo.goodsImgs.split(',');
                         this.goodsInfo.imgs = trimSpace(tmp);
