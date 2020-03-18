@@ -1,7 +1,7 @@
 <template>
     <div class="container" ref="container">
         <el-row>
-            <el-col :span="20">
+            <el-col :span="19">
                 <div>
                     <ul class="levels">
                         <li v-for="item in levels" :key="item.id">
@@ -11,7 +11,7 @@
                     </ul>
                 </div>
             </el-col>
-            <el-col :span="4">
+            <el-col :span="5">
                 <el-button v-if="!myPresellShow" style="float: right;" @click="showMyPresell">打开我的预申请</el-button>
                 <el-button v-else type="warning" style="float: right;" @click="closeShowMyPresell">关闭我的预申请</el-button>
                 <el-button type="primary" @click="reflesh">刷新</el-button>

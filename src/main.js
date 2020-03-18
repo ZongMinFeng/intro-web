@@ -55,11 +55,6 @@ Vue.prototype.Toast = Toast;
 
 // 使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-    console.log('from', from);//debug
-    //如果存在keepAlive并且是false，那么关闭标签页
-    if (from.meta.keepAlive && !from.meta.keepAlive) {
-
-    }
     const loginFlag = store.state.loginFlag;
     if (!loginFlag && to.path !== '/login') {
         next('/login')
