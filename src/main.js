@@ -17,25 +17,27 @@ import store from './store'
 import Router from 'vue-router'
 
 const routerPush = Router.prototype.push
-Router.prototype.push = function push (location) {
-  return routerPush.call(this, location).catch(error => error)
+Router.prototype.push = function push(location) {
+    return routerPush.call(this, location).catch(error => error)
 }
 
 // 拖拽el-dialog
 import './directives'
 import VueDirectiveImagePreviewer from 'vue-directive-image-previewer'
 import 'vue-directive-image-previewer/dist/assets/style.css'
+
 Vue.use(VueDirectiveImagePreviewer);
 
 // 图片预览
 import preview from 'vue-photo-preview'
 import 'vue-photo-preview/dist/skin.css'
+
 Vue.use(preview);
 
 
 Vue.config.productionTip = false
 Vue.use(ElementUI, {
-  size: 'small'
+    size: 'small'
 })
 //设置axios超时时间10秒
 axios.defaults.timeout = 10000
@@ -47,22 +49,27 @@ Vue.use(Mint);
 //使用mockjs模拟数据
 import './mock/index';
 
-import { Toast } from 'mint-ui';
-Vue.prototype.Toast=Toast;
+import {Toast} from 'mint-ui';
+
+Vue.prototype.Toast = Toast;
 
 // 使用钩子函数对路由进行权限跳转
 router.beforeEach((to, from, next) => {
-  console.log('to', to);//debug
-  const loginFlag = store.state.loginFlag;
-  if (!loginFlag && to.path !== '/login') {
-    next('/login')
-  } else {
-    next()
-  }
+    console.log('from', from);//debug
+    //如果存在keepAlive并且是false，那么关闭标签页
+    if (from.meta.keepAlive && !from.meta.keepAlive) {
+
+    }
+    const loginFlag = store.state.loginFlag;
+    if (!loginFlag && to.path !== '/login') {
+        next('/login')
+    } else {
+        next()
+    }
 });
 
 new Vue({
-  router,
-  store,
-  render: h => h(App)
+    router,
+    store,
+    render: h => h(App)
 }).$mount('#app')

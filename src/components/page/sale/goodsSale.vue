@@ -122,6 +122,7 @@
     import {trimSpace} from "../../../Gw/GwArray";
     import _String from '@/util/string';
     import productManualShow from './productManualShow.vue';
+    import {formatPrice} from "../../../tool/Format";
 
     export default {
         name: "goodsSale",
@@ -198,7 +199,7 @@
                 });
             },
 
-            formCommit() {
+            formCommit: function () {
                 let params = {};
                 params.orderAmt = this.numBuy * this.goodsInfo.specNowPrice;
                 params.goodsAllNum = this.numBuy;
@@ -207,13 +208,14 @@
                 let item = {};
                 item.recycleSeq = '1';
                 item.specGoodsId = this.goodsInfo.specGoodsId;
-                item.specNowPrice = this.goodsInfo.specNowPrice;
+                item.specNowPrice = formatPrice(this.goodsInfo.specNowPrice);
                 item.dealNum = this.numBuy + '';
                 params.orderDetailList.push(item);
                 createOrder(this, params).then(
                     res => {
                         this.$message.success('提交购买成功');
                         this.dialogVisible = false;
+                        this.$router.push('/home');
                     },
                     res => {
                     }

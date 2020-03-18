@@ -30,9 +30,9 @@
                                 <img style="height: 40px; width: 40px; background-color: white;" :preview="index"
                                      :src="pictureUrl + item.goodsId + '/'+item.mainPicture">
                             </div>
-                            <div style="font-size: 8px; line-height: 10px;" :title="item.goodsName">{{item.goodsName.substring(0, 4)}}
+                            <div style="font-size: 8px; line-height: 14px; margin-top: -4px;" :title="item.goodsName">{{item.goodsName.substring(0, 4)}}
                             </div>
-                            <div style="font-size: 8px; line-height: 10px;">数量: {{item.dealNum}}</div>
+                            <div style="font-size: 8px; line-height: 14px;">数量: {{item.dealNum}}</div>
                         </div>
                     </div>
                 </template>

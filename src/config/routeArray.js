@@ -89,7 +89,7 @@ module.exports = {
                 {
                     path: '/goodsSale',
                     component: resolve => require(['../components/page/sale/goodsSale.vue'], resolve),
-                    meta: {title: '商品销售', function: 'batchInfoAction'}
+                    meta: {title: '商品销售', function: 'goodsSale', keepAlive:false}
                 },
                 {
                     path: '/orderlistAction',
@@ -149,7 +149,8 @@ module.exports = {
                     flag: true,
                     function: 'myOrderAction',
                     permissions: [
-                        'listMyOrders'
+                        'listMyOrders',
+                        'createOrder'
                     ]
                 },
                 {

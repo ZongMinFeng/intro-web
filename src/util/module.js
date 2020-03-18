@@ -2,6 +2,7 @@ import * as md5 from "./md5";
 import * as jsonSha256 from "./jsonSha256";
 import {PERMISSIONS} from "../tool/permission";
 import {pubRandom} from "./pub";
+import {formatPrice} from "../tool/Format";
 
 const common = require('./common.js');
 const cfg = require("../config/cfg.js");
@@ -3744,7 +3745,7 @@ const getBatchGoodsById = (me, params) => {
 
 /**
  * 1.3.3.11    提交批次运单号 /uptBatchLadingBill 位图索引41
- * @param me
+ * @param mecreateOrder
  * @param params
  * @returns {Promise<any>}
  */
@@ -4238,8 +4239,8 @@ const createOrder = (me, params) => {
             singArray.orderFlag = params.orderFlag;
         }
         if (params.orderAmt != null && params.orderAmt !== '') {
-            send.orderAmt = params.orderAmt;
-            singArray.orderAmt = params.orderAmt;
+            send.orderAmt = formatPrice(params.orderAmt);
+            singArray.orderAmt = formatPrice(params.orderAmt);
         }
         if (params.goodsAllNum != null && params.goodsAllNum !== '') {
             send.goodsAllNum = params.goodsAllNum + '';

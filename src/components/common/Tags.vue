@@ -48,6 +48,11 @@
       bus.$on('reboot', ()=>{
         this.closeAll();
       });
+
+      //监听并关闭标签
+      bus.$on('kill', item=>{
+
+      });
     },
 
     beforeDestroy(){
