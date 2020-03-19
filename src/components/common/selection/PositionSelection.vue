@@ -219,6 +219,6 @@
 
 <style scoped>
     .position-border {
-        border: 1px solid red;
+        border: 1px solid rgb(192,196,204);
     }
 </style>

@@ -149,7 +149,6 @@ module.exports = {
                     flag: true,
                     function: 'myOrderAction',
                     permissions: [
-                        'listMyOrders',
                         'createOrder'
                     ]
                 },

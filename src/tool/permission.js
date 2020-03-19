@@ -474,6 +474,7 @@ const PERMISSIONS = {
         url: BASE_URL_API + '/wxCache/getSerialBySpecGoodsId',
         txnId: 'getSerialBySpecGoodsId'
     },
+
     listMyOrders: {
         name: '我的订单',
         url: BASE_URL_API + '/wxCache/listMyOrders',

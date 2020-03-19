@@ -17,7 +17,7 @@
             <el-dialog
                 :title="dialogTitle"
                 :visible.sync="dialogVisible"
-                width="30%">
+                width="50%">
                 <el-form ref="instPreservationForm" :model="dialogForm" :rules="rules" label-width="110px">
                     <el-form-item label="子公司名称" prop="instName">
                         <el-input v-model="dialogForm.instName" maxlength="64" auto-complete="off"></el-input>
@@ -33,7 +33,7 @@
                     </el-form-item>
                     <div>
                         <!--<el-form-item v-if="flag===1" label="管理员权限" prop="tellerFuncMap">-->
-                        请赋予子公司总经理权限:
+                        <div style="margin-bottom: 5px;">请赋予子公司总经理权限</div>
                         <position-selection v-model="dialogForm.tellerFuncMap"></position-selection>
                         <!--测试使用-->
                         <!--已选择：{{dialogForm.tellerFuncMap}}-->
@@ -471,6 +471,7 @@
             createTap(instInfo) {
                 console.log('createTap instInfo', instInfo);//debug
                 this.flag = 1;
+                this.dialogForm=[];
                 this.dialogForm.specInstId = instInfo.instId;
                 this.dialogForm.instLevel = parseInt(instInfo.instLevel) + 1 + '';
                 this.dialogVisible = true;
