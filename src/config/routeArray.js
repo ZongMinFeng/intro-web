@@ -15,7 +15,7 @@ module.exports = {
                 {
                     path: '/instAction',
                     component: resolve => require(['../components/page/setting/instActionSet.vue'], resolve),
-                    meta: {title: '公司设置', function: 'instAction'}
+                    meta: {title: '公司设置', function: 'instAction', keepAlive:true}
                 },
 
                 {
@@ -212,7 +212,6 @@ module.exports = {
                         'addGooCategory',
                         'deleteGooCategoryById',
                         'updateGooCategoryById',
-                        'getGooCategoryById',
                     ]
                 },
                 {
@@ -263,7 +262,8 @@ module.exports = {
                         'uptBatchLadingBill',
                         'uptBatchRealCount',
                         'listSerialsByConditions',
-                        'submitLocalPrice'
+                        'submitLocalPrice',
+                        'cacSuggestPrice'
                     ]
                 },
             ],

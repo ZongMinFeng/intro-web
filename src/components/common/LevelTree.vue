@@ -10,30 +10,32 @@
             lazy
             @node-click="handleNodeClick" style="padding:10px 0">
        <span class="custom-tree-node" slot-scope="{ node, data}">
-         <span>
-            <svg-icon class="svgname" icon-class="terrace" v-if="node.data.instLevel === '1'"/>
-            <svg-icon class="svgname" icon-class="group" v-if="node.data.instLevel === '2'"/>
-            <svg-icon class="svgname" icon-class="sub-institutional" v-if="node.data.instLevel === '3'"/>
-            <svg-icon class="svgname" icon-class="village" v-if="node.data.instLevel === '4'"/>
-            <svg-icon class="svgname" icon-class="building" v-if="node.data.instLevel === '5'"/>
-           {{ node.label }}
-         </span>
-           <span v-if="create!=null&&node.data.instLevel === '1'">
-                <el-button
-                    type="text"
-                    icon="el-icon-circle-plus"
-                    @click.stop="() => createNew(node,data)">
+            <span>
+                <svg-icon class="svgname" icon-class="terrace" v-if="node.data.instLevel === '1'"/>
+                <svg-icon class="svgname" icon-class="group" v-if="node.data.instLevel === '2'"/>
+                <svg-icon class="svgname" icon-class="sub-institutional" v-if="node.data.instLevel === '3'"/>
+                <svg-icon class="svgname" icon-class="village" v-if="node.data.instLevel === '4'"/>
+                <svg-icon class="svgname" icon-class="building" v-if="node.data.instLevel === '5'"/>
+                <span :title="node.label">{{ node.label.substring(0, 20) }}</span><span v-if="node.label.length>20">...</span>
+            </span>
+            <span style="font-size: 12px;">
+                <span v-if="node.data.linkMan">管理员:{{node.data.linkMan}}</span>
+                <span v-if="node.data.linkPhone">&nbsp;&nbsp;手机号:{{node.data.linkPhone}}</span>
+            </span>
+            <span>
+                <el-button v-if="create!=null&&node.data.instLevel === '1'"
+                           type="text"
+                           icon="el-icon-circle-plus"
+                           @click.stop="() => createNew(node,data)">
                 新增子公司
                 </el-button>
-             </span>
-            <span v-if="create!=null">
-                <el-button
-                    type="text"
-                    icon="el-icon-edit"
-                    @click.stop="() => updateTap(node,data)">
+                <el-button v-if="create!=null"
+                           type="text"
+                           icon="el-icon-edit"
+                           @click.stop="() => updateTap(node,data)">
                     修改公司
                 </el-button>
-             </span>
+            </span>
            <!--只有两层，不需要刷新-->
            <!--<span>-->
            <!--<el-button-->
@@ -115,9 +117,9 @@
                 dialogVisible: false,
                 flag: 1,//1.新增 2.修改
                 dialogForm: {
-                    specInstId:null,
-                    version:null,
-                    instName:null,
+                    specInstId: null,
+                    version: null,
+                    instName: null,
                 },
                 nodeNow: null,
                 dataNow: null,
@@ -145,7 +147,9 @@
                 isLeaf: sysInstInfo.isLeaf,
                 instLevel: sysInstInfo.instLevel,
                 status: sysInstInfo.status,
-                version: sysInstInfo.version
+                version: sysInstInfo.version,
+                linkMan:sysInstInfo.linkMan,
+                linkPhone:sysInstInfo.linkPhone,
             };
             if (sysInstInfo.isLeaf === 'N') {
                 sysInstInList.leaf = false
@@ -227,10 +231,10 @@
                         res => {
                             console.log('res', res);//debug
                             console.log('dataNow', this.dataNow);//debug
-                            let sysInstDepartment=res.data;
+                            let sysInstDepartment = res.data;
                             localStorage.setItem('sysInstDepartment', JSON.stringify(sysInstDepartment));
-                            this.dataNow.instName=sysInstDepartment.instName;
-                            this.dataNow.version=sysInstDepartment.version;
+                            this.dataNow.instName = sysInstDepartment.instName;
+                            this.dataNow.version = sysInstDepartment.version;
                             this.$message.success('修改成功');
                             this.dialogVisible = false;
                         },
@@ -296,9 +300,9 @@
                 // this.$emit('updateTap', data);
                 this.nodeNow = node;
                 this.dataNow = data;
-                this.dialogForm.specInstId=data.instId;
-                this.dialogForm.version=data.version;
-                this.dialogForm.instName=data.instName;
+                this.dialogForm.specInstId = data.instId;
+                this.dialogForm.version = data.version;
+                this.dialogForm.instName = data.instName;
                 this.flag = 2;
                 this.dialogVisible = true;
             },

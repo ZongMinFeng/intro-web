@@ -25,79 +25,80 @@
 
         data() {
             return {
-                treeData: [
-                    {
-                        id: 'setting',
-                        label: '系统设置',
-                        disabled:true,
-                        children: [
-                            {
-                                id: 'instAction',
-                                label: '机构设置',
-                                disabled:true,
-                                children: [
-                                    {
-                                        id: 'addInst',
-                                        label: '添加子公司',
-                                        disabled:true,
-                                        isPermission: 'Y'
-                                    },
-                                    {
-                                        id: 'getAllInstById',
-                                        label: '查询子机构',
-                                        disabled:true,
-                                        isPermission: 'Y'
-                                    },
-                                ]
-                            },
-                            {
-                                id: 'departmentAction',
-                                label: '部门设置',
-                                disabled:true,
-                                children: [
-                                    {
-                                        id: 'listInstDepartments',
-                                        label: '查询公司所有部门',
-                                        disabled:true,
-                                        isPermission: 'Y'
-                                    },
-                                    {
-                                        id: 'addDepartmentInfo',
-                                        label: '新增部门',
-                                        disabled:true,
-                                        isPermission: 'Y'
-                                    },
-                                ]
-                            },
-                        ]
-                    },
-                    {
-                        id: 'goods',
-                        label: '物资管理',
-                        disabled:true,
-                        children: [
-                            {
-                                id: 'categoryAction',
-                                label: '物资分类',
-                                disabled:true,
-                                children: [
-                                    {
-                                        id: 'getGooCategoryById',
-                                        label: '根据主键查询物资分类',
-                                        disabled:true,
-                                        isPermission: 'Y'
-                                    },
-                                    {
-                                        id: 'addGooCategory',
-                                        label: '新增物资分类',
-                                        disabled:true,
-                                        isPermission: 'Y'
-                                    },
-                                ]
-                            },
-                        ]
-                    },
-                ],
+                // treeData: [
+                //     {
+                //         id: 'setting',
+                //         label: '系统设置',
+                //         disabled:true,
+                //         children: [
+                //             {
+                //                 id: 'instAction',
+                //                 label: '机构设置',
+                //                 disabled:true,
+                //                 children: [
+                //                     {
+                //                         id: 'addInst',
+                //                         label: '添加子公司',
+                //                         disabled:true,
+                //                         isPermission: 'Y'
+                //                     },
+                //                     {
+                //                         id: 'getAllInstById',
+                //                         label: '查询子机构',
+                //                         disabled:true,
+                //                         isPermission: 'Y'
+                //                     },
+                //                 ]
+                //             },
+                //             {
+                //                 id: 'departmentAction',
+                //                 label: '部门设置',
+                //                 disabled:true,
+                //                 children: [
+                //                     {
+                //                         id: 'listInstDepartments',
+                //                         label: '查询公司所有部门',
+                //                         disabled:true,
+                //                         isPermission: 'Y'
+                //                     },
+                //                     {
+                //                         id: 'addDepartmentInfo',
+                //                         label: '新增部门',
+                //                         disabled:true,
+                //                         isPermission: 'Y'
+                //                     },
+                //                 ]
+                //             },
+                //         ]
+                //     },
+                //     {
+                //         id: 'goods',
+                //         label: '物资管理',
+                //         disabled:true,
+                //         children: [
+                //             {
+                //                 id: 'categoryAction',
+                //                 label: '物资分类',
+                //                 disabled:true,
+                //                 children: [
+                //                     {
+                //                         id: 'getGooCategoryById',
+                //                         label: '根据主键查询物资分类',
+                //                         disabled:true,
+                //                         isPermission: 'Y'
+                //                     },
+                //                     {
+                //                         id: 'addGooCategory',
+                //                         label: '新增物资分类',
+                //                         disabled:true,
+                //                         isPermission: 'Y'
+                //                     },
+                //                 ]
+                //             },
+                //         ]
+                //     },
+                // ],
+                tableData:[],
                 props: {
                     label: 'label',
                     children: 'children',
@@ -175,7 +176,6 @@
                     }
                 });
                 if (this.disabled === '') {
-                    console.log('啦啦啦，我是卖报的小行家');//debug
                     this.disabledAll(treeDataAll);
                 }
                 this.treeData=treeDataAll;
@@ -196,7 +196,6 @@
             },
 
             check() {
-                console.log('checked', this.$refs.tree.getCheckedKeys());//debug
                 let permissionReady = this.$refs.tree.getCheckedKeys();
                 let permissionNew = [];
                 permissionReady.forEach(item => {

@@ -98,7 +98,6 @@
                 const isExist = this.tagsList.some(item => {
                     return item.path === route.path;
                 });
-                console.log('route', route);//debug
 
                 !isExist && this.tagsList.push({
                     title: route.meta.title,
