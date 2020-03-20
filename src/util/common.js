@@ -52,25 +52,20 @@ const sendServer = (urlParams, me) => {
       let jsonstr = '';
       if (singArray && singArray !== {}) {
         //处理singArray的数组成员
-        console.log("singArray-----------------", singArray);//debug
         let singArrayNew=jsonSha256.expandArray(singArray);
         let jsonObj = jsonSha256.objKeySort(singArrayNew);
-        // let jsonObj = jsonSha256.objKeySort(singArray);
-        console.log('jsonObj:', jsonObj);
 
         for (let item in jsonObj) {
           jsonstr += '&' + item + '=' + jsonObj[item]
         }
       }
-      console.log('jsonstr:', jsonstr);
       if (jsonstr) {
         headerStr += jsonstr
       }
-      console.log('headerStr:', headerStr);
+      console.log('签名内容:', headerStr);//debug
 
       let signBase64 = base64.base64encode(headerStr);
       let signString1 = signBase64 + '&key=' + sha256Key;
-      console.log('签名内容：', signString1);
       header.signValue = jsonSha256.json2sha(signString1)
     }
 
@@ -86,7 +81,6 @@ const sendServer = (urlParams, me) => {
       if (res.status === 200) {
         const data = res.data;
         if (urlParams.txnId === cfg.service.getTellerInfoById.txnId) {
-          console.log('getTellerInfoById', res);//debug
         }
         if (data.returnCode === 501&&urlParams.txnId !== cfg.service.getLoginStatus.txnId) {
           me.Toast({

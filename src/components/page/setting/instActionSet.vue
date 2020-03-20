@@ -102,6 +102,19 @@
                     callback()
                 }
             };
+
+            const checkTellerId=(rule, value, callback)=>{
+                if (!value && value === '') {
+                    callback(new Error('请输入管理员登录名'));
+                    return;
+                }
+                let reg=/[\w*]/;
+                if (!reg.test(value)) {
+                    callback(new Error('请输入字母，数字或者下划线'));
+                    return;
+                }
+                callback();
+            };
             return {
                 instArray: [],
                 dialogVisible: false,
@@ -120,7 +133,7 @@
                 uptDisabled: false,
                 rules: {
                     instName: [{required: true, validate: '', trigger: 'blur', validator: validateInstName}],
-                    tellerId: [{required: true, message: '请输入管理员ID', trigger: 'blur'}],
+                    tellerId: [{required: true,  trigger: 'blur', validator:checkTellerId}],
                     tellerPhone: [{required: false, trigger: 'blur', validator: validateUsername}]
                 },
                 dialogForm: {
@@ -471,7 +484,7 @@
             createTap(instInfo) {
                 console.log('createTap instInfo', instInfo);//debug
                 this.flag = 1;
-                this.dialogForm=[];
+                this.dialogForm={};
                 this.dialogForm.specInstId = instInfo.instId;
                 this.dialogForm.instLevel = parseInt(instInfo.instLevel) + 1 + '';
                 this.dialogVisible = true;

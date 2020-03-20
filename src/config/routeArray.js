@@ -282,7 +282,9 @@ module.exports = {
                     permissions: [
                         'updateInstInfo',
                         'getAllInstById',
-                        'getInstById'
+                        'getInstById',
+                        'chgInstAdmin',
+                        'addInst'
                     ]
                 },
                 {
@@ -323,7 +325,8 @@ module.exports = {
                         'deleteDepartmentTeller',
                         'resetTellerPwd',
                         'checkTellerId',
-                        'departmentLogin'
+                        'departmentLogin',
+                        'loginOut'
                     ]
                 },
             ],

@@ -103,7 +103,6 @@
           urlParams.send = send;
           sendServer(urlParams, that).then(
             (res) => {
-              console.log("getLoginStatus", res);//debug
               // 成功
               // LoginStatus: '0'   //1.未使用 2.已被扫码 3.登陆成功 4.登陆失败 5.登陆超时
               if (res.returnCode !== 200 && res.returnCode !== 601) {
@@ -175,7 +174,6 @@
         var that = this;
         sendServer(urlParams, this).then(
           (res) => {
-            console.log("res", res);//debug
             // 成功
             if (res.returnCode !== 200) {
               this.$message.error(res.msg);

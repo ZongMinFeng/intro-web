@@ -78,7 +78,6 @@
       },
 
       sysInstInfoStore(){
-        console.log("store store store");//debug
         return this.$store.getters.sysInstInfo;
       }
     },
@@ -99,7 +98,6 @@
     },
 
     mounted() {
-      console.log('mounted');
       this.dataChange();
 
       bus.$on('tellerToParentInst', (red) => {
@@ -115,12 +113,12 @@
 
     methods: {
       dataChange() {
-        let parentInstInfosArray = localStorage.getItem('parentInstInfos') || ''
-        let sysInstInfoArray = localStorage.getItem('sysInstInfo') || ''
-        let sysTellerInfoArray = localStorage.getItem('sysTellerInfo') || ''
-        let tellerToParentInst = []
+        let parentInstInfosArray = localStorage.getItem('parentInstInfos') || '';
+        let sysInstInfoArray = localStorage.getItem('sysInstInfo') || '';
+        let sysTellerInfoArray = localStorage.getItem('sysTellerInfo') || '';
+        let tellerToParentInst = [];
         if (parentInstInfosArray) {
-          let parentInstInfos = JSON.parse(parentInstInfosArray)
+          let parentInstInfos = JSON.parse(parentInstInfosArray);
           if (parentInstInfos.length > 1) {
             parentInstInfos.sort(function (a, b) {
               return a.instLevel > b.instLevel ? 1 : -1
@@ -131,15 +129,14 @@
           })
         }
         if (sysInstInfoArray) {
-          let sysInstInfo = JSON.parse(sysInstInfoArray)
+          let sysInstInfo = JSON.parse(sysInstInfoArray);
           tellerToParentInst.push(sysInstInfo.aliasName)
         }
 
         if (sysTellerInfoArray) {
-          let sysTellerInfo = JSON.parse(sysTellerInfoArray)
+          let sysTellerInfo = JSON.parse(sysTellerInfoArray);
           this.tellerName = sysTellerInfo.tellerName
         }
-        console.log('tellerToParentInst', tellerToParentInst)
         this.tellerToParentInst = tellerToParentInst
       },
 

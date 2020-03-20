@@ -4560,6 +4560,51 @@ const listMyOrders = (me, params) => {
     });
 };
 
+/**
+ *1.3.1.3.5更换子公司管理员 /chgInstAdmin    索引125  验签
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const chgInstAdmin = (me, params) => {
+    console.log("chgInstAdmin params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+        // urlParams.noSing = true;
+
+        urlParams.url = PERMISSIONS.chgInstAdmin.url;
+        urlParams.txnId = PERMISSIONS.chgInstAdmin.txnId;
+
+        if (params.specInstId != null && params.specInstId !== '') {
+            send.specInstId = params.specInstId;
+            singArray.specInstId = params.specInstId;
+        }
+        if (params.specTellerId != null && params.specTellerId !== '') {
+            send.specTellerId = params.specTellerId;
+            singArray.specTellerId = params.specTellerId;
+        }
+        if (params.tellerName != null && params.tellerName !== '') {
+            send.tellerName = params.tellerName;
+        }
+        if (params.tellerPhone != null && params.tellerPhone !== '') {
+            send.tellerPhone = params.tellerPhone;
+            singArray.tellerPhone = params.tellerPhone;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4689,5 +4734,6 @@ export {
     closeOrder,
     getManualCertify,
     getSerialBySpecGoodsId,
-    listMyOrders
+    listMyOrders,
+    chgInstAdmin
 };

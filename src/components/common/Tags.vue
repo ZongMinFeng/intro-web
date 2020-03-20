@@ -49,7 +49,6 @@
 
         created() {
             this.setTags(this.$route);
-            console.log('this.$route', this.$route);
             bus.$on('reboot', () => {
                 this.closeAll();
             });

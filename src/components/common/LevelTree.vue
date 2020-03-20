@@ -19,8 +19,8 @@
                 <span :title="node.label">{{ node.label.substring(0, 20) }}</span><span v-if="node.label.length>20">...</span>
             </span>
             <span style="font-size: 12px;">
-                <span v-if="node.data.linkMan">管理员:{{node.data.linkMan}}</span>
-                <span v-if="node.data.linkPhone">&nbsp;&nbsp;手机号:{{node.data.linkPhone}}</span>
+                <span v-if="node.data.adminName">管理员:{{node.data.adminName}}</span>
+                <span v-if="node.data.adminMobile">&nbsp;&nbsp;手机号:{{node.data.adminMobile}}</span>
             </span>
             <span>
                 <el-button v-if="create!=null&&node.data.instLevel === '1'"
@@ -28,6 +28,12 @@
                            icon="el-icon-circle-plus"
                            @click.stop="() => createNew(node,data)">
                 新增子公司
+                </el-button>
+                <el-button v-if="create!=null&&node.data.instLevel !== '1'"
+                           type="text"
+                           icon="el-icon-s-custom"
+                           @click.stop="() => changeAdmin(node,data)">
+                更换管理员
                 </el-button>
                 <el-button v-if="create!=null"
                            type="text"
@@ -79,14 +85,23 @@
         </div>
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible" width="30%">
-            <el-form ref="dialogForm" :model="dialogForm" label-width="120px">
+            <el-form ref="dialogForm" :model="dialogForm" :rules="rules" label-width="120px">
                 <el-row>
-                    <el-col :span="24">
+                    <el-col :span="24" v-if="flag===2">
                         <el-form-item label="公司名称" prop="instName"
                                       :rules="[{required:true, message:'请输入名称', trigger: 'blur'}]">
                             <el-input v-model="dialogForm.instName" placeholder="请输入名称"></el-input>
                         </el-form-item>
                     </el-col>
+                    <el-form-item v-if="flag===3" label="总经理登录名" prop="tellerId">
+                        <el-input v-model="dialogForm.tellerId" maxlength="64" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="flag===3" label="总经理名称" prop="tellerName">
+                        <el-input v-model="dialogForm.tellerName" maxlength="64" auto-complete="off"></el-input>
+                    </el-form-item>
+                    <el-form-item v-if="flag===3" label="总经理手机号" prop="tellerPhone">
+                        <el-input v-model="dialogForm.tellerPhone" maxlength="11" auto-complete="off"></el-input>
+                    </el-form-item>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog_footer">
@@ -94,18 +109,68 @@
                 <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
             </span>
         </el-dialog>
+
+        <el-dialog title="请记录登录信息" :visible.sync="passwordVisible">
+            <div class="passWordDiv">
+                倒计时:&nbsp;<span style="color:red">{{passwordForm.time}}</span><br>
+                <br>
+                用户名:&nbsp;{{passwordForm.tellerId}}<br>
+                <br>
+                密&nbsp;&nbsp;&nbsp;&nbsp;码:&nbsp;<b>{{passwordForm.tellerPwd}}</b>
+            </div>
+            <span slot="footer" class="dialog-footer">
+                    <el-button type="primary" @click="passwordVisible = false">确 定</el-button>
+                </span>
+        </el-dialog>
     </div>
 </template>
 
 <script>
     import {Toast} from 'mint-ui'
     import bus from './bus'
-    import {getAllInstById, getInstById, updateInstInfo} from "../../util/module";
+    import {chgInstAdmin, getAllInstById, getInstById, updateInstInfo} from "../../util/module";
+    import {validUsername} from "../../util/validate";
 
     export default {
         name: 'LevelTree',
         props: ['create'],
         data() {
+            const validateUsername = (rule, value, callback) => {
+                if (!value) {
+                    callback();
+                }
+                if (!validUsername(value)) {
+                    callback(new Error('请填写纯数字手机号！'))
+                } else if (value.substr(0, 1) !== '1') {
+                    callback(new Error('手机号格式错误！'))
+                } else if (value.length !== 11) {
+                    callback(new Error('手机号必须为11位！'))
+                } else {
+                    callback()
+                }
+            };
+
+            const validateInstName = (rule, value, callback) => {
+                if (!value) {
+                    callback(new Error('请填写公司名称！'))
+                } else {
+                    callback()
+                }
+            };
+
+            const checkTellerId=(rule, value, callback)=>{
+                if (!value && value === '') {
+                    callback(new Error('请输入管理员登录名'));
+                    return;
+                }
+                let reg=/[\w*]/;
+                if (!reg.test(value)) {
+                    callback(new Error('请输入字母，数字或者下划线'));
+                    return;
+                }
+                callback();
+            };
+
             return {
                 sysInstInfoAll: [],
                 instLevel: 0,
@@ -115,14 +180,32 @@
                     isLeaf: 'leaf',
                 },
                 dialogVisible: false,
-                flag: 1,//1.新增 2.修改
+                flag: 1,//1.新增 2.修改 3.更换管理员
                 dialogForm: {
                     specInstId: null,
                     version: null,
                     instName: null,
+                    tellerId:null,
+                    tellerName:null,
+                    tellerPhone:null,
+                    adminMobile:null,
+                    adminName:null,
                 },
                 nodeNow: null,
                 dataNow: null,
+                rules: {
+                    instName: [{required: true, validate: '', trigger: 'blur', validator: validateInstName}],
+                    tellerId: [{required: true,  trigger: 'blur', validator:checkTellerId}],
+                    tellerPhone: [{required: false, trigger: 'blur', validator: validateUsername}]
+                },
+                passwordVisible: false,
+                passwordForm: {
+                    tellerId: '',
+                    tellerPwd: '',
+                    time:'',
+                },
+                timer:'',
+                timerData:'',
             }
         },
 
@@ -130,9 +213,17 @@
             dialogTitle() {
                 if (this.flag === 1) {
                     return '新增';
-                } else {
+                }
+                
+                if (this.flag===2){
                     return '修改';
                 }
+
+                if (this.flag === 3) {
+                    return '更换管理员';
+                }
+
+                return '';
             }
         },
 
@@ -229,14 +320,46 @@
                     params.instName = this.dialogForm.instName;
                     updateInstInfo(this, params).then(
                         res => {
-                            console.log('res', res);//debug
-                            console.log('dataNow', this.dataNow);//debug
                             let sysInstDepartment = res.data;
                             localStorage.setItem('sysInstDepartment', JSON.stringify(sysInstDepartment));
                             this.dataNow.instName = sysInstDepartment.instName;
                             this.dataNow.version = sysInstDepartment.version;
                             this.$message.success('修改成功');
                             this.dialogVisible = false;
+                        },
+                        res => {
+                        }
+                    ).catch();
+                }
+
+                if (this.flag === 3) {
+                    //更换管理员
+                    params.specInstId = this.dialogForm.specInstId;
+                    params.specTellerId = this.dialogForm.tellerId;
+                    params.tellerName = this.dialogForm.tellerName;
+                    params.tellerPhone = this.dialogForm.tellerPhone;
+                    chgInstAdmin(this, params).then(
+                        res => {
+                            console.log('res', res);//debug
+                            this.dataNow.adminName = this.dialogForm.tellerName;
+                            this.dataNow.adminMobile = this.dialogForm.tellerPhone;
+                            this.$message.success('更换成功');
+                            this.dialogVisible = false;
+
+                            //如果有密码，那么进行密码显示
+                            if (res.data) {
+                                this.passwordForm.tellerId=this.dialogForm.tellerId;
+                                this.passwordForm.tellerPwd=res.data;
+                                this.passwordVisible = true;
+                                this.passwordForm.time=30;
+                                this.timerData=setInterval(()=>{
+                                    this.passwordForm.time--;
+                                }, 1000);
+                                this.timer=setTimeout(()=>{
+                                    this.passwordVisible=false;
+                                    clearInterval(this.timerData);
+                                }, 30000);
+                            }
                         },
                         res => {
                         }
@@ -250,7 +373,6 @@
 
 
             loadNode(node, resolve) {
-                console.log('node', node);
                 if (node.level === 0) {
                     this.requestTree(resolve)
                 }
@@ -266,7 +388,6 @@
 
             instGetAllByIdFun(instId, resolve, node) {
                 getAllInstById(this, instId, Toast).then((res) => {
-                        console.log('res', res);
                         let data = res.data;
                         if (!data) {
                             Toast({
@@ -292,12 +413,22 @@
             },
 
             createNew(node, data) {
-                console.log('createNew data', data);//debug
                 this.$emit('createTap', data);
             },
 
+            changeAdmin(node, data){
+                this.dialogForm=[];
+                this.nodeNow = node;
+                this.dataNow = data;
+                this.dialogForm.specInstId = data.instId;
+                this.dialogForm.instName = data.instName;
+                this.flag = 3;
+                this.dialogVisible = true;
+
+            },
+
             updateTap(node, data) {
-                // this.$emit('updateTap', data);
+                this.dialogForm=[];
                 this.nodeNow = node;
                 this.dataNow = data;
                 this.dialogForm.specInstId = data.instId;
@@ -412,5 +543,10 @@
     .svgname {
         width: 1.5em;
         height: 1.5em;
+    }
+
+    .passWordDiv {
+        width: 120px;
+        margin: 0 auto;
     }
 </style>

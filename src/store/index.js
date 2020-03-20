@@ -62,7 +62,6 @@ export default new vuex.Store({
         },
 
         setSysInstInfo(state, sysInstInfo) {
-            console.log('啦啦啦啦啦啦啦'); //debug
             state.sysInstInfo = sysInstInfo;
         },
 
@@ -72,9 +71,7 @@ export default new vuex.Store({
 
         myPreSellsDeleteSelect(state, selects){
             selects.forEach(item=>{
-                console.log('item', item);//debug
                 let index=indexByCons(state.myPreSells, item, 'specGoodsId');
-                console.log('index', index);//debug
                 state.myPreSells.splice(index, 1);
             });
         },

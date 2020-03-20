@@ -286,6 +286,13 @@ const PERMISSIONS = {
         url: BASE_URL + '/system/deleteDepartmentInfo',
         txnId: 'deleteDepartmentInfo'
     },
+    //125
+    chgInstAdmin: {
+        index: 125,
+        name: '更换子公司管理员',
+        url: BASE_URL + '/system/chgInstAdmin',
+        txnId: 'chgInstAdmin'
+    },
     //201
     addGooCategory: {
         index: 201,
@@ -498,10 +505,12 @@ const getPermissions = function () {
  * @returns {[]}
  */
 const funcMap2position = function (funcMap) {
+    if(!funcMap){
+        funcMap='00';
+    }
     //权限数组permissions，以后每次交易查询此数组，看是否有权限。
     let permissions = [];
     let permissionMap = hex_to_bin(funcMap);
-    console.log('permissionMap', permissionMap); //debug
     let length = permissionMap.length;
     //遍历所有权限配置，如果此权限在权限map有配置，那么此权限存入权限数组permissions
     for (let permission in PERMISSIONS) {
@@ -516,7 +525,6 @@ const funcMap2position = function (funcMap) {
             permissions.push(permission);
         }
     }
-    console.log('funcMap转permissions', permissions); //debug
     return permissions;
 };
 
