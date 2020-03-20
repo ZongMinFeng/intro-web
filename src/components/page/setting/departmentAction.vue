@@ -16,10 +16,14 @@
 
         <el-table :data="tableData" border stripe>
             <el-table-column label="部门名称" prop="departmentName"></el-table-column>
-            <el-table-column label="操作" width="340" >
+            <el-table-column label="操作" width="340">
                 <template slot-scope="props">
-                    <el-button v-if="!props.row.departmentId.startsWith('Admin')" type="warning" @click="modifyTap(props.row)">修改</el-button>
-                    <el-button v-if="!props.row.departmentId.startsWith('Admin')" type="danger" @click="deleteTap(props.row)">删除</el-button>
+                    <el-button v-if="!props.row.departmentId.startsWith('Admin')" type="warning"
+                               @click="modifyTap(props.row)">修改
+                    </el-button>
+                    <el-button v-if="!props.row.departmentId.startsWith('Admin')" type="danger"
+                               @click="deleteTap(props.row)">删除
+                    </el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -30,7 +34,7 @@
                     <el-col :span="24">
                         <el-form-item label="部门名称" prop="departmentName"
                                       :rules="[{required:true, message:'请输入部门名称', trigger: 'blur'}]">
-                            <el-input v-model="dialogForm.departmentName"></el-input>
+                            <el-input v-model="dialogForm.departmentName" maxlength="64"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -69,8 +73,8 @@
                 dialogVisible: false,
                 dialogForm: {
                     departmentName: null,
-                    specDepartmentId:null,
-                    version:null,
+                    specDepartmentId: null,
+                    version: null,
                 },
             }
         },
@@ -97,7 +101,6 @@
             },
 
             deleteTap(item) {
-                console.log('啦啦');//debug
                 this.$confirm('此操作将删除部门，是否确认?', '删除部门', {
                     confirmButtonText: '确认',
                     cancelButtonText: '取消',
@@ -111,7 +114,7 @@
 
             deleteCommit(item) {
                 let params = {};
-                params.specDepartmentId  = item.departmentId ;
+                params.specDepartmentId = item.departmentId;
                 deleteDepartmentInfo(this, params).then(
                     res => {
                         this.$message.success('删除成功');
@@ -122,12 +125,15 @@
                 ).catch();
             },
 
-            modifyTap(item){
-                this.flag=2;
-                this.dialogForm.specDepartmentId=item.departmentId;
-                this.dialogForm.version=item.version;
-                this.dialogForm.departmentName=item.departmentName;
-                this.dialogVisible=true;
+            modifyTap(item) {
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                this.flag = 2;
+                this.dialogForm.specDepartmentId = item.departmentId;
+                this.dialogForm.version = item.version;
+                this.dialogForm.departmentName = item.departmentName;
+                this.dialogVisible = true;
             },
 
             getDepartment() {
@@ -144,7 +150,15 @@
             },
 
             onAddNewTap() {
-                this.flag=1;
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                this.dialogForm = {
+                    departmentName: null,
+                    specDepartmentId: null,
+                    version: null,
+                };
+                this.flag = 1;
                 this.dialogVisible = true;
                 this.dialogForm.specInstId = this.searchForm.specInstId;
             },
@@ -183,8 +197,8 @@
 
                 if (this.flag === 2) {
                     let params = {};
-                    params.specDepartmentId  = this.dialogForm.specDepartmentId;
-                    params.version=this.dialogForm.version;
+                    params.specDepartmentId = this.dialogForm.specDepartmentId;
+                    params.version = this.dialogForm.version;
                     params.departmentName = this.dialogForm.departmentName;
                     updateDepartmentInfo(this, params).then(
                         res => {

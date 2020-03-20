@@ -159,11 +159,11 @@
             };
 
             const checkTellerId=(rule, value, callback)=>{
-                if (!value && value === '') {
+                if (!value || value === '') {
                     callback(new Error('请输入管理员登录名'));
                     return;
                 }
-                let reg=/[\w*]/;
+                let reg=/^[\w]*$/;
                 if (!reg.test(value)) {
                     callback(new Error('请输入字母，数字或者下划线'));
                     return;
@@ -417,7 +417,19 @@
             },
 
             changeAdmin(node, data){
-                this.dialogForm=[];
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                this.dialogForm={
+                    specInstId: null,
+                    version: null,
+                    instName: null,
+                    tellerId:null,
+                    tellerName:null,
+                    tellerPhone:null,
+                    adminMobile:null,
+                    adminName:null,
+                };
                 this.nodeNow = node;
                 this.dataNow = data;
                 this.dialogForm.specInstId = data.instId;
@@ -428,7 +440,19 @@
             },
 
             updateTap(node, data) {
-                this.dialogForm=[];
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                this.dialogForm={
+                    specInstId: null,
+                    version: null,
+                    instName: null,
+                    tellerId:null,
+                    tellerName:null,
+                    tellerPhone:null,
+                    adminMobile:null,
+                    adminName:null,
+                };
                 this.nodeNow = node;
                 this.dataNow = data;
                 this.dialogForm.specInstId = data.instId;

@@ -18,7 +18,7 @@
                 :title="dialogTitle"
                 :visible.sync="dialogVisible"
                 width="50%">
-                <el-form ref="instPreservationForm" :model="dialogForm" :rules="rules" label-width="110px">
+                <el-form ref="dialogForm" :model="dialogForm" :rules="rules" label-width="110px">
                     <el-form-item label="子公司名称" prop="instName">
                         <el-input v-model="dialogForm.instName" maxlength="64" auto-complete="off"></el-input>
                     </el-form-item>
@@ -104,11 +104,11 @@
             };
 
             const checkTellerId=(rule, value, callback)=>{
-                if (!value && value === '') {
+                if (!value || value === '') {
                     callback(new Error('请输入管理员登录名'));
                     return;
                 }
-                let reg=/[\w*]/;
+                let reg=/^[\w]*$/;
                 if (!reg.test(value)) {
                     callback(new Error('请输入字母，数字或者下划线'));
                     return;
@@ -482,7 +482,9 @@
             },
 
             createTap(instInfo) {
-                console.log('createTap instInfo', instInfo);//debug
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
                 this.flag = 1;
                 this.dialogForm={};
                 this.dialogForm.specInstId = instInfo.instId;
@@ -491,7 +493,6 @@
             },
 
             updateTap(instInfo) {
-                console.log('updateTap instInfo', instInfo);//debug
                 this.flag = 2;
                 this.dialogForm.specInstId = instInfo.instId;
                 this.dialogForm.version = instInfo.version;

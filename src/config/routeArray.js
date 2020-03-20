@@ -14,8 +14,8 @@ module.exports = {
 
                 {
                     path: '/instAction',
-                    component: resolve => require(['../components/page/setting/instActionSet.vue'], resolve),
-                    meta: {title: '公司设置', function: 'instAction', keepAlive:true}
+                    component: resolve => require(['../components/page/setting/instAction.vue'], resolve),
+                    meta: {title: '公司设置', function: 'instAction'}
                 },
 
                 {
