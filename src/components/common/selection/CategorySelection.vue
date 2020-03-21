@@ -16,7 +16,7 @@
       CategoryTree
     },
 
-    props:['disabled'],
+    props:['disabled', 'placeholder'],
 
     data() {
       return {
@@ -25,7 +25,6 @@
           categoryName:null,
         },
         treeVisible:false,
-        placeholder:'请选择物资分类',
       };
     },
 

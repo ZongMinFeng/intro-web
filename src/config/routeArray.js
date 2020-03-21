@@ -33,7 +33,7 @@ module.exports = {
                 {
                     path: '/tellerAction',
                     component: resolve => require(['../components/page/setting/tellerAction.vue'], resolve),
-                    meta: {title: '员工管理', function: 'tellerAction'}
+                    meta: {title: '员工管理', function: 'tellerAction', keepAlive:true}
                 },
 
                 {
@@ -325,6 +325,7 @@ module.exports = {
                         'deleteDepartmentTeller',
                         'resetTellerPwd',
                         'checkTellerId',
+                        'chgTellerPwd',
                         'departmentLogin',
                         'loginOut'
                     ]

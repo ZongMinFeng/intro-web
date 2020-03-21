@@ -2,6 +2,7 @@
     <div class="container">
         <div class="handle-box">
             <el-button type="success" icon="el-icon-plus" @click="onAddNewTap">新增</el-button>
+            <el-button style="float: right;" type="primary" @click="reflesh">刷新</el-button>
         </div>
 
         <el-form :model="searchForm" ref="searchForm" label-width="80px">
@@ -59,21 +60,21 @@
                     <el-col :span="24">
                         <el-form-item label="账号" prop="specTellerId"
                                       :rules="[{required:true, message:'请输入账号,账号用于登录管理小程序', trigger: 'blur'}, {validator: checkSpecTellerId, trigger: 'blur'} ]">
-                            <el-input v-model="dialogForm.specTellerId"></el-input>
+                            <el-input v-model="dialogForm.specTellerId" maxLength="20"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="姓名" prop="tellerName">
-                            <el-input v-model="dialogForm.tellerName"></el-input>
+                            <el-input v-model="dialogForm.tellerName" maxLength="20"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="手机号" prop="tellerPhone">
-                            <el-input v-model="dialogForm.tellerPhone"></el-input>
+                        <el-form-item label="手机号" prop="tellerPhone" :rules="[{validator: validateUsername, trigger: 'blur'}]">
+                            <el-input v-model="dialogForm.tellerPhone" maxLength="11"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -120,6 +121,7 @@
         updateTellerInfo
     } from "../../../util/module";
     import InstSelection from '@/components/common/selection/InstSelection';
+    import {validUsername} from "../../../util/validate";
 
     export default {
         name: "tellerAction",
@@ -156,8 +158,8 @@
                 tellerId: null,
                 sysInstDepartment: {},
                 tellerInfo: {},
-                timer:'',
-                timerData:'',
+                timer: '',
+                timerData: '',
             }
         },
 
@@ -197,6 +199,30 @@
                 this.getTeller();
             },
 
+            validateUsername(rule, value, callback){
+                if (!value) {
+                    callback();
+                }
+                if (!validUsername(value)) {
+                    callback(new Error('请填写纯数字手机号！'))
+                } else if (value.substr(0, 1) !== '1') {
+                    callback(new Error('手机号格式错误！'))
+                } else if (value.length !== 11) {
+                    callback(new Error('手机号必须为11位！'))
+                } else {
+                    callback()
+                }
+            },
+
+            reflesh() {
+                //如果不是管理员部门用户，那么只能修改本部门人员
+                if (!this.sysInstDepartment.departmentId.startsWith('Admin')) {
+                    this.chooseDepartment();
+                } else {
+                    this.getDepartment();
+                }
+            },
+
             departmentFlagShow(flag) {
                 if (flag === "1") {
                     return '本部门';
@@ -205,7 +231,11 @@
             },
 
             checkSpecTellerId(rule, specTellerId, callback) {
-                console.log("specTellerId", specTellerId);//debug
+                let reg=/^[\w]*$/;
+                if (!reg.test(specTellerId)) {
+                    callback(new Error('请输入字母，数字或者下划线'));
+                    return;
+                }
                 let params = {};
                 params.specDepartmentId = this.searchForm.departmentId;
                 params.specTellerId = specTellerId;
@@ -228,6 +258,17 @@
                     this.$message.error('请选择部门！');
                     return
                 }
+                this.dialogForm={
+                    specDepartmentId: null,
+                    version: null,
+                    specTellerId: null,
+                    tellerName: null,
+                    tellerPhone: null,
+                    tellerPositionIds: null,
+                };
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
                 this.flag = 1;
                 this.dialogForm.specDepartmentId = this.searchForm.departmentId;
                 this.dialogVisible = true;
@@ -239,6 +280,8 @@
                 listInstDepartments(this, params).then(
                     res => {
                         this.departments = res.data;
+                        this.searchForm.departmentId='';
+                        this.tableData=[];
                     },
                     res => {
 
