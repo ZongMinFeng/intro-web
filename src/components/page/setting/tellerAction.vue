@@ -110,7 +110,7 @@
 
         <el-dialog title="请记录登录信息" :visible.sync="passwordVisible">
             <div class="passWordDiv">
-                倒计时:&nbsp;{{passwordForm.time}}<br>
+                倒计时:&nbsp;<span style="color:red">{{passwordForm.time}}</span><br>
                 <br>
                 用户名:&nbsp;{{passwordForm.tellerId}}<br>
                 <br>
@@ -119,6 +119,16 @@
             <span slot="footer" class="dialog-footer">
                     <el-button type="primary" @click="passwordVisible = false">确 定</el-button>
                 </span>
+        </el-dialog>
+
+        <el-dialog title="职位详情" :visible.sync="detailVisible">
+            <div style="margin-bottom: 10px;">
+                职位：{{detailForm.positionName}}
+            </div>
+            <!--<div>-->
+            <!--权限值：{{detailForm.funcMap}}-->
+            <!--</div>-->
+            <position-selection v-model="detailForm.funcMap"></position-selection>
         </el-dialog>
     </div>
 </template>
@@ -133,10 +143,11 @@
     } from "../../../util/module";
     import InstSelection from '@/components/common/selection/InstSelection';
     import {validUsername} from "../../../util/validate";
+    import positionSelection from "../../common/selection/PositionSelection.vue";
 
     export default {
         name: "tellerAction",
-        components: {InstSelection},
+        components: {InstSelection, positionSelection},
         data() {
             return {
                 searchForm: {
@@ -171,6 +182,11 @@
                 tellerInfo: {},
                 timer: '',
                 timerData: '',
+                detailVisible:false,
+                detailForm: {
+                    positionName: null,
+                    funcMap: null,
+                },
             }
         },
 
@@ -211,9 +227,9 @@
             },
 
             showPositionDetail(position) {
-                // this.detailForm.positionName = position.postionName;
-                // this.detailForm.funcMap = position.funcMap;
-                // this.detailVisible = true;
+                this.detailForm.positionName = position.postionName;
+                this.detailForm.funcMap = position.funcMap;
+                this.detailVisible = true;
             },
 
             validateUsername(rule, value, callback){
@@ -331,7 +347,6 @@
                 params.specDepartmentId = this.searchForm.departmentId;
                 listDepartmentTeller(this, params).then(
                     res => {
-                        console.log('res', res);//debug
                         this.AllCount = res.data.total;
                         let records = [];
                         if (this.AllCount > 0) {
@@ -371,7 +386,6 @@
             },
 
             modifyTap(item) {
-                console.log("modifyTap item", item);//debug
                 this.flag = 2;
                 this.dialogForm.specDepartmentId = this.searchForm.departmentId;
                 this.dialogForm.version = item.version;
@@ -427,7 +441,18 @@
                     res => {
                         this.$message.success('重置成功');
                         this.passwordForm.tellerPwd = res.data;
+                        this.passwordForm.tellerId = item.tellerId;
                         this.passwordVisible = true;
+
+                        //倒计时
+                        this.passwordForm.time=30;
+                        this.timerData=setInterval(()=>{
+                            this.passwordForm.time--;
+                        }, 1000);
+                        this.timer=setTimeout(()=>{
+                            this.passwordVisible=false;
+                            clearInterval(this.timerData);
+                        }, 30000);
                     },
                     res => {
                     }

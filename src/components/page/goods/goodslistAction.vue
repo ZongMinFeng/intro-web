@@ -25,27 +25,6 @@
                     </el-form-item>
                 </el-col>
             </el-row>
-            <!--暂时不支持-->
-            <!--<el-row>-->
-            <!--<el-col :span="6">-->
-            <!--<el-form-item label="售价起始值" prop="begNowPrice">-->
-            <!--<el-input v-model="searchForm.begNowPrice" clearable placeholder="请输入售价起始值"></el-input>-->
-            <!--</el-form-item>-->
-            <!--</el-col>-->
-            <!--<el-col :span="6">-->
-            <!--<el-form-item label="售价结束值" prop="endNowPrice">-->
-            <!--<el-input v-model="searchForm.endNowPrice" clearable placeholder="请输入售价结束值"></el-input>-->
-            <!--</el-form-item>-->
-            <!--</el-col>-->
-            <!--<el-col :span="12">-->
-            <!--<el-form-item label="状态">-->
-            <!--<el-select v-model="searchForm.status" clearable placeholder="请选择状态" style="width: 100%;">-->
-            <!--<el-option v-for="item in statusList" :key="item.id" :label="item.value"-->
-            <!--:value="item.id"></el-option>-->
-            <!--</el-select>-->
-            <!--</el-form-item>-->
-            <!--</el-col>-->
-            <!--</el-row>-->
         </el-form>
 
         <el-table :data="tableData" border stripe>
@@ -76,12 +55,18 @@
                     {{getUnitName(props.row.unitId)}}
                 </template>
             </el-table-column>
+            <el-table-column label="分类">
+                <template slot-scope="props">
+                    {{getCategoryName(props.row.categoryId)}}
+                </template>
+            </el-table-column>
             <el-table-column label="状态" width="80">
                 <template slot-scope="props">
                     {{getStatusName(props.row.status)}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="340">
+            <el-table-column label="备注" prop="memo"></el-table-column>
+            <el-table-column label="操作" width="120">
                 <template slot-scope="props">
                     <p>
                         <el-button type="primary" @click="doInfos(props.row, 2)">查看●修改</el-button>
@@ -113,7 +98,12 @@
 </template>
 
 <script>
-    import {deleteGooTGoodsinfoById, listAllUnitinfos, listGoodsinfosByConditions} from "../../../util/module";
+    import {
+        deleteGooTGoodsinfoById,
+        getAllConfig,
+        listAllUnitinfos,
+        listGoodsinfosByConditions
+    } from "../../../util/module";
     import * as cfg from "../../../config/cfg";
     import _String from '../../../util/string';
     import CategorySelection from '../../common/selection/CategorySelection';
@@ -149,6 +139,7 @@
                 units: [],
                 dollarRate:1,
                 nalaRate:1,
+                categoryList:[],
             }
         },
 
@@ -166,12 +157,26 @@
             this.nalaRate=localStorage.getItem('nalaRate')||1;
             this.dollarRate=localStorage.getItem('dollarRate')||1;
             this.getUnits();
+            this.allConfig();
             this.initData();
         },
 
         methods: {
             initData() {
                 this.goodsList();
+            },
+
+            allConfig(){
+                let params={};
+                getAllConfig(this, params).then(
+                    res=>{
+                        let categoryList=res.data.categoryList;
+                        this.categoryList=categoryList;
+                    },
+                    res=>{
+
+                    }
+                ).catch();
             },
 
             addSerialTap(item) {
@@ -218,6 +223,17 @@
                     }
                 });
                 return unitInfo.unitName;
+            },
+
+            getCategoryName(categoryId){
+                let categoryInfo={};
+                this.categoryList.forEach(item=>{
+                    if (item.categoryId === categoryId) {
+                        categoryInfo=item;
+                        return false;
+                    }
+                });
+                return categoryInfo.categoryName;
             },
 
             //格式化金额

@@ -48,7 +48,7 @@
 
             <el-dialog title="请记录登录信息" :visible.sync="passwordVisible">
                 <div class="passWordDiv">
-                    倒计时:&nbsp;{{passwordForm.time}}<br>
+                    倒计时:&nbsp;<span style="color:red">{{passwordForm.time}}</span><br>
                     <br>
                     用户名:&nbsp;{{passwordForm.tellerId}}<br>
                     <br>

@@ -2110,11 +2110,11 @@ const updateTellerInfo = (me, params) => {
             send.specDepartmentId = params.specDepartmentId;
             singArray.specDepartmentId = params.specDepartmentId;
         }
-        if (params.tellerPhone) {
+        if (params.tellerPhone!=null) {
             send.tellerPhone = params.tellerPhone;
             singArray.tellerPhone = params.tellerPhone;
         }
-        if (params.tellerName) {
+        if (params.tellerName!=null) {
             send.tellerName = params.tellerName;
         }
         if (params.tellerPositionIds) {

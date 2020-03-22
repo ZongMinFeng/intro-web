@@ -49,7 +49,7 @@ module.exports = {
                 {
                     path: '/goodslistAction',
                     component: resolve => require(['../components/page/goods/goodslistAction.vue'], resolve),
-                    meta: {title: '物资列表', function: 'goodslistAction'}
+                    meta: {title: '物资列表', function: 'goodslistAction', keepAlive:true}
                 },
                 {
                     path: '/goodsInfos',

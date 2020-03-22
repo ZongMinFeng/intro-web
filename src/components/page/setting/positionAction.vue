@@ -57,7 +57,7 @@
                         请选择选择权限:
                         <position-selection v-model="dialogForm.funcMap"></position-selection>
                         <!--测试使用-->
-                        已选择：{{dialogForm.funcMap}}
+                        <!--已选择：{{dialogForm.funcMap}}-->
                     </el-col>
                 </el-row>
             </el-form>

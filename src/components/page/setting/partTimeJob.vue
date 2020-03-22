@@ -35,7 +35,7 @@
             </el-table-column>
         </el-table>
 
-        <el-dialog title="权限详情" :visible.sync="detailVisible">
+        <el-dialog title="职位详情" :visible.sync="detailVisible">
             <div style="margin-bottom: 10px;">
                 职位：{{detailForm.positionName}}
             </div>
