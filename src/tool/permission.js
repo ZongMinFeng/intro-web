@@ -13,11 +13,25 @@ let BASE_URL_API = cfg.baseUrlApi;
 //属性index为funcMap位图的位置，从1开始；index为null表示此权限默认存在
 const PERMISSIONS = {
     //1
-    addSystemChannel: {
+    listApproveCustomers: {
         index: 1,
-        name: '系统交易渠道信息表新增',
-        url: BASE_URL + '/system/addSystemChannel',
-        txnId: 'addSystemChannel'
+        name: '分页查询注册顾客',
+        url: BASE_URL + '/system/listApproveCustomers',
+        txnId: 'listApproveCustomers'
+    },
+    //2
+    approveCustomer: {
+        index: 2,
+        name: '审批注册顾客',
+        url: BASE_URL + '/system/approveCustomer',
+        txnId: 'approveCustomer'
+    },
+    //3
+    updateSysRate: {
+        index: 3,
+        name: '汇率修改',
+        url: BASE_URL + '/system/updateSysRate',
+        txnId: 'updateSysRate'
     },
     //10
     createOrder: {
@@ -60,6 +74,20 @@ const PERMISSIONS = {
         name: '关闭订单',
         url: BASE_URL + '/orderMng/closeOrder',
         txnId: 'closeOrder'
+    },
+    //16
+    killOrderById: {
+        index: 16,
+        name: '结束异常订单',
+        url: BASE_URL + '/orderMng/killOrderById',
+        txnId: 'killOrderById'
+    },
+    //17
+    listAllKilledOrders: {
+        index: 17,
+        name: '结束异常订单',
+        url: BASE_URL + '/orderMng/listAllKilledOrders',
+        txnId: 'listAllKilledOrders'
     },
     //31
     listBatchsByCon: {
@@ -152,6 +180,27 @@ const PERMISSIONS = {
         url: BASE_URL + '/batch/listSerialsByConditions',
         txnId: 'listSerialsByConditions'
     },
+    //44
+    killBatchById: {
+        index: 44,
+        name: '终止批次',
+        url: BASE_URL + '/batch/killBatchById',
+        txnId: 'killBatchById'
+    },
+    //45
+    listKilledBatchsByCon: {
+        index: 45,
+        name: '分页查询异常批次信息',
+        url: BASE_URL + '/batch/listKilledBatchsByCon',
+        txnId: 'listKilledBatchsByCon'
+    },
+    //46
+    listKilledBatchGoodsByCon: {
+        index: 46,
+        name: '分页查询异常批次(集装箱)对应物资',
+        url: BASE_URL + '/batch/listKilledBatchGoodsByCon',
+        txnId: 'listKilledBatchGoodsByCon'
+    },
     //51
     submitLocalPrice: {
         index: 51,
@@ -235,6 +284,11 @@ const PERMISSIONS = {
         index: 113,
         name: '员工兼职'
     },
+    //114
+    getTellerInfoById: {
+        index: 114,
+        name: '查询部门员工信息'
+    },
     //115
     updateTellerInfo: {
         index: 115,
@@ -264,6 +318,11 @@ const PERMISSIONS = {
     departmentLogin: {
         index: 120,
         name: '部门切换'
+    },
+    //121
+    loginOut: {
+        index: 121,
+        name: '退出登录'
     },
     //122
     updateInstInfo: {

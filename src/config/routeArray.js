@@ -163,6 +163,8 @@ module.exports = {
                         'confirmOrderPay',
                         'confirmOrderSend',
                         'closeOrder',
+                        'killOrderById',
+                        'listAllKilledOrders'
                     ]
                 },
             ],
@@ -211,6 +213,7 @@ module.exports = {
                         'addGooCategory',
                         'deleteGooCategoryById',
                         'updateGooCategoryById',
+                        'listGooCategorysByPid',
                     ]
                 },
                 {
@@ -262,7 +265,12 @@ module.exports = {
                         'uptBatchRealCount',
                         'listSerialsByConditions',
                         'submitLocalPrice',
-                        'cacSuggestPrice'
+                        'cacSuggestPrice',
+                        'killBatchById',
+                        'listKilledBatchsByCon',
+                        'listKilledBatchGoodsByCon',
+                        'submitReportPrice',
+                        'putonBatch'
                     ]
                 },
             ],
@@ -328,6 +336,25 @@ module.exports = {
                         'chgTellerPwd',
                         'departmentLogin',
                         'loginOut'
+                    ]
+                },
+                {
+                    index: 'customAction',
+                    title: '顾客管理',
+                    flag: false,
+                    function: 'customAction',
+                    permissions: [
+                        'listApproveCustomers',
+                        'approveCustomer',
+                    ]
+                },
+                {
+                    index: 'rateAction',
+                    title: '汇率管理',
+                    flag: false,
+                    function: 'rateAction',
+                    permissions: [
+                        'updateSysRate',
                     ]
                 },
             ],
