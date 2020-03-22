@@ -36,12 +36,12 @@
         </el-table>
 
         <el-dialog title="权限详情" :visible.sync="detailVisible">
-            <div>
+            <div style="margin-bottom: 10px;">
                 职位：{{detailForm.positionName}}
             </div>
-            <div>
-                权限值：{{detailForm.funcMap}}
-            </div>
+            <!--<div>-->
+                <!--权限值：{{detailForm.funcMap}}-->
+            <!--</div>-->
             <position-selection v-model="detailForm.funcMap"></position-selection>
         </el-dialog>
 
@@ -49,7 +49,7 @@
             <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="部门">
+                        <el-form-item label="部门" prop="departmentId" :rules="[{required:true, message:'请选择部门', trigger:'change'}]">
                             <el-select v-model="dialogForm.departmentId" @change="chooseDepartment" placeholder="请选择部门"
                                        style="width: 100%;">
                                 <el-option v-for="item in departments" :key="item.departmentId"
@@ -61,7 +61,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
-                        <el-form-item label="职位">
+                        <el-form-item label="职位" prop="tellerPositionIds" :rules=" [{ type: 'array', required: true, message: '请至少选择一个职位', trigger: 'change' }]">
                             <el-select v-model="dialogForm.tellerPositionIds" multiple placeholder="请选择职位，可多选"
                                        style="width: 100%;">
                                 <el-option v-for="item in positions" :key="item.positionId" :label="item.postionName"
@@ -211,6 +211,7 @@
             },
 
             chooseDepartment() {
+                this.dialogForm.tellerPositionIds=[];
                 this.getPositions();
             },
 
@@ -219,7 +220,13 @@
                 params.specDepartmentId = this.dialogForm.departmentId;
                 listDepartmentPosition(this, params).then(
                     res => {
-                        this.positions = res.data;
+                        this.positions = [];
+                        //去除管理员权限
+                        res.data.forEach(item=>{
+                            if (item.departmentId !== 'AdminSID200217000') {
+                                this.positions.push(item);
+                            }
+                        });
                     }
                 ).catch();
             },
@@ -238,6 +245,14 @@
             },
 
             onAddNewTap() {
+                this.dialogForm={
+                    departmentId: null,
+                    tellerPositionIds: [],
+                    specTellerId: null
+                };
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
                 this.flag = 1;
                 this.dialogForm.specTellerId = this.tellerInfo.tellerId;
                 this.dialogForm.tellerPositionIds = [];
