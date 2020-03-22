@@ -149,7 +149,8 @@ module.exports = {
                     flag: true,
                     function: 'myOrderAction',
                     permissions: [
-                        'createOrder'
+                        'createOrder',
+                        'listAllOrders'
                     ]
                 },
                 {
@@ -158,13 +159,11 @@ module.exports = {
                     flag: true,
                     function: 'orderlistAction',
                     permissions: [
-                        'listAllOrders',
                         'confirmOrderStock',
                         'confirmOrderPay',
                         'confirmOrderSend',
                         'closeOrder',
                         'killOrderById',
-                        'listAllKilledOrders'
                     ]
                 },
             ],
@@ -185,22 +184,25 @@ module.exports = {
                         'addGooTGoodsinfo',
                         'deleteGooTGoodsinfoById',
                         'updateGooTGoodsinfoById',
-                        'getGooTGoodsinfoById',
-                        'listGoodsinfosByConditions',
                         'addGoodsProductmanual',
                         'deleteGoodsProductmanualById',
                         'updateGoodsProductmanualById',
-                        'getGoodsProductmanualById',
                         'addGoodsQualitycertify',
                         'deleteGoodsQualitycertifyById',
                         'updateGoodsQualitycertifyById',
-                        'getGoodsQualitycertifyById',
                         'addGoodsserial',
                         'deleteGoodsserialById',
                         'deleteGoodsserialByGoodsId',
                         'updateGoodsserialById',
+                        'putDownIndex',
+                        'getGoodsQualitycertifyById',
+                        'listGooCategorysByPid',
+                        'listGoodsinfosByConditions',
+                        'listGoodsserialsByGoodsId',
+                        'getGoodsProductmanualById',
                         'getGoodsserialById',
-                        'listGoodsserialsByGoodsId'
+                        'getGooTGoodsinfoById'
+
                     ]
                 },
                 {
@@ -209,11 +211,10 @@ module.exports = {
                     flag: true,
                     function: 'categoryAction',
                     permissions: [
-                        'getGooCategoryById',
                         'addGooCategory',
                         'deleteGooCategoryById',
                         'updateGooCategoryById',
-                        'listGooCategorysByPid',
+                        'getGooCategoryById'
                     ]
                 },
                 {
@@ -222,10 +223,10 @@ module.exports = {
                     flag: true,
                     function: 'unitAction',
                     permissions: [
+                        'listAllUnitinfos',
+                        'getGooUnitinfoById',
                         'addGooUnitinfo',
                         'deleteGooUnitinfoById',
-                        'getGooUnitinfoById',
-                        'listAllUnitinfos'
                     ]
                 },
             ],
@@ -243,12 +244,9 @@ module.exports = {
                     flag: false,
                     function: 'batchListAction',
                     permissions: [
-                        'listBatchsByCon',
                         'addBatchinfo',
                         'updateBatchinfo',
                         'deleteBatchinfoById',
-                        'getBatchinfoById',
-                        'listBatchGoodsByCon',
                     ]
                 },
                 {
@@ -260,17 +258,17 @@ module.exports = {
                         'addBatchGoods',
                         'updateBatchGoodsById',
                         'deleteBatchGoodsById',
-                        'getBatchGoodsById',
                         'uptBatchLadingBill',
                         'uptBatchRealCount',
-                        'listSerialsByConditions',
                         'submitLocalPrice',
                         'cacSuggestPrice',
                         'killBatchById',
-                        'listKilledBatchsByCon',
-                        'listKilledBatchGoodsByCon',
                         'submitReportPrice',
-                        'putonBatch'
+                        'putonBatch',
+                        'getBatchGoodsById',
+                        'getBatchinfoById',
+                        'listBatchsByCon',
+                        'listBatchGoodsByCon'
                     ]
                 },
             ],
@@ -288,9 +286,9 @@ module.exports = {
                     flag: false,
                     function: 'instAction',
                     permissions: [
-                        'updateInstInfo',
                         'getAllInstById',
                         'getInstById',
+                        'updateInstInfo',
                         'chgInstAdmin',
                         'addInst'
                     ]
@@ -313,8 +311,8 @@ module.exports = {
                     flag: false,
                     function: 'positionAction',
                     permissions: [
-                        'addDepartmentPosition',
                         'listDepartmentPosition',
+                        'addDepartmentPosition',
                         'updateDepartmentPosition',
                         'deleteDepartmentPosition'
                     ]
@@ -325,17 +323,12 @@ module.exports = {
                     flag: false,
                     function: 'tellerAction',
                     permissions: [
+                        'listDepartmentTeller',
                         'addTellerInfo',
                         'addTellerDepartment',
-                        'listDepartmentTeller',
-                        'getTellerInfoById',
                         'updateTellerInfo',
                         'deleteDepartmentTeller',
                         'resetTellerPwd',
-                        'checkTellerId',
-                        'chgTellerPwd',
-                        'departmentLogin',
-                        'loginOut'
                     ]
                 },
                 {

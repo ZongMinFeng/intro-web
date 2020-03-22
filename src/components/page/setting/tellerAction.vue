@@ -28,6 +28,17 @@
             <el-table-column label="登录ID" prop="tellerId"></el-table-column>
             <el-table-column label="名字" prop="tellerName"></el-table-column>
             <el-table-column label="手机号" prop="tellerPhone"></el-table-column>
+            <el-table-column label="职位">
+                <template slot-scope="props">
+                    <ul class="table-ul">
+                        <li v-for="item in props.row.sysDepartmentPositions" :key="item.positionId">
+                            <el-button type="primary" @click="showPositionDetail(item)">
+                                {{item.postionName}}
+                            </el-button>
+                        </li>
+                    </ul>
+                </template>
+            </el-table-column>
             <el-table-column label="住址" prop="tellerAddr"></el-table-column>
             <el-table-column label="部门类型">
                 <template slot-scope="props">
@@ -79,7 +90,7 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="24">
+                    <el-col :span="24" width="100px">
                         <el-form-item label="职位" prop="tellerPositionIds"
                                       :rules=" [{ type: 'array', required: true, message: '请至少选择一个职位', trigger: 'change' }]">
                             <el-select v-model="dialogForm.tellerPositionIds" multiple placeholder="请选择职位，可多选"
@@ -197,6 +208,12 @@
         methods: {
             initData() {
                 this.getTeller();
+            },
+
+            showPositionDetail(position) {
+                // this.detailForm.positionName = position.postionName;
+                // this.detailForm.funcMap = position.funcMap;
+                // this.detailVisible = true;
             },
 
             validateUsername(rule, value, callback){
@@ -326,6 +343,7 @@
                                         item.sysTellerInfo.positions.push(position.positionId);
                                     });
                                 }
+                                item.sysTellerInfo.sysDepartmentPositions=item.sysDepartmentPositions;
                                 records.push(item.sysTellerInfo);
                             });
                         }
@@ -496,5 +514,14 @@
     .passWordDiv {
         width: 120px;
         margin: 0 auto;
+    }
+
+    .table-ul {
+        list-style-type: none;
+    }
+
+    .table-ul li {
+        display: inline-block;
+        margin-right: 5px;
     }
 </style>

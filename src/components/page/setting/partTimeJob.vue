@@ -52,7 +52,7 @@
                         <el-form-item label="部门" prop="departmentId" :rules="[{required:true, message:'请选择部门', trigger:'change'}]">
                             <el-select v-model="dialogForm.departmentId" @change="chooseDepartment" placeholder="请选择部门"
                                        style="width: 100%;">
-                                <el-option v-for="item in departments" :key="item.departmentId"
+                                <el-option v-for="item in departmentsShow" :key="item.departmentId"
                                            :label="item.departmentName"
                                            :value="item.departmentId"></el-option>
                             </el-select>
@@ -114,6 +114,7 @@
                 },
                 dialogVisible: false,
                 departments: [],
+                departmentsShow: [],
                 dialogForm: {
                     departmentId: null,
                     tellerPositionIds: [],
@@ -145,6 +146,18 @@
         methods: {
             initData() {
                 this.getTellerDetail();
+            },
+
+            doDepartmentsShow(){
+                this.departmentsShow=[];
+                this.departmentsShow.push(...this.departments);
+                this.tableData.forEach(item=>{
+                    this.departmentsShow.forEach((department, index)=>{
+                        if (department.departmentId===item.departmentId){
+                            this.departmentsShow.splice(index, 1);
+                        }
+                    });
+                });
             },
 
             departmentFlagShow(flag) {
@@ -237,6 +250,7 @@
                 listInstDepartments(this, params).then(
                     res => {
                         this.departments = res.data;
+                        this.doDepartmentsShow();
                     },
                     res => {
 
@@ -282,10 +296,12 @@
                             info.positionAll = [];
 
                             let sysDepartmentPositions = item.sysDepartmentPositions;
-                            sysDepartmentPositions.forEach(position => {
-                                this.positionAll[position.positionId] = position;
-                                info.positionAll.push(position.positionId);
-                            });
+                            if (sysDepartmentPositions) {
+                                sysDepartmentPositions.forEach(position => {
+                                    this.positionAll[position.positionId] = position;
+                                    info.positionAll.push(position.positionId);
+                                });
+                            }
 
                             let sysTellerInst = item.sysTellerInst;
                             info.departmentFlag = sysTellerInst.departmentFlag;
@@ -293,6 +309,7 @@
                             tableDataTmp.push(info);
                         });
                         this.tableData = tableDataTmp;
+                        this.doDepartmentsShow();
                     },
                     res => {
 

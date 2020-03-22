@@ -98,6 +98,7 @@
                 //         ]
                 //     },
                 // ],
+                treeData:[],
                 tableData:[],
                 props: {
                     label: 'label',
@@ -158,7 +159,7 @@
                                         treeLevel3.id = permission;
                                         treeLevel3.label = PERMISSIONS[permission].name;
                                         treeLevel3.isPermission = 'Y';
-                                        if (this.superPosition.indexOf(permission) > 0) {
+                                        if (this.superPosition.indexOf(permission) > -0.005) {
                                             treeLevel2.children.push(treeLevel3);
                                             level2hasSuper = true;
                                         }
@@ -188,7 +189,7 @@
                 this.position = [];
                 let positionTmp = funcMap2position(this.value);
                 positionTmp.forEach(item => {
-                    if (this.superPosition.indexOf(item) > 0) {
+                    if (this.superPosition.indexOf(item) > -0.005) {
                         this.position.push(item);
                     }
                 });
@@ -199,7 +200,7 @@
                 let permissionReady = this.$refs.tree.getCheckedKeys();
                 let permissionNew = [];
                 permissionReady.forEach(item => {
-                    if (this.superPosition.indexOf(item) > 0) {
+                    if (this.superPosition.indexOf(item) > -0.005) {
                         permissionNew.push(item);
                     }
                 });

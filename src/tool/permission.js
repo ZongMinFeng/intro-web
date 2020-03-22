@@ -33,6 +33,13 @@ const PERMISSIONS = {
         url: BASE_URL + '/system/updateSysRate',
         txnId: 'updateSysRate'
     },
+    //4
+    putDownIndex: {
+        index: 4,
+        name: '物资系列下架',
+        url: BASE_URL + '/goods/putDownIndex',
+        txnId: 'putDownIndex'
+    },
     //10
     createOrder: {
         index: 10,
@@ -234,15 +241,20 @@ const PERMISSIONS = {
         index: 102,
         name: '添加子公司'
     },
-    //105
-    listInstDepartments: {
-        index: 105,
-        name: '查询公司所有部门'
+    //103
+    getAllInstById: {
+        index: 103,
+        name: '查询子机构'
     },
     //104
     addDepartmentInfo: {
         index: 104,
         name: '新增部门'
+    },
+    //105
+    listInstDepartments: {
+        index: 105,
+        name: '查询公司所有部门'
     },
     //107
     addDepartmentPosition: {
@@ -403,14 +415,12 @@ const PERMISSIONS = {
     },
     //210
     genGoodsId: {
-        // 暂时不控制权限
-        // index:210,
+        index:210,
         name: '获取物资ID'
     },
     //211
     sendPicture: {
-        // 暂时不控制权限
-        // index:211,
+        index:211,
         name: '上传图片'
     },
     //212
@@ -491,7 +501,7 @@ const PERMISSIONS = {
     //227
     deleteGoodsserialByGoodsId: {
         index: 227,
-        name: '删除物资系列信息'
+        name: '删除所有物资系列信息'
     },
     //228
     updateGoodsserialById: {
