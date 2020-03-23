@@ -42,6 +42,11 @@ module.exports = {
                     meta: {title: '物资分类', function: 'categoryAction'}
                 },
                 {
+                    path: '/categoryOrderAction',
+                    component: resolve => require(['../components/page/goods/categoryOrderAction.vue'], resolve),
+                    meta: {title: '分类排序', function: 'categoryOrderAction'}
+                },
+                {
                     path: '/unitAction',
                     component: resolve => require(['../components/page/goods/unitAction.vue'], resolve),
                     meta: {title: '物资单位', function: 'unitAction'}
@@ -213,8 +218,16 @@ module.exports = {
                     permissions: [
                         'addGooCategory',
                         'deleteGooCategoryById',
-                        'updateGooCategoryById',
                         'getGooCategoryById'
+                    ]
+                },
+                {
+                    index: 'categoryOrderAction',
+                    title: '分类排序',
+                    flag: true,
+                    function: 'categoryOrderAction',
+                    permissions: [
+                        'updateGooCategoryById',
                     ]
                 },
                 {

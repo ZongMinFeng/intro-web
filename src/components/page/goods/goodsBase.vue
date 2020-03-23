@@ -56,37 +56,17 @@
                                     <img v-image-preview :src="pictureUrl+searchForm.goodsId+'/'+item"
                                          class="drag-list-img"/>
                                 </div>
-                                <el-button v-if="item === searchForm.mainPicture" class="drag-list-button"
-                                           type="warning">此为主图
-                                </el-button>
-                                <el-button v-if="item.endsWith('.mp4')" class="drag-list-button">视频</el-button>
-                                <el-button v-if="item !== searchForm.mainPicture&&!item.endsWith('.mp4')" type="primary"
-                                           class="drag-list-button" @click="onMainPicTap(item)">设为主图
-                                </el-button>
-                                <el-button type="danger" @click="deletePicTap(item, index)">删除</el-button>
+                                <!--目前默认轮播图的第一张为主图-->
+                                <!--<el-button v-if="item === searchForm.mainPicture" class="drag-list-button"-->
+                                           <!--type="warning">此为主图-->
+                                <!--</el-button>-->
+                                <!--<el-button v-if="item !== searchForm.mainPicture&&!item.endsWith('.mp4')" type="primary"-->
+                                           <!--class="drag-list-button" @click="onMainPicTap(item)">设为主图-->
+                                <!--</el-button>-->
+                                <el-button v-if="index!==0" style="float: right;" type="danger" @click="deletePicTap(item, index)">删除</el-button>
                             </div>
                         </transition-group>
                     </draggable>
-                </div>
-            </div>
-
-            <div class="picture">
-                <div class="list-name">物资主图</div>
-                <el-upload
-                    :action="pictureUrl"
-                    multiple
-                    list-type="fileList"
-                    :show-file-list="false"
-                    :http-request="handelPicturePostMain"
-                    :before-upload="beforeAvatarUploadMain">
-                    <el-button v-if="!searchForm.mainPicture" size="small" type="primary">新增主图</el-button>
-                    <el-button v-else size="small" type="primary">修改主图</el-button>
-                </el-upload>
-                <div v-if="searchForm.mainPicture!=null&&searchForm.mainPicture!==''" style="margin-top:5px;">
-                    <div class="drag-list">
-                        <img v-image-preview :src="pictureUrl+searchForm.goodsId+'/'+searchForm.mainPicture+'?'+time"
-                             class="drag-list-img"/>
-                    </div>
                 </div>
             </div>
 
@@ -106,8 +86,6 @@
             <el-form-item class="form-bot">
                 <el-button v-if="addFlag===2" type="primary" :disabled="saveDisabled" @click="addConfirm">保存</el-button>
                 <el-button v-else type="success" :disabled="addDisabled" @click="addConfirm">新增</el-button>
-                <!--测试按钮-->
-                <!--<el-button type="success" @click="testClick">测试</el-button>-->
             </el-form-item>
         </el-form>
     </div>
@@ -177,7 +155,6 @@
 
         computed: {
             addDisabled() {
-                console.log('addDisabled 新增检查', this.searchForm);//debug
                 return !(this.searchForm.goodsId != null && this.searchForm.categoryId != null && this.searchForm.goodsName != null && this.searchForm.mainPicture != null && this.searchForm.imgs.length > 0 && this.searchForm.goodsType != null && this.searchForm.unitId != null && this.addFlag === 1);
             },
 
@@ -322,7 +299,8 @@
                     params.goodsId = this.searchForm.goodsId;
                     params.categoryId = this.searchForm.categoryId;
                     params.goodsName = this.searchForm.goodsName;
-                    params.mainPicture = this.searchForm.mainPicture;
+                    //第一张图作为主图
+                    params.mainPicture = this.searchForm.imgs[0];
                     params.goodsImgs = this.searchForm.goodsImgs = this.searchForm.imgs.join(',');
                     params.goodsType = this.searchForm.goodsType;
                     params.unitId = this.searchForm.unitId;
@@ -332,6 +310,7 @@
                             this.$message.success('新增成功!');
                             this.addFlag = 2;
                             this.$emit('createOk');
+                            this.searchForm.version=res.data.version;
                         },
                         res => {
 
@@ -406,6 +385,10 @@
                 sendPicture(this, params).then(
                     res => {
                         this.searchForm.imgs.push(res.data.fileNames);
+                        if (!this.searchForm.mainPicture || this.searchForm.mainPicture === '') {
+                            console.log('修改main');//debug
+                            this.searchForm.mainPicture=res.data.fileNames;
+                        }
                     },
                     res => {
 
@@ -500,15 +483,10 @@
             },
 
             deletePicTap(item, index) {
-                if (item === this.searchForm.mainPicture) {
-                    this.$message.error("无法删除主图，请先选择其他图作为主图，然后再删除此图");
-                    return;
-                }
                 this.searchForm.imgs.splice(index, 1);
             },
 
-            onMove({relatedContext, draggedContext}) {
-                console.log("hello, move");//debug
+            onMove(relatedContext, draggedContext) {
             },
 
             onChangeTap() {

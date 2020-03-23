@@ -51,9 +51,9 @@
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog_footer">
-        <el-button @click="dialogVisible=false">取消</el-button>
-        <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
-      </span>
+                <el-button @click="dialogVisible=false">取消</el-button>
+                <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
+            </span>
         </el-dialog>
     </div>
 </template>

@@ -2,6 +2,7 @@
     <div class="container">
         <div class="handle-box">
             <el-button type="success" icon="el-icon-plus" @click="onAddNewTap">新增</el-button>
+            <el-button style="float: right;" type="primary" @click="refreshTap">刷新</el-button>
         </div>
 
         <el-form :model="searchForm" ref="searchForm" label-width="100px">
@@ -146,6 +147,7 @@
         watch: {
             searchForm: {
                 handler() {
+                    this.currentPage=1;
                     this.initData();
                 },
                 deep: true
@@ -164,6 +166,10 @@
         methods: {
             initData() {
                 this.goodsList();
+            },
+
+            refreshTap(){
+                this.initData();
             },
 
             allConfig(){
@@ -267,19 +273,18 @@
             },
 
             canDelete(item) {
-                return true;//debug
                 //有如下状态，不可删除
-                //不是上架状态
+                //上架状态
                 if (item.status === '1') {
                     return false;
                 }
 
-                //没有锁定库存
-                if (item.lockNum !== 0) {
+                //锁定库存
+                if (item.lockNum !=null && item.lockNum !== 0) {
                     return false;
                 }
 
-                //没有系列
+                //有系列
                 if (item.isSerial === 'Y') {
                     return false;
                 }

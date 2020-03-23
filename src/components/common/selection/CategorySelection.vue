@@ -3,9 +3,7 @@
         <div class="inputClass">
             <input :placeholder="placeholder" :disabled="disabled===''" v-model="nodeInfo.categoryName"
                    @focus="onFocus"/>
-            <div class="inputClassDiv" style="display: inline-block; float: right;">
-                X
-            </div>
+            <i v-if="nodeInfo.categoryName!=null&&nodeInfo.categoryName!==''" class="el-icon-circle-close inputClassDiv" @click="clearNodeInfo"></i>
         </div>
         <el-card v-show="treeVisible" :body-style="{ padding: '0px' } " style="width: 100%;">
             <category-tree @node-click="nodeClick"></category-tree>
@@ -45,6 +43,12 @@
                 this.treeVisible = true;
             },
 
+            clearNodeInfo(){
+                this.nodeInfo.categoryId='';
+                this.nodeInfo.categoryName='';
+                this.$emit('click', this.nodeInfo);
+            },
+
             nodeClick(nodeInfo) {
                 this.nodeInfo.categoryName = nodeInfo.categoryName;
                 this.nodeInfo.categoryId = nodeInfo.categoryId;
@@ -66,11 +70,23 @@
         padding-right: 15px;
     }
 
-    .inputClass input{
-        width: 90%;
+    .inputClass input {
+        width: 94%;
         border: none;
         line-height: 32px;
-        outline:none;
+        outline: none;
+        padding-left: 10px;
     }
 
+    .inputClassDiv {
+        color: transparent;
+    }
+
+    .inputClass:hover .inputClassDiv{
+        color: rgb(209,221,235);
+    }
+
+    .inputClass:hover .inputClassDiv:hover{
+        color: rgb(161,160,194);
+    }
 </style>

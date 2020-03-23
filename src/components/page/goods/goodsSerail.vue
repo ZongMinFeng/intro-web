@@ -404,6 +404,11 @@
                     this.$message.error('必须输入颜色、材质、尺寸其中一个条件！');
                     return;
                 }
+                //必须要有系列图
+                if (this.dialogForm.imgs.length === 0) {
+                    this.$message.error('请添加图片！');
+                    return;
+                }
                 let params = {};
                 if (this.flag === 1) {
                     //新增
