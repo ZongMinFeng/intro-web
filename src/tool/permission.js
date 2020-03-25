@@ -556,6 +556,11 @@ const PERMISSIONS = {
         url: BASE_URL_API + '/wxCache/listMyOrders',
         txnId: 'listMyOrders'
     },
+    getSysRate: {
+        name: '查询汇率',
+        url: BASE_URL + '/system/getSysRate',
+        txnId: 'getSysRate'
+    },
 };
 
 const handelPermission = function (funcMap) {

@@ -3367,6 +3367,10 @@ const addBatchinfo = (me, params) => {
             send.batchFlag = params.batchFlag;
             singArray.batchFlag = params.batchFlag;
         }
+        if (params.batchCny) {
+            send.batchCny = params.batchCny;
+            singArray.batchCny = params.batchCny;
+        }
         if (params.batchName) {
             send.batchName = params.batchName;
         }
@@ -3444,6 +3448,10 @@ const updateBatchinfo = (me, params) => {
         if (params.version) {
             send.version = params.version;
             singArray.version = params.version;
+        }
+        if (params.batchCny) {
+            send.batchCny = params.batchCny;
+            singArray.batchCny = params.batchCny;
         }
         if (params.batchName) {
             send.batchName = params.batchName;
@@ -4605,6 +4613,81 @@ const chgInstAdmin = (me, params) => {
     });
 };
 
+/**
+ * 1.3.5.3.1查询  /getSysRate
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const getSysRate = (me, params) => {
+    console.log("getSysRate params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+        urlParams.noSing = true;
+
+        urlParams.url = PERMISSIONS.getSysRate.url;
+        urlParams.txnId = PERMISSIONS.getSysRate.txnId;
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.5.3.2修改  /updateSysRate   位图索引 3
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const updateSysRate = (me, params) => {
+    console.log("updateSysRate params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+        // urlParams.noSing = true;
+
+        urlParams.url = PERMISSIONS.updateSysRate.url;
+        urlParams.txnId = PERMISSIONS.updateSysRate.txnId;
+
+        if (params.id) {
+            send.id  = params.id ;
+            singArray.id  = params.id ;
+        }
+        if (params.version) {
+            send.version  = params.version ;
+            singArray.version  = params.version ;
+        }
+        if (params.dollarRate) {
+            send.dollarRate = params.dollarRate;
+            singArray.dollarRate = params.dollarRate;
+        }
+        if (params.nalaRate) {
+            send.nalaRate = params.nalaRate;
+            singArray.nalaRate = params.nalaRate;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4735,5 +4818,7 @@ export {
     getManualCertify,
     getSerialBySpecGoodsId,
     listMyOrders,
-    chgInstAdmin
+    chgInstAdmin,
+    getSysRate,
+    updateSysRate
 };

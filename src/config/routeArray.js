@@ -84,7 +84,7 @@ module.exports = {
                 {
                     path: '/batchListAction',
                     component: resolve => require(['../components/page/batch/batchListAction.vue'], resolve),
-                    meta: {title: '批次列表', function: 'batchListAction'}
+                    meta: {title: '批次列表', function: 'batchListAction', keepAlive:true}
                 },
                 {
                     path: '/batchInfoAction',
@@ -105,6 +105,11 @@ module.exports = {
                     path: '/myOrderAction',
                     component: resolve => require(['../components/page/order/myOrderAction.vue'], resolve),
                     meta: {title: '我的订单', function: 'myOrderAction', keepAlive:true}
+                },
+                {
+                    path: '/rateAction',
+                    component: resolve => require(['../components/page/setting/rateAction.vue'], resolve),
+                    meta: {title: '汇率管理', function: 'rateAction'}
                 },
                 {
                     path: '/test',

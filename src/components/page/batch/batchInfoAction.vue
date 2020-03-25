@@ -14,7 +14,7 @@
                     &nbsp;
                 </el-col>
                 <el-col :span="6">
-                    <el-button v-if="batchInfo.status==='9'||batchInfo.status==='8'" type="primary" @click="uptBatchInfoTap" style="float: right; margin-left: 5px;">提交运单号
+                    <el-button v-if="batchInfo.batchFlag==='I'&&(batchInfo.status==='9'||batchInfo.status==='8')" type="primary" @click="uptBatchInfoTap" style="float: right; margin-left: 5px;">提交运单号
                     </el-button>
                     <el-button v-if="batchInfo.status==='9'||batchInfo.status==='8'" type="success" icon="el-icon-plus" @click="onAddNewTap" style="float: right;">录入物资
                     </el-button>
@@ -189,7 +189,7 @@
     import {
         addBatchGoods, cacSuggestPrice,
         deleteBatchGoodsById,
-        getBatchinfoById,
+        getBatchinfoById, listAllUnitinfos,
         listBatchGoodsByCon, putonBatch, submitLocalPrice, submitReportPrice,
         updateBatchGoodsById, uptBatchLadingBill, uptBatchRealCount
     } from "../../../util/module";
@@ -254,6 +254,7 @@
                 suggestPrices:[],//建议价格
                 companyCounts:[],//内部数量
                 reportPrices:[],//零售价
+                units:[],
             }
         },
 
@@ -285,6 +286,7 @@
 
         created() {
             // this.$route.query.batchId="BI685783182406328320";//debug
+            this.getUnits();
             if (this.$route.query.batchId) {
                 this.searchForm.batchId = this.$route.query.batchId;
                 this.getBatchInfo();
@@ -294,6 +296,30 @@
         methods: {
             initData() {
                 this.getGoodsSerials();
+            },
+
+            getUnitName(unitId){
+                console.log("unitId", unitId);//debug
+                let unitInfo={};
+                this.units.forEach(item=>{
+                    if (item.unitId === unitId) {
+                        unitInfo=item;
+                        return false;
+                    }
+                });
+                return unitInfo.unitName;
+            },
+
+            getUnits() {
+                let params = {};
+                listAllUnitinfos(this, params).then(
+                    res => {
+                        this.units = res.data;
+                    },
+                    res => {
+
+                    }
+                ).catch();
             },
 
             //如果条件符合shows中的任意一个条件，那么就返回true
@@ -572,6 +598,7 @@
             },
 
             formCommit() {
+                console.log("dialogForm", this.dialogForm);//debug
                 let params = {};
                 if (this.flag === 1) {
                     //新增
@@ -582,7 +609,10 @@
                     item.batchGoodsId = this.dialogForm.batchGoodsId;
                     item.tellerBuyPrice = this.dialogForm.tellerBuyPrice;
                     item.tellerBuyCount = this.dialogForm.tellerBuyCount;
-                    item.memo = this.dialogForm.memo;
+                    item.tellerBuyBaseUnit=this.dialogForm.tellerBuyBaseUnit;
+                    if (item.memo) {
+                        item.memo = this.dialogForm.memo;
+                    }
                     params.goodsList.push(item);
                     addBatchGoods(this, params).then(
                         res => {
@@ -601,7 +631,10 @@
                     params.version = this.dialogForm.version;
                     params.tellerBuyPrice = this.dialogForm.tellerBuyPrice;
                     params.tellerBuyCount = this.dialogForm.tellerBuyCount;
-                    params.memo = this.dialogForm.memo;
+                    params.tellerBuyBaseUnit=this.dialogForm.tellerBuyBaseUnit;
+                    if (item.memo) {
+                        item.memo = this.dialogForm.memo;
+                    }
                     updateBatchGoodsById(this, params).then(
                         res => {
                             this.$message.success('修改成功');
@@ -617,6 +650,7 @@
             dbClick(item) {
                 this.dialogForm.batchGoodsId = item.specGoodsId;
                 this.dialogForm.goodsName = item.goodsName;
+                this.dialogForm.tellerBuyBaseUnit=this.getUnitName(item.unitId);
                 this.goodsVisible = false;
             },
 
@@ -625,6 +659,18 @@
             },
 
             onAddNewTap() {
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                this.dialogForm={
+                    id: null,
+                    recycleSeq: null,
+                    batchGoodsId: null,
+                    tellerBuyPrice: null,
+                    tellerBuyCount: null,
+                    memo: null,
+                    goodsName: null
+                };
                 this.flag = 1;
                 this.dialogForm.batchId = this.batchInfo.batchId;
                 this.dialogVisible = true;
@@ -655,7 +701,8 @@
 
 <style scoped>
     .batchInfoDiv {
-        border: 1px solid red;
+        border: 1px solid rgb(235,238,245);
         margin-bottom: 10px;
+        padding: 10px;
     }
 </style>

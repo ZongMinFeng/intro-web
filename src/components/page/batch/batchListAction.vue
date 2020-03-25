@@ -2,18 +2,19 @@
     <div class="container">
         <div class="handle-box">
             <el-button type="success" icon="el-icon-plus" @click="onAddNewTap">新增</el-button>
+            <el-button style="float: right;" type="primary" @click="refresh">刷新</el-button>
         </div>
 
         <el-form :model="searchForm" ref="searchForm" label-width="80px">
             <el-row>
                 <el-col :span="6">
-                    <el-form-item label="单据号" prop="ladingBill">
+                    <el-form-item label="提单号" prop="ladingBill">
                         <el-input v-model="searchForm.ladingBill" clearable placeholder="请输入单据号"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="单据名称" prop="batchName">
-                        <el-input v-model="searchForm.batchName" clearable placeholder="请输入集装箱号或批次名称"></el-input>
+                    <el-form-item label="批次或集装箱号" prop="batchName" label-width="130px">
+                        <el-input v-model="searchForm.batchName" clearable placeholder="请输入批次或集装箱号"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -37,10 +38,21 @@
 
         <el-table :data="tableData" border stripe>
             <el-table-column label="单据号" prop="batchId"></el-table-column>
-            <el-table-column label="单据名称" prop="batchName"></el-table-column>
+            <el-table-column label="批次或集装箱号" prop="batchName"></el-table-column>
             <el-table-column label="采购区域" prop="status">
                 <template slot-scope="props">
                     {{getBatchFlagName(props.row.batchFlag)}}
+                </template>
+            </el-table-column>
+            <el-table-column label="提单号" prop="ladingBill"></el-table-column>
+            <el-table-column label="时间" width="225">
+                <template slot-scope="props">
+                    <p>创建时间：{{toDate(props.row.createTime)}}</p>
+                </template>
+            </el-table-column>
+            <el-table-column label="币种" prop="batchCny">
+                <template slot-scope="props">
+                    {{batchCnyName(props.row.batchCny)}}
                 </template>
             </el-table-column>
             <el-table-column label="备注" prop="memo"></el-table-column>
@@ -49,7 +61,7 @@
                     {{getStatusName(props.row.status)}}
                 </template>
             </el-table-column>
-            <el-table-column label="操作" width="340">
+            <el-table-column label="操作" width="240">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
                     <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
@@ -68,37 +80,49 @@
         </div>
 
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
-            <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="单据名称" prop="batchName"
-                                      :rules="[{required:true, message:'请输入集装箱号或批次号', trigger: 'blur'}]">
-                            <el-input v-model="dialogForm.batchName" placeholder="请输入集装箱号或批次号"></el-input>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
+            <el-form :model="dialogForm" label-width="130px" ref="dialogForm">
                 <el-row v-if="flag===1">
                     <el-col :span="24">
                         <el-form-item label="采购区域" prop="batchFlag"
                                       :rules="[{required:true, message:'请选择采购区域', trigger: 'blur'}]">
-                            <el-select v-model="dialogForm.batchFlag" placeholder="请选择采购区域" style="width: 100%;">
+                            <el-select v-model="dialogForm.batchFlag" placeholder="请选择采购区域" style="width: 100%;" @change="changeBatchFlag">
                                 <el-option v-for="item in batchFlags" :key="item.id" :label="item.value"
                                            :value="item.id"></el-option>
                             </el-select>
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <div class="list-name">备注信息</div>
-                <el-row :gutter="10">
+                <el-row>
                     <el-col :span="24">
-                        <el-input
-                            type="textarea"
-                            class="goods-memo"
-                            :autosize="{ minRows: 2}"
-                            placeholder="请输入备注信息"
-                            v-model="dialogForm.memo">
-                        </el-input>
+                        <el-form-item :label="batchNameLabel" prop="batchName"
+                                      :rules="[{required:true, message:batchNameMessage, trigger: 'blur'}]">
+                            <el-input v-model="dialogForm.batchName" :placeholder=batchNameMessage></el-input>
+                        </el-form-item>
                     </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="采购币种" prop="batchCny"
+                                      :rules="[{required:true, message:'请选择采购区域', trigger: 'blur'}]">
+                            <el-select v-model="dialogForm.batchCny" placeholder="请选择采购币种" style="width: 100%;">
+                                <el-option v-for="item in batchCnys" :key="item.id" :label="item.value"
+                                           :value="item.id"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-form-item label="备注信息" prop="batchCny">
+                        <el-col :span="24">
+                            <el-input
+                                type="textarea"
+                                class="goods-memo"
+                                :autosize="{ minRows: 2}"
+                                placeholder="请输入备注信息"
+                                v-model="dialogForm.memo">
+                            </el-input>
+                        </el-col>
+                    </el-form-item>
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog_footer">
@@ -111,6 +135,9 @@
 
 <script>
     import {addBatchinfo, deleteBatchinfoById, listBatchsByCon, updateBatchinfo} from "../../../util/module";
+    import {toDate} from "../../../tool/Format";
+    import {batchCnys} from "../../../tool/status"
+    import {deepCopy} from "../../../Gw/GwDateUtil";
 
     export default {
         name: "batchListAction",
@@ -150,9 +177,17 @@
                     batchName: null,
                     batchFlag: null,
                     memo: null,
+                    batchCny:"1",
+                },
+                dialogFormOld:{
+                    batchName: null,
+                    batchFlag: null,
+                    memo: null,
+                    batchCny:"1",
                 },
                 flag: 1,//1.新增  2.修改
                 dialogVisible: false,
+                batchCnys:batchCnys,
             };
         },
 
@@ -163,12 +198,33 @@
                 } else {
                     return '修改';
                 }
-            }
+            },
+
+            batchNameMessage(){
+                if (this.dialogForm.batchFlag === "I"){
+                    return '请输入集装箱号或批次号';
+                }
+                if (this.dialogForm.batchFlag==="O"){
+                    return '请输入批次号';
+                }
+                return '请输入单据号';
+            },
+
+            batchNameLabel(){
+                if (this.dialogForm.batchFlag === "I"){
+                    return '集装箱或批次号';
+                }
+                if (this.dialogForm.batchFlag==="O"){
+                    return '批次号';
+                }
+                return '请输入单据号';
+            },
         },
 
         watch: {
             searchForm: {
                 handler() {
+                    this.currentPage=1;
                     this.initData();
                 },
                 deep: true,
@@ -182,6 +238,21 @@
         methods: {
             initData() {
                 this.getBatchs();
+            },
+
+            refresh(){
+                this.initData();
+            },
+
+            changeBatchFlag(val){
+                //如果国内
+                if (val === "I") {
+                    this.dialogForm.batchCny="2";
+                }
+            },
+
+            toDate(dateStr){
+                return toDate(dateStr);
             },
 
             getBatchFlagName(batchFlag) {
@@ -222,11 +293,18 @@
             },
 
             modifyTap(item) {
+                //清除验证效果
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                //旧数据拷贝
+                this.dialogFormOld=deepCopy(item);
                 this.flag = 2;
                 this.dialogForm.batchId = item.batchId;
                 this.dialogForm.version = item.version;
                 this.dialogForm.batchName = item.batchName;
                 this.dialogForm.batchFlag = item.batchFlag;
+                this.dialogForm.batchCny=item.batchCny;
                 this.dialogForm.memo = item.memo;
                 this.dialogVisible = true;
             },
@@ -242,6 +320,17 @@
                 return statusName;
             },
 
+            batchCnyName(batchCny){
+                let name='';
+                batchCnys.forEach(item=>{
+                    if (item.id === batchCny) {
+                        name=item.value;
+                        return false;
+                    }
+                });
+                return name;
+            },
+
             handleSizeChange() {
                 this.initData();
             },
@@ -252,6 +341,15 @@
             },
 
             onAddNewTap() {
+                this.dialogForm={
+                    batchName: null,
+                    batchFlag: null,
+                    memo: null,
+                    batchCny:"1"
+                };
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
                 this.flag = 1;
                 this.dialogVisible = true;
             },
@@ -272,6 +370,7 @@
                     //新增
                     params.batchFlag = this.dialogForm.batchFlag;
                     params.batchName = this.dialogForm.batchName;
+                    params.batchCny=this.dialogForm.batchCny;
                     params.memo = this.dialogForm.memo;
                     addBatchinfo(this, params).then(
                         res => {
@@ -288,8 +387,15 @@
                     //修改
                     params.batchId = this.dialogForm.batchId;
                     params.version = this.dialogForm.version;
-                    params.batchName = this.dialogForm.batchName;
-                    params.memo = this.dialogForm.memo;
+                    if (this.dialogForm.batchName !== this.dialogFormOld.batchName) {
+                        params.batchName = this.dialogForm.batchName;
+                    }
+                    if (this.dialogForm.batchCny !== this.dialogFormOld.batchCny) {
+                        params.batchCny=this.dialogForm.batchCny;
+                    }
+                    if (this.dialogForm.memo !== this.dialogFormOld.memo) {
+                        params.memo = this.dialogForm.memo;
+                    }
                     updateBatchinfo(this, params).then(
                         res => {
                             this.$message.success('修改成功');
