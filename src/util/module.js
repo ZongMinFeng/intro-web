@@ -3539,6 +3539,12 @@ const addBatchGoods = (me, params) => {
             item.batchGoodsId = itemTmp.batchGoodsId;
             item.tellerBuyPrice = itemTmp.tellerBuyPrice;
             item.tellerBuyCount = itemTmp.tellerBuyCount;
+            if(itemTmp.tellerBuyThisCount){
+                item.tellerBuyThisCount=itemTmp.tellerBuyThisCount;
+            }
+            if(itemTmp.unitChange){
+                item.unitChange=itemTmp.unitChange;
+            }
             singArray.goodsList.push(item);
         }
 

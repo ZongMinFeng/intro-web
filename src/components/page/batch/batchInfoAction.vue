@@ -25,74 +25,73 @@
         </el-form>
 
         <div class="batchInfoDiv">
-            <div>批次信息</div>
             <el-row>
                 <el-col :span="6">ID:{{batchInfo.batchId}}</el-col>
                 <el-col :span="6">名称:{{batchInfo.batchName}}</el-col>
                 <el-col :span="6">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
-                <el-col :span="6">状态:{{getStatusName(batchInfo.status)}}</el-col>
                 <el-col :span="6">提单号:{{batchInfo.ladingBill}}</el-col>
+                <el-col :span="6">状态:{{getStatusName(batchInfo.status)}}</el-col>
             </el-row>
         </div>
 
         <el-table :data="tableData" border stripe>
-            <el-table-column label="名称" prop="goodsName"></el-table-column>
-            <el-table-column label="备注" prop="memo"></el-table-column>
-            <el-table-column label="价格" prop="tellerBuyPrice"></el-table-column>
-            <el-table-column label="采购数量" prop="tellerBuyCount"></el-table-column>
-            <el-table-column v-if="showRealCount" label="已入库数量">
+            <el-table-column key="1" label="名称" prop="goodsName"></el-table-column>
+            <el-table-column key="2" label="备注" prop="memo"></el-table-column>
+            <el-table-column key="3" label="价格" prop="tellerBuyPrice"></el-table-column>
+            <el-table-column key="4" label="采购数量" prop="tellerBuyCount"></el-table-column>
+            <el-table-column key="5" v-if="showRealCount" label="已入库数量">
                 <template slot-scope="props">
                     {{props.row.realCount}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShow(batchInfo.status, 'reportPrice')" label="内部使用数量">
+            <el-table-column key="6" v-if="isShow(batchInfo.status, 'reportPrice')" label="内部使用数量">
                 <template slot-scope="props">
                     {{props.row.companyCount}}
                 </template>
             </el-table-column>
-            <el-table-column
+            <el-table-column key="7"
                 v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'&&batchInfo.status!=='7'&&batchInfo.status!=='A'&&batchInfo.status!=='B'"
                 label="本地价格">
                 <template slot-scope="props">
                     {{props.row.localPrice}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShow(batchInfo.status, 'cacSuggestPrice')" label="建议价格">
+            <el-table-column key="8" v-if="isShow(batchInfo.status, 'cacSuggestPrice')" label="建议价格">
                 <template slot-scope="props">
                     {{props.row.suggestPrice}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="isShow(batchInfo.status, 'reportPrice')" label="零售价">
+            <el-table-column key="9" v-if="isShow(batchInfo.status, 'reportPrice')" label="零售价">
                 <template slot-scope="props">
                     {{props.row.reportPrice}}
                 </template>
             </el-table-column>
-            <el-table-column v-if="showOperation" label="操作" width="340">
+            <el-table-column key="10" v-if="showOperation" label="操作" width="340">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
                     <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='8'||batchInfo.status==='A'||batchInfo.status==='7'"
+            <el-table-column key="11" v-if="showRealCountIns"
                              label="入库数量      操作" width="200">
                 <template slot-scope="props">
                     <el-input v-model="realCountIns[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="showLocalPriceOperation" label="本地价格      操作" width="210">
+            <el-table-column key="12" v-if="showLocalPriceOperation" label="本地价格      操作" width="210">
                 <template slot-scope="props">
                     <el-input v-model="localPrices[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="showSuggestPriceOperation" label="建议价格      操作" width="210">
+            <el-table-column key="13" v-if="showSuggestPriceOperation" label="建议价格      操作" width="210">
                 <template slot-scope="props">
                     <el-input v-model="suggestPrices[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
                     <el-button type="danger" @click="doSuggestPrice(props.row, props.$index)">提交建议价格</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'"
+            <el-table-column key="14" v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'"
                              label="零售价  内部数量 操作" width="250">
                 <template slot-scope="props">
                     <el-input v-model="reportPrices[props.$index]" style="width: 68px; margin-right: 4px;"></el-input>
@@ -100,7 +99,7 @@
                     <el-button type="danger" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
                 </template>
             </el-table-column>
-            <el-table-column v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'" label="上架操作"
+            <el-table-column key="15" v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'" label="上架操作"
                              width="80">
                 <template slot-scope="props">
                     <el-button type="danger" @click="doPutonBatch(props.row)">上架</el-button>
@@ -144,7 +143,7 @@
                 </el-row>
                 <el-row>
                     <el-col :span="20">
-                        <el-form-item label="采购数量" prop="tellerBuyCount"
+                        <el-form-item label="采购数量" prop="count"
                                       :rules="[{required:true, message:'请输入采购数量', trigger: 'blur'}]">
                             <el-input v-model="dialogForm.count"></el-input>
                         </el-form-item>
@@ -312,6 +311,16 @@
 
             showOperation() {
                 return this.batchInfo.status === '9';
+            },
+
+            showRealCountIns(){
+                if (this.batchInfo.batchFlag === "I") {
+                    // 国内
+                    return this.batchInfo.status==='8'||this.batchInfo.status==='A'||this.batchInfo.status==='7';
+                }else {
+                    // 国外
+                    return this.batchInfo.status==='9'||this.batchInfo.status==='A'||this.batchInfo.status==='7';
+                }
             },
 
             showSuggestPriceOperation() {
@@ -644,7 +653,6 @@
             },
 
             formCommit() {
-                console.log("dialogForm", this.dialogForm);//debug
                 let params = {};
                 if (this.flag === 1) {
                     //新增
@@ -655,7 +663,13 @@
                     item.batchGoodsId = this.dialogForm.batchGoodsId;
                     item.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
                     item.tellerBuyCount = formatPrice(this.dialogForm.count*this.dialogForm.unitChange);
-                    item.tellerBuyBaseUnit = this.getUnitName(this.dialogForm.unitId);
+                    item.tellerBuyBaseUnit = this.dialogForm.tellerBuyBaseUnit;
+                    console.log('this.dialogForm', this.dialogForm);//debug
+                    if (this.dialogForm.unitId != null && this.dialogForm.baseUnitId != null && this.dialogForm.unitId !== this.dialogForm.baseUnitId) {
+                        item.tellerBuyThisUnit=this.dialogForm.unitName;
+                        item.tellerBuyThisCount=this.dialogForm.count;
+                        item.unitChange=this.dialogForm.unitChange;
+                    }
                     if (item.memo) {
                         item.memo = this.dialogForm.memo;
                     }
@@ -699,6 +713,7 @@
                 this.dialogForm.batchGoodsId = item.specGoodsId;
                 this.dialogForm.goodsName = item.goodsName;
                 this.dialogForm.unitId = item.unitId;
+                this.dialogForm.baseUnitId=item.unitId;
                 this.goodsVisible = false;
             },
 
@@ -719,13 +734,16 @@
                     recycleSeq: null,
                     batchGoodsId: null,
                     tellerBuyPrice: null,
+                    count:null,
                     tellerBuyCount: null,
                     memo: null,
                     goodsName: null,
-                    unitId: null,
-                    unitName: null,
                     baseCategory: null,
-                    unitChange: 1
+                    unitChange: 1,
+                    baseUnitId:null,
+                    unitId: null,
+                    tellerBuyBaseUnit:null,
+                    unitName:null,
                 };
                 this.flag = 1;
                 this.dialogForm.batchId = this.batchInfo.batchId;
