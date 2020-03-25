@@ -57,6 +57,11 @@ module.exports = {
                     meta: {title: '物资列表', function: 'goodslistAction', keepAlive:true}
                 },
                 {
+                    path: '/putDownAction',
+                    component: resolve => require(['../components/page/goods/putDownAction.vue'], resolve),
+                    meta: {title: '物资下架', function: 'putDownAction'}
+                },
+                {
                     path: '/goodsInfos',
                     component: resolve => require(['../components/page/goods/goodsInfos.vue'], resolve),
                     meta: {title: '物资信息', function: 'goodsInfos'}
@@ -212,6 +217,16 @@ module.exports = {
                         'getGoodsProductmanualById',
                         'getGoodsserialById',
                         'getGooTGoodsinfoById'
+
+                    ]
+                },
+                {
+                    index: 'putDownAction',
+                    title: '物资下架',
+                    flag: true,
+                    function: 'putDownAction',
+                    permissions: [
+                        'putDownIndex'
 
                     ]
                 },
