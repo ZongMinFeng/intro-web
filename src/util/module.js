@@ -3539,11 +3539,11 @@ const addBatchGoods = (me, params) => {
             item.batchGoodsId = itemTmp.batchGoodsId;
             item.tellerBuyPrice = itemTmp.tellerBuyPrice;
             item.tellerBuyCount = itemTmp.tellerBuyCount;
-            if(itemTmp.tellerBuyThisCount){
-                item.tellerBuyThisCount=itemTmp.tellerBuyThisCount;
+            if(itemTmp.thisCount ){
+                item.thisCount =itemTmp.thisCount ;
             }
-            if(itemTmp.unitChange){
-                item.unitChange=itemTmp.unitChange;
+            if(itemTmp.thisChange ){
+                item.thisChange =itemTmp.thisChange ;
             }
             singArray.goodsList.push(item);
         }
@@ -4694,6 +4694,40 @@ const updateSysRate = (me, params) => {
     });
 };
 
+/**
+ * 1.3.2.9 物资系列下架  putDownIndex  位图索引 4
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const putDownIndex = (me, params) => {
+    console.log("putDownIndex params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.putDownIndex.url;
+        urlParams.txnId = PERMISSIONS.putDownIndex.txnId;
+        // urlParams.noSing = true;
+
+        if (params.goodsList) {
+            send.goodsList = params.goodsList;
+            singArray.goodsList = params.goodsList;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4826,5 +4860,6 @@ export {
     listMyOrders,
     chgInstAdmin,
     getSysRate,
-    updateSysRate
+    updateSysRate,
+    putDownIndex
 };

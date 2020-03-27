@@ -136,7 +136,7 @@
                 <el-row>
                     <el-col :span="24">
                         <el-form-item label="采购价格" prop="tellerBuyPrice"
-                                      :rules="[{required:true, message:'请输入采购价格', trigger: 'blur'}]">
+                                      :rules="[{required:true, message:'请输入采购价格', trigger: 'blur'},{validator:checkCount, trigger:'blur'}]">
                             <el-input v-model="dialogForm.tellerBuyPrice"></el-input>
                         </el-form-item>
                     </el-col>
@@ -144,30 +144,30 @@
                 <el-row>
                     <el-col :span="20">
                         <el-form-item label="采购数量" prop="count"
-                                      :rules="[{required:true, message:'请输入采购数量', trigger: 'blur'}]">
+                                      :rules="[{required:true, message:'请输入采购数量', trigger: 'blur'}, {validator:checkCount, trigger:'blur'}]">
                             <el-input v-model="dialogForm.count"></el-input>
                         </el-form-item>
                     </el-col>
                     <el-col :span="4">
-                        <el-select v-model="dialogForm.unitId" placeholder="请选择单位"
-                                   style="width: 100%;" @change="unitIdChange">
-                            <el-option v-for="item in units" :key="item.unitId" :label="item.unitName"
-                                       :value="item.unitId"></el-option>
+                        <el-select v-model="dialogForm.unitName" placeholder="请选择单位"
+                                   style="width: 100%;">
+                            <el-option v-for="item in units" :key="item.unitName" :label="item.unitName"
+                                       :value="item.unitName"></el-option>
                         </el-select>
                     </el-col>
                 </el-row>
-                <el-row v-show="goodsInfo.unitId&&dialogForm.unitId&&goodsInfo.unitId!==dialogForm.unitId">
-                    <el-form-item label="单位换算" prop="unitChange"
-                                  :rules="[{validator:checkUnitChange, trigger:'blur'}]">
+                <el-row v-show="dialogForm.unitName&&dialogForm.buyBaseUnit &&dialogForm.unitName!==dialogForm.buyBaseUnit ">
+                    <el-form-item label="单位换算" prop="thisChange"
+                                  :rules="[{validator:checkthisChange, trigger:'blur'}]">
                         <el-col :span="1">&nbsp;</el-col>
                         <el-col :span="1">1</el-col>
                         <el-col :span="4">{{dialogForm.unitName}}</el-col>
                         <el-col :span="1">=</el-col>
                         <el-col :span="4">
-                            <el-input v-model="dialogForm.unitChange"></el-input>
+                            <el-input v-model="dialogForm.thisChange"></el-input>
                         </el-col>
                         <el-col :span="1">&nbsp;</el-col>
-                        <el-col :span="4">{{dialogForm.tellerBuyBaseUnit}}</el-col>
+                        <el-col :span="4">{{dialogForm.buyBaseUnit}}</el-col>
                     </el-form-item>
                 </el-row>
                 <div class="list-name">备注信息</div>
@@ -268,10 +268,10 @@
                     memo: null,
                     goodsName: null,
                     baseCategory: null,
-                    unitChange: 1,
+                    thisChange: 1,
                     baseUnitId:null,
                     unitId: null,
-                    tellerBuyBaseUnit:null,
+                    buyBaseUnit:null,
                     unitName:null,
                 },
                 dialogVisible: false,
@@ -358,6 +358,13 @@
                 return unitInfo.unitName;
             },
 
+            checkCount(rule, value, callback){
+                if (!GwRegular.numeric2.test(value)){
+                    callback(new Error('请输入数字，最多两位小数!'));
+                }
+                callback();
+            },
+
             getUnits() {
                 let params = {};
                 listAllUnitinfos(this, params).then(
@@ -423,7 +430,7 @@
 
             },
 
-            checkUnitChange(rule, value, callback) {
+            checkthisChange(rule, value, callback) {
                 if (!GwRegular.numeric2.test(value)) {
                     callback(new Error('请输入数字，最多两位小数!'));
                 }
@@ -567,13 +574,36 @@
             },
 
             modifyTap(item) {
+                console.log('item', item);//debug
+                this.dialogForm={
+                    id: null,
+                    recycleSeq: null,
+                    batchGoodsId: null,
+                    tellerBuyPrice: null,
+                    count:null,
+                    tellerBuyCount: null,
+                    memo: null,
+                    goodsName: null,
+                    thisChange: 1,
+                    baseUnitId:null,
+                    unitId: null,
+                    buyBaseUnit:null,
+                    unitName:null,
+                };
                 this.flag = 2;
                 this.dialogForm.id = item.id;
                 this.dialogForm.batchGoodsId = item.batchGoodsId;
                 this.dialogForm.version = item.version;
                 this.dialogForm.tellerBuyPrice = item.tellerBuyPrice;
                 this.dialogForm.tellerBuyCount = item.tellerBuyCount;
+                this.dialogForm.goodsName=item.goodsName;
+                this.dialogForm.buyBaseUnit=item.buyBaseUnit;
                 this.dialogForm.memo = item.memo;
+                if (item.thisCategory) {
+                    this.dialogForm.count=item.tellerBuyCount/item.thisChange;
+                    this.thisChange=item.thisChange;
+                    this.dialogForm.unitName=item.thisCategory;
+                }
                 this.dialogVisible = true;
             },
 
@@ -662,13 +692,13 @@
                     item.recycleSeq = '1';
                     item.batchGoodsId = this.dialogForm.batchGoodsId;
                     item.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
-                    item.tellerBuyCount = formatPrice(this.dialogForm.count*this.dialogForm.unitChange);
-                    item.tellerBuyBaseUnit = this.dialogForm.tellerBuyBaseUnit;
+                    item.tellerBuyCount = formatPrice(this.dialogForm.count*this.dialogForm.thisChange);
+                    item.buyBaseUnit = this.dialogForm.buyBaseUnit;
                     console.log('this.dialogForm', this.dialogForm);//debug
-                    if (this.dialogForm.unitId != null && this.dialogForm.baseUnitId != null && this.dialogForm.unitId !== this.dialogForm.baseUnitId) {
-                        item.tellerBuyThisUnit=this.dialogForm.unitName;
-                        item.tellerBuyThisCount=this.dialogForm.count;
-                        item.unitChange=this.dialogForm.unitChange;
+                    if (this.dialogForm.unitName != null && this.dialogForm.buyBaseUnit!= null && this.dialogForm.unitName !== this.dialogForm.buyBaseUnit) {
+                        item.buyThisUnit=this.dialogForm.unitName;
+                        item.thisCount=this.dialogForm.count;
+                        item.thisChange=this.dialogForm.thisChange;
                     }
                     if (item.memo) {
                         item.memo = this.dialogForm.memo;
@@ -691,7 +721,7 @@
                     params.version = this.dialogForm.version;
                     params.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
                     params.tellerBuyCount = formatPrice(this.dialogForm.tellerBuyCount);
-                    params.tellerBuyBaseUnit = this.dialogForm.tellerBuyBaseUnit;
+                    params.buyBaseUnit = this.dialogForm.buyBaseUnit;
                     if (item.memo) {
                         item.memo = this.dialogForm.memo;
                     }
@@ -709,16 +739,16 @@
 
             dbClick(item) {
                 this.goodsInfo = deepCopy(item);
-                this.dialogForm.tellerBuyBaseUnit = this.getUnitName(item.unitId);
+                this.dialogForm.buyBaseUnit = this.getUnitName(item.unitId);
                 this.dialogForm.batchGoodsId = item.specGoodsId;
                 this.dialogForm.goodsName = item.goodsName;
                 this.dialogForm.unitId = item.unitId;
+                this.dialogForm.unitName=this.getUnitName(item.unitId);
                 this.dialogForm.baseUnitId=item.unitId;
+                this.dialogForm.count='';
+                this.dialogForm.tellerBuyPrice='';
+                this.dialogForm.thisChange=1;
                 this.goodsVisible = false;
-            },
-
-            unitIdChange(unitId) {
-                this.dialogForm.unitName = this.getUnitName(unitId);
             },
 
             choiceTap() {
@@ -739,10 +769,10 @@
                     memo: null,
                     goodsName: null,
                     baseCategory: null,
-                    unitChange: 1,
+                    thisChange: 1,
                     baseUnitId:null,
                     unitId: null,
-                    tellerBuyBaseUnit:null,
+                    buyBaseUnit:null,
                     unitName:null,
                 };
                 this.flag = 1;
