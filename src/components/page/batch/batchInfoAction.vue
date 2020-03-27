@@ -26,11 +26,12 @@
 
         <div class="batchInfoDiv">
             <el-row>
-                <el-col :span="6">ID:{{batchInfo.batchId}}</el-col>
-                <el-col :span="6">名称:{{batchInfo.batchName}}</el-col>
-                <el-col :span="6">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
-                <el-col :span="6">提单号:{{batchInfo.ladingBill}}</el-col>
-                <el-col :span="6">状态:{{getStatusName(batchInfo.status)}}</el-col>
+                <el-col :span="4">ID:{{batchInfo.batchId}}</el-col>
+                <el-col :span="4">名称:{{batchInfo.batchName}}</el-col>
+                <el-col :span="4">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
+                <el-col :span="4">提单号:{{batchInfo.ladingBill}}</el-col>
+                <el-col :span="4">状态:{{getStatusName(batchInfo.status)}}</el-col>
+                <el-col :span="4">状态:{{getStatusName(batchInfo.status)}}</el-col>
             </el-row>
         </div>
 
