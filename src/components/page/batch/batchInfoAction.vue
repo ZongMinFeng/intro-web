@@ -26,12 +26,14 @@
 
         <div class="batchInfoDiv">
             <el-row>
-                <el-col :span="4">ID:{{batchInfo.batchId}}</el-col>
-                <el-col :span="4">名称:{{batchInfo.batchName}}</el-col>
-                <el-col :span="4">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
-                <el-col :span="4">提单号:{{batchInfo.ladingBill}}</el-col>
-                <el-col :span="4">状态:{{getStatusName(batchInfo.status)}}</el-col>
-                <el-col :span="4">状态:{{getStatusName(batchInfo.status)}}</el-col>
+                <el-col class="batchInfoCol" :span="5">ID:{{batchInfo.batchId}}</el-col>
+                <el-col class="batchInfoCol" :span="5">名称:{{batchInfo.batchName}}</el-col>
+                <el-col class="batchInfoCol" :span="5">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
+                <el-col class="batchInfoCol" :span="5">提单号:{{batchInfo.ladingBill}}</el-col>
+                <el-col class="batchInfoCol" :span="4">币种:{{batchCnyName(batchInfo.batchCny)}}</el-col>
+            </el-row>
+            <el-row>
+                <el-col :span="6">状态:{{getStatusName(batchInfo.status)}}</el-col>
             </el-row>
         </div>
 
@@ -225,6 +227,7 @@
     import {formatPrice} from "../../../tool/Format";
     import {deepCopy} from "../../../Gw/GwDateUtil";
     import GwRegular from "@/Gw/GwRegular.js";
+    import {batchCnys} from "../../../tool/status"
 
     export default {
         name: "batchInfoAction",
@@ -345,6 +348,17 @@
         methods: {
             initData() {
                 this.getGoodsSerials();
+            },
+
+            batchCnyName(batchCny){
+                let name='';
+                batchCnys.forEach(item=>{
+                    if (item.id === batchCny) {
+                        name=item.value;
+                        return false;
+                    }
+                });
+                return name;
             },
 
             getUnitName(unitId) {
@@ -809,5 +823,10 @@
         border: 1px solid rgb(235, 238, 245);
         margin-bottom: 10px;
         padding: 10px;
+    }
+
+    .batchInfoCol{
+        line-height: 16px;
+        color: rgb(144,147,153);
     }
 </style>
