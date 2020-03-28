@@ -40,72 +40,92 @@
         <el-table :data="tableData" border stripe>
             <el-table-column key="1" label="名称" prop="goodsName"></el-table-column>
             <el-table-column key="2" label="备注" prop="memo"></el-table-column>
-            <el-table-column key="3" label="价格" prop="tellerBuyPrice"></el-table-column>
-            <el-table-column key="4" label="采购数量" prop="tellerBuyCount"></el-table-column>
-            <el-table-column key="5" v-if="showRealCount" label="已入库数量">
+            <el-table-column key="3" label="采购价格" width="160" align="right" header-align="left">
+                <template slot-scope="props">
+                    <div v-if="batchInfo.batchCny==='1'">
+                        <span>₦{{formatPrice(props.row.tellerBuyPrice)}}</span>
+                    </div>
+                    <div v-if="batchInfo.batchCny==='2'">
+                        <span>￥{{formatPrice(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>₦{{formatPrice(props.row.tellerBuyPrice*nalaRate)}}</span>
+                    </div>
+                    <div v-if="batchInfo.batchCny==='3'">
+                        <span>${{formatPrice(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>₦{{formatPrice(props.row.tellerBuyPrice*dollarRate)}}</span>
+                    </div>
+                </template>
+            </el-table-column>
+            <el-table-column key="4" label="采购数量" prop="tellerBuyCount" align="right" header-align="left"></el-table-column>
+            <el-table-column key="5" label="采购单位" prop="buyBaseUnit"></el-table-column>
+            <el-table-column key="6" v-if="showRealCount" label="已入库数量" align="right" header-align="left">
                 <template slot-scope="props">
                     {{props.row.realCount}}
                 </template>
             </el-table-column>
-            <el-table-column key="6" v-if="isShow(batchInfo.status, 'reportPrice')" label="内部使用数量">
+            <el-table-column key="7" v-if="isShow(batchInfo.status, 'reportPrice')" label="内部数量" align="right" header-align="left">
                 <template slot-scope="props">
                     {{props.row.companyCount}}
                 </template>
             </el-table-column>
-            <el-table-column key="7"
-                v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'&&batchInfo.status!=='7'&&batchInfo.status!=='A'&&batchInfo.status!=='B'"
-                label="本地价格">
+            <el-table-column key="8"
+                             v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'&&batchInfo.status!=='7'&&batchInfo.status!=='A'"
+                             label="本地价格" align="right" header-align="left">
                 <template slot-scope="props">
-                    {{props.row.localPrice}}
+                    ₦{{formatPrice(props.row.localPrice)}}
                 </template>
             </el-table-column>
-            <el-table-column key="8" v-if="isShow(batchInfo.status, 'cacSuggestPrice')" label="建议价格">
+            <el-table-column key="9" v-if="isShow(batchInfo.status, 'cacSuggestPrice')" label="建议价格" align="right" header-align="left">
                 <template slot-scope="props">
-                    {{props.row.suggestPrice}}
+                    ₦{{formatPrice(props.row.suggestPrice)}}
                 </template>
             </el-table-column>
-            <el-table-column key="9" v-if="isShow(batchInfo.status, 'reportPrice')" label="零售价">
+            <el-table-column key="10" v-if="isShow(batchInfo.status, 'reportPrice')" label="零售价" align="right" header-align="left">
                 <template slot-scope="props">
-                    {{props.row.reportPrice}}
+                    ₦{{formatPrice(props.row.reportPrice)}}
                 </template>
             </el-table-column>
-            <el-table-column key="10" v-if="showOperation" label="操作" width="340">
+            <el-table-column key="11" v-if="showOperation" label="操作" width="160">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
                     <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
                 </template>
             </el-table-column>
-            <el-table-column key="11" v-if="showRealCountIns"
+            <el-table-column key="12" v-if="showRealCountIns"
                              label="入库数量      操作" width="200">
                 <template slot-scope="props">
-                    <el-input v-model="realCountIns[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
-                    <el-button type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
+                    <el-input v-model="realCountIns[props.$index]" style="width: 80px; margin-right: 8px;"></el-input>
+                    <el-button v-if="(!props.row.realCount)||props.row.realCount===''" type="primary" @click="changeRealCount(props.row, props.$index)">入库</el-button>
+                    <el-button v-else type="danger" @click="changeRealCount(props.row, props.$index)">入库</el-button>
                 </template>
             </el-table-column>
-            <el-table-column key="12" v-if="showLocalPriceOperation" label="本地价格      操作" width="210">
+            <el-table-column key="13" v-if="showLocalPriceOperation" label="本地价格      操作" width="220">
                 <template slot-scope="props">
-                    <el-input v-model="localPrices[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
-                    <el-button type="danger" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
+                    <el-input v-model="localPrices[props.$index]" style="width: 78px; margin-right: 8px;"></el-input>
+                    <el-button v-if="props.row.localPrice==null||props.row.localPrice===''" type="primary" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
+                    <el-button v-else type="danger" @click="doSubmitLocalPrice(props.row, props.$index)">提交本地价格</el-button>
                 </template>
             </el-table-column>
-            <el-table-column key="13" v-if="showSuggestPriceOperation" label="建议价格      操作" width="210">
+            <el-table-column key="14" v-if="showSuggestPriceOperation" label="建议价格      操作" width="220">
                 <template slot-scope="props">
-                    <el-input v-model="suggestPrices[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
-                    <el-button type="danger" @click="doSuggestPrice(props.row, props.$index)">提交建议价格</el-button>
+                    <el-input v-model="suggestPrices[props.$index]" style="width: 78px; margin-right: 8px;"></el-input>
+                    <el-button v-if="props.row.suggestPrice==null||props.row.suggestPrice===''" type="primary" @click="doSuggestPrice(props.row, props.$index)">提交建议价格</el-button>
+                    <el-button v-else type="danger" @click="doSuggestPrice(props.row, props.$index)">提交建议价格</el-button>
                 </template>
             </el-table-column>
-            <el-table-column key="14" v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'"
-                             label="零售价  内部数量 操作" width="250">
+            <el-table-column key="15" v-if="batchInfo.status==='5'||batchInfo.status==='D'||batchInfo.status==='4'"
+                             label="零售价  内部数量 操作" width="260">
                 <template slot-scope="props">
-                    <el-input v-model="reportPrices[props.$index]" style="width: 68px; margin-right: 4px;"></el-input>
+                    <el-input v-model="reportPrices[props.$index]" style="width: 78px; margin-right: 4px;"></el-input>
                     <el-input v-model="companyCounts[props.$index]" style="width: 68px; margin-right: 8px;"></el-input>
-                    <el-button type="danger" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
+                    <el-button v-if="props.row.reportPrice==null||props.row.reportPrice===''" type="primary" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
+                    <el-button v-else type="danger" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
                 </template>
             </el-table-column>
-            <el-table-column key="15" v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'" label="上架操作"
+            <el-table-column key="16" v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'"
+                             label="操作"
                              width="80">
                 <template slot-scope="props">
-                    <el-button type="danger" @click="doPutonBatch(props.row)">上架</el-button>
+                    <el-button v-if="props.row.status==null" type="danger" @click="doPutonBatch(props.row)">上架</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -122,14 +142,15 @@
         <el-dialog :title="dialogTitle" :visible.sync="dialogVisible">
             <el-form :model="dialogForm" label-width="80px" ref="dialogForm">
                 <el-row>
-                    <el-form-item label="系列ID" prop="batchGoodsId"
-                                  :rules="[{required:true, message:'请选择系列', trigger: 'blur'}]">
+                    <el-form-item label="物资名称" prop="batchGoodsId"
+                                  :rules="[{required:true, message:'请选择物资', trigger: 'blur'}]">
 
-                        <el-col :span="15">
-                            <el-input v-model="dialogForm.batchGoodsId" style="display: inline-block;"></el-input>
-                        </el-col>
+                        <!--不允许手输入-->
+                        <!--<el-col :span="15">-->
+                        <!--<el-input v-model="dialogForm.batchGoodsId" style="display: inline-block;"></el-input>-->
+                        <!--</el-col>-->
                         <el-col :span="6" v-if="dialogForm.goodsName">
-                            系列名称：{{dialogForm.goodsName}}
+                            {{dialogForm.goodsName}}
                         </el-col>
                         <el-col :span="3">
                             <el-button type="primary" @click="choiceTap">选择</el-button>
@@ -140,7 +161,8 @@
                     <el-col :span="24">
                         <el-form-item label="采购价格" prop="tellerBuyPrice"
                                       :rules="[{required:true, message:'请输入采购价格', trigger: 'blur'},{validator:checkCount, trigger:'blur'}]">
-                            <el-input v-model="dialogForm.tellerBuyPrice"></el-input>
+                            <span>{{tellerBuyPriceUnit}}</span>&nbsp;<el-input class="tellerBuyPriceClass"
+                                                                               v-model="dialogForm.tellerBuyPrice"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -159,7 +181,8 @@
                         </el-select>
                     </el-col>
                 </el-row>
-                <el-row v-show="dialogForm.unitName&&dialogForm.buyBaseUnit &&dialogForm.unitName!==dialogForm.buyBaseUnit ">
+                <el-row
+                    v-show="dialogForm.unitName&&dialogForm.buyBaseUnit &&dialogForm.unitName!==dialogForm.buyBaseUnit ">
                     <el-form-item label="单位换算" prop="thisChange"
                                   :rules="[{validator:checkthisChange, trigger:'blur'}]">
                         <el-col :span="1">&nbsp;</el-col>
@@ -227,7 +250,8 @@
     import {formatPrice} from "../../../tool/Format";
     import {deepCopy} from "../../../Gw/GwDateUtil";
     import GwRegular from "@/Gw/GwRegular.js";
-    import {batchCnys} from "../../../tool/status"
+    import {batchCnys, batchCnysId} from "../../../tool/status"
+    import _String from '../../../util/string';
 
     export default {
         name: "batchInfoAction",
@@ -267,17 +291,17 @@
                     recycleSeq: null,
                     batchGoodsId: null,
                     tellerBuyPrice: null,
-                    count:null,
+                    count: null,
                     tellerBuyCount: null,
                     memo: null,
                     goodsName: null,
-                    baseCategory: null,
                     thisChange: 1,
-                    baseUnitId:null,
+                    baseUnitId: null,
                     unitId: null,
-                    buyBaseUnit:null,
-                    unitName:null,
+                    buyBaseUnit: null,
+                    unitName: null,
                 },
+                dialogFormOld: {},
                 dialogVisible: false,
                 goodsVisible: false,
                 currentPage: 1,
@@ -297,6 +321,8 @@
                 reportPrices: [],//零售价
                 units: [],
                 goodsInfo: {},
+                dollarRate: 1,
+                nalaRate: 1,
             }
         },
 
@@ -317,13 +343,13 @@
                 return this.batchInfo.status === '9';
             },
 
-            showRealCountIns(){
+            showRealCountIns() {
                 if (this.batchInfo.batchFlag === "I") {
                     // 国内
-                    return this.batchInfo.status==='8'||this.batchInfo.status==='A'||this.batchInfo.status==='7';
-                }else {
+                    return this.batchInfo.status === '8' || this.batchInfo.status === 'A' || this.batchInfo.status === '7';
+                } else {
                     // 国外
-                    return this.batchInfo.status==='9'||this.batchInfo.status==='A'||this.batchInfo.status==='7';
+                    return this.batchInfo.status === '9' || this.batchInfo.status === 'A' || this.batchInfo.status === '7';
                 }
             },
 
@@ -334,10 +360,26 @@
             showLocalPriceOperation() {
                 return this.batchInfo.status === '7' || this.batchInfo.status === 'B' || this.batchInfo.status === '6';
             },
+
+            tellerBuyPriceUnit() {
+                let str = '₦';
+                if (!this.batchInfo.batchCny) {
+                    return str;
+                }
+                if (this.batchInfo.batchCny === '2') {
+                    str = '￥';
+                }
+                if (this.batchInfo.batchCny === '3') {
+                    str = '$';
+                }
+                return str;
+            },
         },
 
         created() {
             // this.$route.query.batchId="BI685783182406328320";//debug
+            this.nalaRate = localStorage.getItem('nalaRate') || 1;
+            this.dollarRate = localStorage.getItem('dollarRate') || 1;
             this.getUnits();
             if (this.$route.query.batchId) {
                 this.searchForm.batchId = this.$route.query.batchId;
@@ -350,11 +392,11 @@
                 this.getGoodsSerials();
             },
 
-            batchCnyName(batchCny){
-                let name='';
-                batchCnys.forEach(item=>{
+            batchCnyName(batchCny) {
+                let name = '';
+                batchCnys.forEach(item => {
                     if (item.id === batchCny) {
-                        name=item.value;
+                        name = item.value;
                         return false;
                     }
                 });
@@ -373,8 +415,8 @@
                 return unitInfo.unitName;
             },
 
-            checkCount(rule, value, callback){
-                if (!GwRegular.numeric2.test(value)){
+            checkCount(rule, value, callback) {
+                if (!GwRegular.numeric2.test(value)) {
                     callback(new Error('请输入数字，最多两位小数!'));
                 }
                 callback();
@@ -453,13 +495,21 @@
             },
 
             changeRealCount(item, index) {
+                if (!GwRegular.numeric2_.test(this.realCountIns[index])) {
+                    this.$message.error('请输入数字，最多两位小数');
+                    return;
+                }
                 let params = {};
                 params.batchId = this.batchInfo.batchId;
                 params.goodsList = [];
                 let obj = {};
                 obj.recycleSeq = '1';
                 obj.batchGoodsId = item.batchGoodsId;
-                obj.realCount = parseInt(this.realCountIns[index]) + item.realCount;
+                obj.realCount = parseFloat(this.realCountIns[index]) + item.realCount;
+                if (obj.realCount < 0.005 || obj.realCount > item.tellerBuyCount) {
+                    this.$message.error('请输入正确数量！');
+                    return;
+                }
                 params.goodsList.push(obj);
                 uptBatchRealCount(this, params).then(
                     res => {
@@ -478,14 +528,17 @@
             },
 
             doSubmitLocalPrice(item, index) {
-                console.log("本地价格", this.localPrices[index]);//debug
+                if (!GwRegular.numeric2.test(this.localPrices[index])) {
+                    this.$message.error('请输入正确数字，最多两位小数');
+                    return;
+                }
                 let params = {};
                 params.batchId = this.batchInfo.batchId;
                 params.goodsList = [];
                 let obj = {};
                 obj.recycleSeq = '1';
                 obj.batchGoodsId = item.batchGoodsId;
-                obj.localPrice = parseInt(this.localPrices[index]);
+                obj.localPrice = parseFloat(this.localPrices[index]);
                 params.goodsList.push(obj);
                 submitLocalPrice(this, params).then(
                     res => {
@@ -499,6 +552,10 @@
             },
 
             doSuggestPrice(item, index) {
+                if (!GwRegular.numeric2.test(this.suggestPrices[index])) {
+                    this.$message.error('请输入正确数字，最多两位小数');
+                    return;
+                }
                 let params = {};
                 params.batchId = this.batchInfo.batchId;
                 params.goodsList = [];
@@ -519,6 +576,21 @@
             },
 
             doReportPrices(item, index) {
+                console.log("this.reportPrices[index]", this.reportPrices[index]);//debug
+                if (!this.reportPrices[index] || this.reportPrices[index] === '') {
+                    this.$message.error('请输入零售价!');
+                    return;
+                }
+                if (!GwRegular.numeric2.test(this.reportPrices[index])) {
+                    this.$message.error('零售价请输入正确数字，最多两位小数');
+                    return;
+                }
+                if (this.companyCounts[index]) {
+                    if (!GwRegular.numeric2.test(this.companyCounts[index])) {
+                        this.$message.error('内部数量请输入正确数字，最多两位小数');
+                        return;
+                    }
+                }
                 let params = {};
                 params.batchId = this.batchInfo.batchId;
                 params.goodsList = [];
@@ -526,10 +598,18 @@
                 obj.recycleSeq = '1';
                 obj.batchGoodsId = item.batchGoodsId;
                 if (this.reportPrices[index] && this.reportPrices[index] !== '') {
-                    obj.reportPrice = parseInt(this.reportPrices[index]);
+                    obj.reportPrice = parseFloat(this.reportPrices[index]);
                 }
                 if (this.companyCounts[index] && this.companyCounts[index] !== '') {
-                    obj.companyCount = parseInt(this.companyCounts[index]);
+                    obj.companyCount = parseFloat(this.companyCounts[index]);
+                    if (obj.companyCount<0.005){
+                        this.$message.error('内部数量不能输入负数');
+                        return;
+                    }
+                    if (obj.companyCount-item.realCount>0.005){
+                        this.$message.error('内部数量不能超过已入库数量！');
+                        return;
+                    }
                 }
                 params.goodsList.push(obj);
                 submitReportPrice(this, params).then(
@@ -589,35 +669,35 @@
             },
 
             modifyTap(item) {
-                console.log('item', item);//debug
-                this.dialogForm={
+                this.dialogForm = {
                     id: null,
                     recycleSeq: null,
                     batchGoodsId: null,
                     tellerBuyPrice: null,
-                    count:null,
+                    count: null,
                     tellerBuyCount: null,
                     memo: null,
                     goodsName: null,
                     thisChange: 1,
-                    baseUnitId:null,
+                    baseUnitId: null,
                     unitId: null,
-                    buyBaseUnit:null,
-                    unitName:null,
+                    buyBaseUnit: null,
+                    unitName: null,
                 };
+                this.dialogFormOld = deepCopy(this.dialogForm);
                 this.flag = 2;
                 this.dialogForm.id = item.id;
                 this.dialogForm.batchGoodsId = item.batchGoodsId;
                 this.dialogForm.version = item.version;
                 this.dialogForm.tellerBuyPrice = item.tellerBuyPrice;
                 this.dialogForm.tellerBuyCount = item.tellerBuyCount;
-                this.dialogForm.goodsName=item.goodsName;
-                this.dialogForm.buyBaseUnit=item.buyBaseUnit;
+                this.dialogForm.goodsName = item.goodsName;
+                this.dialogForm.buyBaseUnit = item.buyBaseUnit;
                 this.dialogForm.memo = item.memo;
-                if (item.thisCategory) {
-                    this.dialogForm.count=item.tellerBuyCount/item.thisChange;
-                    this.thisChange=item.thisChange;
-                    this.dialogForm.unitName=item.thisCategory;
+                if (item.buyThisUnit) {
+                    this.dialogForm.count = item.thisCount;
+                    this.dialogForm.thisChange = item.thisChange;
+                    this.dialogForm.unitName = item.buyThisUnit;
                 }
                 this.dialogVisible = true;
             },
@@ -656,13 +736,11 @@
                 params.currentPage = this.currentPage;
                 params.pageSize = this.pageSize;
                 params.batchId = this.batchInfo.batchId;
-                // params.batchName=this.batchInfo.batchName;
                 listBatchGoodsByCon(this, params).then(
                     res => {
                         this.tableData = res.data.records;
                         for (let i = 0; i < this.tableData.length; i++) {
-                            // this.tableData[i].realCountIn=this.tableData[i].tellerBuyCount-this.tableData[i].realCount;
-                            this.$set(this.realCountIns, i, this.tableData[i].tellerBuyCount - this.tableData[i].realCount);
+                            this.$set(this.realCountIns, i, formatPrice(this.tableData[i].tellerBuyCount - this.tableData[i].realCount));
                         }
                         this.AllCount = res.data.total;
                     },
@@ -670,6 +748,11 @@
 
                     }
                 ).catch();
+            },
+
+            //格式化金额
+            formatPrice(price) {
+                return _String.number_format(price, 2);
             },
 
             getBatchInfo() {
@@ -706,14 +789,23 @@
                     let item = {};
                     item.recycleSeq = '1';
                     item.batchGoodsId = this.dialogForm.batchGoodsId;
+                    // 暂时不转换，直接上送
+                    // if (this.batchInfo.batchCny === batchCnysId.RMB) {
+                    //     //人民币
+                    //     item.tellerBuyPrice =formatPrice(this.dialogForm.tellerBuyPrice*this.nalaRate);
+                    // }else if (this.batchInfo.batchCny === batchCnysId.DOLS) {
+                    //     // 美元
+                    //     item.tellerBuyPrice =formatPrice(this.dialogForm.tellerBuyPrice*this.dollarRate);
+                    // }else{
+                    //     item.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
+                    // }
                     item.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
-                    item.tellerBuyCount = formatPrice(this.dialogForm.count*this.dialogForm.thisChange);
+                    item.tellerBuyCount = formatPrice(this.dialogForm.count * this.dialogForm.thisChange);
                     item.buyBaseUnit = this.dialogForm.buyBaseUnit;
-                    console.log('this.dialogForm', this.dialogForm);//debug
-                    if (this.dialogForm.unitName != null && this.dialogForm.buyBaseUnit!= null && this.dialogForm.unitName !== this.dialogForm.buyBaseUnit) {
-                        item.buyThisUnit=this.dialogForm.unitName;
-                        item.thisCount=this.dialogForm.count;
-                        item.thisChange=this.dialogForm.thisChange;
+                    if (this.dialogForm.unitName != null && this.dialogForm.buyBaseUnit != null && this.dialogForm.unitName !== this.dialogForm.buyBaseUnit) {
+                        item.buyThisUnit = this.dialogForm.unitName;
+                        item.thisCount = this.dialogForm.count;
+                        item.thisChange = this.dialogForm.thisChange;
                     }
                     if (item.memo) {
                         item.memo = this.dialogForm.memo;
@@ -734,11 +826,23 @@
                     //修改
                     params.id = this.dialogForm.id;
                     params.version = this.dialogForm.version;
-                    params.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
-                    params.tellerBuyCount = formatPrice(this.dialogForm.tellerBuyCount);
-                    params.buyBaseUnit = this.dialogForm.buyBaseUnit;
-                    if (item.memo) {
-                        item.memo = this.dialogForm.memo;
+                    if (this.dialogForm.tellerBuyPrice !== this.dialogFormOld.tellerBuyPrice) {
+                        params.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
+                    }
+                    if (this.dialogForm.count !== this.dialogFormOld.count||this.dialogForm.thisChange !== this.dialogFormOld.thisChange) {
+                        params.tellerBuyCount = formatPrice(this.dialogForm.count * this.dialogForm.thisChange);
+                    }
+                    if (this.dialogForm.unitName !== this.dialogFormOld.unitName) {
+                        params.buyThisUnit = this.dialogForm.unitName;
+                    }
+                    if (this.dialogForm.thisChange !== this.dialogFormOld.thisChange) {
+                        params.thisChange = this.dialogForm.thisChange;
+                    }
+                    if (this.dialogForm.count !== this.dialogFormOld.count) {
+                        params.thisCount = this.dialogForm.count;
+                    }
+                    if (this.dialogForm.memo !== this.dialogFormOld.memo) {
+                        params.memo = this.dialogForm.memo;
                     }
                     updateBatchGoodsById(this, params).then(
                         res => {
@@ -758,11 +862,11 @@
                 this.dialogForm.batchGoodsId = item.specGoodsId;
                 this.dialogForm.goodsName = item.goodsName;
                 this.dialogForm.unitId = item.unitId;
-                this.dialogForm.unitName=this.getUnitName(item.unitId);
-                this.dialogForm.baseUnitId=item.unitId;
-                this.dialogForm.count='';
-                this.dialogForm.tellerBuyPrice='';
-                this.dialogForm.thisChange=1;
+                this.dialogForm.unitName = this.getUnitName(item.unitId);
+                this.dialogForm.baseUnitId = item.unitId;
+                this.dialogForm.count = '';
+                this.dialogForm.tellerBuyPrice = '';
+                this.dialogForm.thisChange = 1;
                 this.goodsVisible = false;
             },
 
@@ -779,16 +883,16 @@
                     recycleSeq: null,
                     batchGoodsId: null,
                     tellerBuyPrice: null,
-                    count:null,
+                    count: null,
                     tellerBuyCount: null,
                     memo: null,
                     goodsName: null,
                     baseCategory: null,
                     thisChange: 1,
-                    baseUnitId:null,
+                    baseUnitId: null,
                     unitId: null,
-                    buyBaseUnit:null,
-                    unitName:null,
+                    buyBaseUnit: null,
+                    unitName: null,
                 };
                 this.flag = 1;
                 this.dialogForm.batchId = this.batchInfo.batchId;
@@ -825,8 +929,13 @@
         padding: 10px;
     }
 
-    .batchInfoCol{
+    .batchInfoCol {
         line-height: 16px;
-        color: rgb(144,147,153);
+        color: rgb(144, 147, 153);
     }
+
+    .tellerBuyPriceClass {
+        width: 96%;
+    }
+
 </style>

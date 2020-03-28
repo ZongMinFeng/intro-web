@@ -3673,6 +3673,17 @@ const updateBatchGoodsById = (me, params) => {
             send.tellerBuyCount = params.tellerBuyCount;
             singArray.tellerBuyCount = params.tellerBuyCount;
         }
+        if (params.buyThisUnit ) {
+            send.buyThisUnit  = params.buyThisUnit ;
+        }
+        if (params.thisChange ) {
+            send.thisChange  = params.thisChange ;
+            singArray.thisChange = params.thisChange;
+        }
+        if (params.thisCount ) {
+            send.thisCount  = params.thisCount ;
+            singArray.thisCount = params.thisCount;
+        }
         if (params.memo) {
             send.memo = params.memo;
         }

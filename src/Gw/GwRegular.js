@@ -14,5 +14,8 @@ GwRegular.numeric4=/^[0-9]+(.[0-9]{0,4})?$/;
 //两位正实数
 GwRegular.numeric2=/^[0-9]+(.[0-9]{0,2})?$/;
 
+//两位实数
+GwRegular.numeric2_=/^-?[0-9]+(.[0-9]{0,2})?$/;
+
 
 export default GwRegular;
