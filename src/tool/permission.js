@@ -40,6 +40,13 @@ const PERMISSIONS = {
         url: BASE_URL + '/goods/putDownIndex',
         txnId: 'putDownIndex'
     },
+    //5
+    uptPriceAndStock: {
+        index: 5,
+        name: '上架物资修改库存和价格',
+        url: BASE_URL + '/goods/uptPriceAndStock',
+        txnId: 'uptPriceAndStock'
+    },
     //10
     createOrder: {
         index: 10,
@@ -64,7 +71,7 @@ const PERMISSIONS = {
     //13
     confirmOrderPay: {
         index: 13,
-        name: '确认订单收款',
+        name: '财务确认订单',
         url: BASE_URL + '/orderMng/confirmOrderPay',
         txnId: 'confirmOrderPay'
     },
@@ -92,7 +99,7 @@ const PERMISSIONS = {
     //17
     listAllKilledOrders: {
         index: 17,
-        name: '结束异常订单',
+        name: '查询异常订单',
         url: BASE_URL + '/orderMng/listAllKilledOrders',
         txnId: 'listAllKilledOrders'
     },

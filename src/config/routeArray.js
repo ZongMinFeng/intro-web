@@ -35,6 +35,11 @@ module.exports = {
                     component: resolve => require(['../components/page/setting/tellerAction.vue'], resolve),
                     meta: {title: '员工管理', function: 'tellerAction', keepAlive:true}
                 },
+                {
+                    path: '/customAction',
+                    component: resolve => require(['../components/page/setting/customAction.vue'], resolve),
+                    meta: {title: '顾客管理', function: 'customAction'}
+                },
 
                 {
                     path: '/categoryAction',
@@ -54,12 +59,12 @@ module.exports = {
                 {
                     path: '/goodslistAction',
                     component: resolve => require(['../components/page/goods/goodslistAction.vue'], resolve),
-                    meta: {title: '物资列表', function: 'goodslistAction', keepAlive:true}
+                    meta: {title: '物资基础信息', function: 'goodslistAction', keepAlive:true}
                 },
                 {
                     path: '/putDownAction',
                     component: resolve => require(['../components/page/goods/putDownAction.vue'], resolve),
-                    meta: {title: '物资下架', function: 'putDownAction'}
+                    meta: {title: '上下架管理', function: 'putDownAction'}
                 },
                 {
                     path: '/goodsInfos',
@@ -104,7 +109,7 @@ module.exports = {
                 {
                     path: '/orderlistAction',
                     component: resolve => require(['../components/page/order/orderlistAction.vue'], resolve),
-                    meta: {title: '订单列表', function: 'orderlistAction', keepAlive:true}
+                    meta: {title: '订单处理', function: 'orderlistAction', keepAlive:true}
                 },
                 {
                     path: '/myOrderAction',
@@ -165,15 +170,15 @@ module.exports = {
                     function: 'myOrderAction',
                     permissions: [
                         'createOrder',
-                        'listAllOrders'
                     ]
                 },
                 {
                     index: 'orderlistAction',
-                    title: '订单列表',
+                    title: '订单处理',
                     flag: true,
                     function: 'orderlistAction',
                     permissions: [
+                        'listAllOrders',
                         'confirmOrderStock',
                         'confirmOrderPay',
                         'confirmOrderSend',
@@ -191,46 +196,6 @@ module.exports = {
             flag: false,
             subs: [
                 {
-                    index: 'goodslistAction',
-                    title: '物资列表',
-                    flag: true,
-                    function: 'goodslistAction',
-                    permissions: [
-                        'addGooTGoodsinfo',
-                        'deleteGooTGoodsinfoById',
-                        'updateGooTGoodsinfoById',
-                        'addGoodsProductmanual',
-                        'deleteGoodsProductmanualById',
-                        'updateGoodsProductmanualById',
-                        'addGoodsQualitycertify',
-                        'deleteGoodsQualitycertifyById',
-                        'updateGoodsQualitycertifyById',
-                        'addGoodsserial',
-                        'deleteGoodsserialById',
-                        'deleteGoodsserialByGoodsId',
-                        'updateGoodsserialById',
-                        'putDownIndex',
-                        'getGoodsQualitycertifyById',
-                        'listGooCategorysByPid',
-                        'listGoodsinfosByConditions',
-                        'listGoodsserialsByGoodsId',
-                        'getGoodsProductmanualById',
-                        'getGoodsserialById',
-                        'getGooTGoodsinfoById'
-
-                    ]
-                },
-                {
-                    index: 'putDownAction',
-                    title: '物资下架',
-                    flag: true,
-                    function: 'putDownAction',
-                    permissions: [
-                        'putDownIndex'
-
-                    ]
-                },
-                {
                     index: 'categoryAction',
                     title: '物资分类',
                     flag: true,
@@ -238,16 +203,8 @@ module.exports = {
                     permissions: [
                         'addGooCategory',
                         'deleteGooCategoryById',
-                        'getGooCategoryById'
-                    ]
-                },
-                {
-                    index: 'categoryOrderAction',
-                    title: '分类排序',
-                    flag: true,
-                    function: 'categoryOrderAction',
-                    permissions: [
                         'updateGooCategoryById',
+                        'getGooCategoryById'
                     ]
                 },
                 {
@@ -257,11 +214,51 @@ module.exports = {
                     function: 'unitAction',
                     permissions: [
                         'listAllUnitinfos',
-                        'getGooUnitinfoById',
                         'addGooUnitinfo',
                         'deleteGooUnitinfoById',
                     ]
                 },
+                {
+                    index: 'goodslistAction',
+                    title: '物资基础信息',
+                    flag: true,
+                    function: 'goodslistAction',
+                    permissions: [
+                        'addGooTGoodsinfo',
+                        'deleteGooTGoodsinfoById',
+                        'updateGooTGoodsinfoById',
+                        'listGoodsinfosByConditions',
+
+                        'addGoodsProductmanual',
+                        'deleteGoodsProductmanualById',
+                        'updateGoodsProductmanualById',
+                        'getGoodsProductmanualById',
+
+                        'addGoodsQualitycertify',
+                        'deleteGoodsQualitycertifyById',
+                        'updateGoodsQualitycertifyById',
+                        'getGoodsQualitycertifyById',
+
+                        'addGoodsserial',
+                        'deleteGoodsserialById',
+                        'deleteGoodsserialByGoodsId',
+                        'updateGoodsserialById',
+                        'getGoodsserialById',
+
+                    ]
+                },
+                {
+                    index: 'putDownAction',
+                    title: '上下架管理',
+                    flag: true,
+                    function: 'putDownAction',
+                    permissions: [
+                        'putDownIndex',
+                        'uptPriceAndStock'
+                    ]
+                },
+
+
             ],
         },
 
@@ -277,6 +274,7 @@ module.exports = {
                     flag: false,
                     function: 'batchListAction',
                     permissions: [
+                        'listBatchsByCon',
                         'addBatchinfo',
                         'updateBatchinfo',
                         'deleteBatchinfoById',
@@ -288,20 +286,18 @@ module.exports = {
                     flag: false,
                     function: 'batchInfoAction',
                     permissions: [
+                        'listBatchGoodsByCon',
                         'addBatchGoods',
                         'updateBatchGoodsById',
                         'deleteBatchGoodsById',
                         'uptBatchLadingBill',
                         'uptBatchRealCount',
+
                         'submitLocalPrice',
                         'cacSuggestPrice',
-                        'killBatchById',
                         'submitReportPrice',
                         'putonBatch',
-                        'getBatchGoodsById',
-                        'getBatchinfoById',
-                        'listBatchsByCon',
-                        'listBatchGoodsByCon'
+                        'killBatchById',
                     ]
                 },
             ],

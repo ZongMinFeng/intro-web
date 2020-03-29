@@ -33,10 +33,10 @@
 
         <el-table :data="tableData" border stripe @row-dblclick="dbCliick">
             <el-table-column label="系列名称" prop="goodsName"></el-table-column>
-            <el-table-column prop="goodsId" label="系列ID"></el-table-column>
+            <el-table-column label="系列ID" prop="specGoodsId"></el-table-column>
             <el-table-column label="系列主图" width="120" align="center" header-align="left">
                 <template slot-scope="scope">
-                    <img style="height: 80px; width: 80px;background-color: white;"  :preview="scope.$index" :src="pictureUrl + scope.row.goodsId + '/'+scope.row.mainPicture" >
+                    <img style="height: 80px; width: 80px;background-color: white;"  :src="pictureUrl + scope.row.goodsId + '/'+scope.row.mainPicture" >
                 </template>
             </el-table-column>
             <el-table-column label="型号" prop="goodsType"></el-table-column>

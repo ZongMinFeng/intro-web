@@ -13,6 +13,7 @@
 
         <el-table :data="tableData" border stripe>
             <el-table-column label="名称" prop="categoryName"></el-table-column>
+            <el-table-column label="序号" prop="sortOrder"></el-table-column>
             <el-table-column label="状态">
                 <template slot-scope="props">
                     <span :class="getStatusClass(props.row.status)">{{getStatus(props.row.status)}}</span>
@@ -36,6 +37,14 @@
                         <el-form-item label="名称" prop="categoryName"
                                       :rules="[{required:true, message:'请输入分类名称', trigger: 'blur'}]">
                             <el-input v-model="dialogForm.categoryName" maxLength="64"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="序号" prop="sortOrder"
+                                      :rules="[{required:true, message:'请输入分类序号', trigger: 'blur'}, {validator:checkSortOrder}]">
+                            <el-input v-model="dialogForm.sortOrder" maxLength="10"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -66,6 +75,9 @@
         updateGooCategoryById
     } from "../../../util/module";
 
+    import GwRegular from "@/Gw/GwRegular.js";
+    import {deepCopy} from "../../../Gw/GwDateUtil";
+
     export default {
         name: "categoryAction",
         data() {
@@ -86,8 +98,10 @@
                 dialogVisible: false,
                 dialogForm: {
                     categoryName: null,
+                    sortOrder:null,
                     status: '1'
                 },
+                dialogFormOld:{},
                 allStatus: [
                     {id: '1', value: '正常'},
                     {id: '2', value: '注销'},
@@ -115,6 +129,14 @@
         methods: {
             initData() {
                 this.goodsList();
+            },
+
+            checkSortOrder(rule, value, callback){
+                if(!GwRegular.num.test(value)){
+                    callback(new Error('请输入大于0数字！'));
+                    return;
+                }
+                callback();
             },
 
             goodsList() {
@@ -182,6 +204,7 @@
                 this.dialogForm.sortOrder = item.sortOrder;
                 this.dialogForm.status = item.status;
                 this.dialogForm.categoryName = item.categoryName;
+                this.dialogFormOld=deepCopy(this.dialogForm);
                 this.dialogVisible = true;
             },
 
@@ -245,9 +268,15 @@
                 if (this.flag === 3) {
                     params.categoryId = this.dialogForm.categoryId;
                     params.version = this.dialogForm.version;
-                    params.categoryName = this.dialogForm.categoryName;
-                    params.sortOrder = this.dialogForm.sortOrder;
-                    params.status = this.dialogForm.status;
+                    if (this.dialogFormOld.categoryName !== this.dialogForm.categoryName) {
+                        params.categoryName = this.dialogForm.categoryName;
+                    }
+                    if (this.dialogFormOld.sortOrder !== this.dialogForm.sortOrder) {
+                        params.sortOrder = this.dialogForm.sortOrder;
+                    }
+                    if (this.dialogFormOld.status !== this.dialogForm.status) {
+                        params.status = this.dialogForm.status;
+                    }
                     updateGooCategoryById(this, params).then(
                         res => {
                             this.$message.success('修改成功');
@@ -280,6 +309,7 @@
                 this.dialogForm.categoryName = '';
                 this.dialogForm.categoryLevel = parseInt(item.categoryLevel) + 1 + '';
                 this.dialogForm.parentCategory = item.categoryId;
+                this.dialogForm.sortOrder=item.sortOrder+'01';
                 this.dialogVisible = true;
             },
 

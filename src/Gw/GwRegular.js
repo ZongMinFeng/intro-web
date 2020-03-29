@@ -17,5 +17,8 @@ GwRegular.numeric2=/^[0-9]+(.[0-9]{0,2})?$/;
 //两位实数
 GwRegular.numeric2_=/^-?[0-9]+(.[0-9]{0,2})?$/;
 
+//正整数
+GwRegular.num=/^[1-9][0-9]*$/;
+
 
 export default GwRegular;

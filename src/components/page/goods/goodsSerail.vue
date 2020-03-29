@@ -16,7 +16,9 @@
             <el-table-column label="颜色" prop="specColor"></el-table-column>
             <el-table-column label="系列价格" width="160" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p>￥{{formatPrice(props.row.specNowPrice)}}元</p>
+                    <p>₦{{formatPrice(props.row.specNowPrice)}}</p>
+                    <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
+                    <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="材质" prop="specMaterial"></el-table-column>
@@ -227,6 +229,8 @@
                 pictureUrl: '',
                 create: false,
                 units: [],
+                dollarRate:1,
+                nalaRate:1,
             }
         },
 
@@ -242,6 +246,8 @@
 
         created() {
             this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.nalaRate=localStorage.getItem('nalaRate')||1;
+            this.dollarRate=localStorage.getItem('dollarRate')||1;
             this.goodsId = this.$route.query.goodsId;
             this.create = this.$route.query.create || false;
             if (this.goodsId && this.goodsId !== '') {

@@ -128,7 +128,6 @@
                 },
                 DestroyIncomeStatistics: true,
                 instId: '',
-                addDisabled: false,
                 refDisabled: false,
                 uptDisabled: false,
                 rules: {
@@ -253,12 +252,12 @@
                 })
             },
 
-            handleConfirm(userAddForm) {
-                this.$refs[userAddForm].validate((valid) => {
+            handleConfirm() {
+                this.$refs.dialogForm.validate((valid) => {
                     if (valid) {
                         this.formCommit();
                     } else {
-                        console.log('error submit!!')
+                        console.log('error submit!!');
                         return false
                     }
                 })

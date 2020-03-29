@@ -39,8 +39,8 @@
             </el-table-column>
             <el-table-column label="订单金额" width="150" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p><strong style="color:red">￥{{formatPrice(props.row.orderAmt)}}</strong></p>
-                    <p>₦{{formatPrice(props.row.orderAmt/nalaRate)}}</p>
+                    <p><strong style="color:red">₦{{formatPrice(props.row.orderAmt)}}</strong></p>
+                    <p>￥{{formatPrice(props.row.orderAmt/nalaRate)}}</p>
                     <p>${{formatPrice(props.row.orderAmt/dollarRate)}}</p>
                 </template>
             </el-table-column>

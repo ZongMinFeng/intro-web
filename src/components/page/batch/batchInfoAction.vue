@@ -38,6 +38,48 @@
         </div>
 
         <el-table :data="tableData" border stripe>
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="物资系列ID">
+                            <span>{{ props.row.batchGoodsId }}</span>
+                        </el-form-item>
+                        <el-form-item label="主物资ID">
+                            <span>{{ props.row.goodsId }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建者">
+                            <span>{{ props.row.createTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建时间">
+                            <span>{{toDate(props.row.createTime)}}</span>
+                        </el-form-item>
+                        <el-form-item label="修改者">
+                            <span>{{ props.row.updateTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改时间">
+                            <span>{{toDate(props.row.updateTime)}}</span>
+                        </el-form-item>
+                        <el-form-item label="采购人员">
+                            <span>{{props.row.putinTellerId}}</span>
+                        </el-form-item>
+                        <el-form-item label="运单号提交人员">
+                            <span>{{props.row.ladingTellerId}}</span>
+                        </el-form-item>
+                        <el-form-item label="本地金额提交人员">
+                            <span>{{props.row.localTellerId}}</span>
+                        </el-form-item>
+                        <el-form-item label="建议价提交人员">
+                            <span>{{props.row.suggestTellerId}}</span>
+                        </el-form-item>
+                        <el-form-item label="零售价提交人员">
+                            <span>{{props.row.reportTellerId}}</span>
+                        </el-form-item>
+                        <el-form-item label="物资上架人员">
+                            <span>{{props.row.putonTellerId}}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
             <el-table-column key="1" label="名称" prop="goodsName"></el-table-column>
             <el-table-column key="2" label="备注" prop="memo"></el-table-column>
             <el-table-column key="3" label="采购价格" width="160" align="right" header-align="left">
@@ -247,7 +289,7 @@
         updateBatchGoodsById, uptBatchLadingBill, uptBatchRealCount
     } from "../../../util/module";
     import GoodsSelection from "../../common/selection/GoodsSelection";
-    import {formatPrice} from "../../../tool/Format";
+    import {formatPrice, toDate} from "../../../tool/Format";
     import {deepCopy} from "../../../Gw/GwDateUtil";
     import GwRegular from "@/Gw/GwRegular.js";
     import {batchCnys, batchCnysId} from "../../../tool/status"
@@ -390,6 +432,10 @@
         methods: {
             initData() {
                 this.getGoodsSerials();
+            },
+
+            toDate(dateStr){
+                return toDate(dateStr);
             },
 
             batchCnyName(batchCny) {
@@ -660,11 +706,37 @@
             },
 
             handleSizeChange() {
+                //初始化数组
+                for (let i = 0; i < this.reportPrices.length; i++) {
+                    this.reportPrices[i]='';
+                }
+                for (let i = 0; i < this.realCountIns.length; i++) {
+                    this.realCountIns[i]='';
+                }
+                for (let i = 0; i < this.suggestPrices.length; i++) {
+                    this.suggestPrices[i]='';
+                }
+                for (let i = 0; i < this.companyCounts.length; i++) {
+                    this.companyCounts[i]='';
+                }
                 this.initData();
             },
 
             handleCurrentChange(options) {
                 this.currentPage = options;
+                //初始化数组
+                for (let i = 0; i < this.reportPrices.length; i++) {
+                    this.reportPrices[i]='';
+                }
+                for (let i = 0; i < this.realCountIns.length; i++) {
+                    this.realCountIns[i]='';
+                }
+                for (let i = 0; i < this.suggestPrices.length; i++) {
+                    this.suggestPrices[i]='';
+                }
+                for (let i = 0; i < this.companyCounts.length; i++) {
+                    this.companyCounts[i]='';
+                }
                 this.initData();
             },
 
@@ -936,6 +1008,19 @@
 
     .tellerBuyPriceClass {
         width: 96%;
+    }
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
     }
 
 </style>

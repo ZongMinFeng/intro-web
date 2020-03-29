@@ -49,12 +49,12 @@
                             <div>
                                 <div class="row1">
                                     <div class="price">
-                                        <span>￥</span><strong>{{formatPrice(item.specNowPrice)}}</strong>
+                                        <span>₦</span><strong>{{formatPrice(item.specNowPrice)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row2">
                                     <div class="price2">
-                                        <span>₦</span><strong>{{formatPrice(item.specNowPrice/nalaRate)}}</strong>
+                                        <span>￥</span><strong>{{formatPrice(item.specNowPrice/nalaRate)}}</strong>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                                         <span>$</span><strong>{{formatPrice(item.specNowPrice/dollarRate)}}</strong>
                                     </div>

@@ -48,9 +48,9 @@
             <el-table-column label="操作" width="340">
                 <template slot-scope="props">
                     <el-button type="primary" @click="resetPasswordTap(props.row)">重置密码</el-button>
-                    <el-button type="primary" @click="partTimeTap(props.row)">兼职</el-button>
-                    <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
-                    <el-button v-if="props.row.tellerId!==tellerId" type="danger" @click="deleteTap(props.row)">删除
+                    <el-button v-if="props.row.tellerId!==tellerId&&!searchForm.departmentId.startsWith('Admin')" type="primary" @click="partTimeTap(props.row)">兼职</el-button>
+                    <el-button v-if="props.row.tellerId!==tellerId&&!searchForm.departmentId.startsWith('Admin')" type="primary" @click="modifyTap(props.row)">修改</el-button>
+                    <el-button v-if="props.row.tellerId!==tellerId&&!searchForm.departmentId.startsWith('Admin')" type="danger" @click="deleteTap(props.row)">删除
                     </el-button>
                 </template>
             </el-table-column>
@@ -363,6 +363,7 @@
                             });
                         }
                         this.tableData = records;
+                        console.log("records", records);//debug
                     },
                     res => {
                     }
@@ -537,7 +538,7 @@
 
 <style scoped>
     .passWordDiv {
-        width: 120px;
+        width: 200px;
         margin: 0 auto;
     }
 

@@ -41,8 +41,8 @@
             <el-table-column label="物资价格" width="160" align="right" header-align="left">
                 <template slot-scope="props">
                     <div v-if="props.row.specNowPrice>0.005">
-                        <p>￥{{formatPrice(props.row.specNowPrice)}}</p>
-                        <p>₦{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
+                        <p>₦{{formatPrice(props.row.specNowPrice)}}</p>
+                        <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
                         <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
                     </div>
                     <div v-else style="color:red">

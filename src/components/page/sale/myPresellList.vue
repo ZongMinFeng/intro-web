@@ -18,8 +18,8 @@
             </el-table-column>
             <el-table-column label="单价" align="right" header-align="right">
                 <template slot-scope="props">
-                    <p><strong>￥{{formatPrice(props.row.specNowPrice)}}</strong></p>
-                    <p>₦{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
+                    <p><strong>₦{{formatPrice(props.row.specNowPrice)}}</strong></p>
+                    <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
                     <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
                 </template>
             </el-table-column>
@@ -30,8 +30,8 @@
             </el-table-column>
             <el-table-column label="小计" align="right" header-align="right">
                 <template slot-scope="props">
-                    <p><strong style="color:red">￥{{formatPrice(props.row.specNowPrice*props.row.sellNum)}}</strong></p>
-                    <p>₦{{formatPrice(props.row.specNowPrice/nalaRate*props.row.sellNum)}}</p>
+                    <p><strong style="color:red">₦{{formatPrice(props.row.specNowPrice*props.row.sellNum)}}</strong></p>
+                    <p>￥{{formatPrice(props.row.specNowPrice/nalaRate*props.row.sellNum)}}</p>
                     <p>${{formatPrice(props.row.specNowPrice/dollarRate*props.row.sellNum)}}</p>
                 </template>
             </el-table-column>
@@ -55,10 +55,10 @@
                     <div class="priceAllShow">
                         <div style="margin-bottom: 2px;">
                             <span style="font-size: 14px; float: left;">已选总价：</span>
-                            <b style="color: red; float: right; line-height: 20px;">￥{{formatPrice(allPrice)}}</b>
+                            <b style="color: red; float: right; line-height: 20px;">₦{{formatPrice(allPrice)}}</b>
                         </div>
                         <div>
-                            <span class="priceAllShohItem">₦ {{formatPrice(allPrice/nalaRate)}}</span>
+                            <span class="priceAllShohItem">￥ {{formatPrice(allPrice/nalaRate)}}</span>
                         </div>
                         <div>
                             <span class="priceAllShohItem">$ {{formatPrice(allPrice/dollarRate)}}</span>

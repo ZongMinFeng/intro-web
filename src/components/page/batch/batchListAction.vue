@@ -8,13 +8,13 @@
         <el-form :model="searchForm" ref="searchForm" label-width="80px">
             <el-row>
                 <el-col :span="6">
-                    <el-form-item label="提单号" prop="ladingBill">
-                        <el-input v-model="searchForm.ladingBill" clearable placeholder="请输入单据号"></el-input>
+                    <el-form-item label="批次或集装箱号" prop="batchName" label-width="130px">
+                        <el-input v-model="searchForm.batchName" clearable placeholder="请输入批次或集装箱号"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
-                    <el-form-item label="批次或集装箱号" prop="batchName" label-width="130px">
-                        <el-input v-model="searchForm.batchName" clearable placeholder="请输入批次或集装箱号"></el-input>
+                    <el-form-item label="提单号" prop="ladingBill">
+                        <el-input v-model="searchForm.ladingBill" clearable placeholder="请输入提单号"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="6">
@@ -37,17 +37,25 @@
         </el-form>
 
         <el-table :data="tableData" border stripe>
-            <el-table-column label="单据号" prop="batchId"></el-table-column>
+            <!--暂时不显示单据号-->
+            <!--<el-table-column label="单据号" prop="batchId"></el-table-column>-->
             <el-table-column label="批次或集装箱号" prop="batchName"></el-table-column>
+            <el-table-column label="提单号" prop="ladingBill"></el-table-column>
             <el-table-column label="采购区域" prop="status">
                 <template slot-scope="props">
                     {{getBatchFlagName(props.row.batchFlag)}}
                 </template>
             </el-table-column>
-            <el-table-column label="提单号" prop="ladingBill"></el-table-column>
-            <el-table-column label="时间" width="225">
+            <el-table-column label="时间" width="200">
                 <template slot-scope="props">
                     <p>创建时间：{{toDate(props.row.createTime)}}</p>
+                    <!--暂时不显示更新时间-->
+                    <!--<p>更新时间：{{toDate(props.row.updateTime)}}</p>-->
+                </template>
+            </el-table-column>
+            <el-table-column label="创建者">
+                <template slot-scope="props">
+                    <p>{{props.row.createTellerId}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="币种" prop="batchCny">
@@ -55,16 +63,16 @@
                     {{batchCnyName(props.row.batchCny)}}
                 </template>
             </el-table-column>
-            <el-table-column label="备注" prop="memo"></el-table-column>
             <el-table-column label="状态" prop="status">
                 <template slot-scope="props">
                     {{getStatusName(props.row.status)}}
                 </template>
             </el-table-column>
+            <el-table-column label="备注" prop="memo"></el-table-column>
             <el-table-column label="操作" width="240">
                 <template slot-scope="props">
-                    <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
-                    <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
+                    <el-button v-if="props.row.status==='9'" type="primary" @click="modifyTap(props.row)">修改</el-button>
+                    <el-button v-if="props.row.status==='9'" type="danger" @click="deleteTap(props.row)">删除</el-button>
                     <el-button type="primary" @click="detailTap(props.row)">单据操作</el-button>
                 </template>
             </el-table-column>
@@ -155,19 +163,19 @@
                 ],
                 statuses: [
                     {id: '1', value: '上架'},
+                    {id: 'E', value: '物资上架中'},
                     // {id:'2', value:'未知'},
                     // {id:'3', value:'未知'},
                     {id: '4', value: '零售价已申报'},
+                    {id: 'D', value: '零售价申报中'},
                     {id: '5', value: '建议价格已计算'},
+                    {id: 'C', value: '建议价格计算中'},
                     {id: '6', value: '本地价格已提交'},
+                    {id: 'B', value: '本地价格正在提交'},
                     {id: '7', value: '物资已入库'},
+                    {id: 'A', value: '物资正在入库'},
                     {id: '8', value: '海运'},
                     {id: '9', value: '初始'},
-                    {id: 'A', value: '物资正在入库'},
-                    {id: 'B', value: '本地价格正在提交'},
-                    {id: 'C', value: '建议价格计算中'},
-                    {id: 'D', value: '零售价申报中'},
-                    {id: 'E', value: '物资上架中'},
                 ],
                 tableData: [],
                 currentPage: 1,

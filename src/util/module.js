@@ -4739,6 +4739,134 @@ const putDownIndex = (me, params) => {
     });
 };
 
+/**
+ * 1.3.2.10上架物资修改库存和价格  uptPriceAndStock   位图索引 5
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const uptPriceAndStock = (me, params) => {
+    console.log("uptPriceAndStock params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.uptPriceAndStock.url;
+        urlParams.txnId = PERMISSIONS.uptPriceAndStock.txnId;
+        // urlParams.noSing = true;
+
+        if (params.specGoodsId) {
+            send.specGoodsId = params.specGoodsId;
+            singArray.specGoodsId = params.specGoodsId;
+        }
+        if (params.version ) {
+            send.version  = params.version ;
+            singArray.version  = params.version ;
+        }
+        if (params.specNowPrice) {
+            send.specNowPrice = params.specNowPrice;
+            singArray.specNowPrice = params.specNowPrice;
+        }
+        if (params.stockNum) {
+            send.stockNum = params.stockNum;
+            singArray.stockNum = params.stockNum;
+        }
+        if (params.lockNum) {
+            send.lockNum = params.lockNum;
+            singArray.lockNum = params.lockNum;
+        }
+        if (params.innerStockNum) {
+            send.innerStockNum = params.innerStockNum;
+            singArray.innerStockNum = params.innerStockNum;
+        }
+        if (params.innerLockNum) {
+            send.innerLockNum = params.innerLockNum;
+            singArray.innerLockNum = params.innerLockNum;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.5.1分页查询注册顾客 /listApproveCustomers?currentPage=1&pageSize=10 位图索引1
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listApproveCustomers = (me, params) => {
+    console.log("listApproveCustomers params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        urlParams.url = PERMISSIONS.listApproveCustomers.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listApproveCustomers.txnId;
+
+        urlParams.send = send;
+        urlParams.noSing = true;
+        let singArray = {};
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.5.2 审批注册顾客 /approveCustomer 位图索引2
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const approveCustomer = (me, params) => {
+    console.log("approveCustomer params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.approveCustomer.url;
+        urlParams.txnId = PERMISSIONS.approveCustomer.txnId;
+        // urlParams.noSing = true;
+
+        if (params.customerList) {
+            send.customerList = params.customerList;
+            singArray.customerList=[];
+            params.customerList.forEach(item=>{
+                let tmp={};
+                tmp.recycleSeq=item.recycleSeq;
+                tmp.tellerId=item.tellerId;
+                tmp.status=item.status;
+                singArray.customerList.push(tmp);
+            });
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -4872,5 +5000,8 @@ export {
     chgInstAdmin,
     getSysRate,
     updateSysRate,
-    putDownIndex
+    putDownIndex,
+    uptPriceAndStock,
+    listApproveCustomers,
+    approveCustomer
 };
