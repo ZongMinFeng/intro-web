@@ -102,6 +102,16 @@ module.exports = {
                     meta: {title: '批次操作', function: 'batchInfoAction'}
                 },
                 {
+                    path: '/unusualBatchInfoAction',
+                    component: resolve => require(['../components/page/batch/unusualBatchInfoAction.vue'], resolve),
+                    meta: {title: '异常批次物资明细', function: 'unusualBatchInfoAction'}
+                },
+                {
+                    path: '/unusualBatchListAction',
+                    component: resolve => require(['../components/page/batch/unusualBatchListAction.vue'], resolve),
+                    meta: {title: '异常批次', function: 'unusualBatchListAction', keepAlive:true}
+                },
+                {
                     path: '/goodsSale',
                     component: resolve => require(['../components/page/sale/goodsSale.vue'], resolve),
                     meta: {title: '商品销售', function: 'goodsSale', keepAlive:false}
@@ -110,6 +120,11 @@ module.exports = {
                     path: '/orderlistAction',
                     component: resolve => require(['../components/page/order/orderlistAction.vue'], resolve),
                     meta: {title: '订单处理', function: 'orderlistAction', keepAlive:true}
+                },
+                {
+                    path: '/unusualOrderAction',
+                    component: resolve => require(['../components/page/order/unusualOrderAction.vue'], resolve),
+                    meta: {title: '异常订单', function: 'unusualOrderAction'}
                 },
                 {
                     path: '/myOrderAction',
@@ -184,6 +199,15 @@ module.exports = {
                         'confirmOrderSend',
                         'closeOrder',
                         'killOrderById',
+                    ]
+                },
+                {
+                    index: 'unusualOrderAction',
+                    title: '异常订单',
+                    flag: true,
+                    function: 'unusualOrderAction',
+                    permissions: [
+                        'listAllKilledOrders',
                     ]
                 },
             ],
@@ -298,6 +322,16 @@ module.exports = {
                         'submitReportPrice',
                         'putonBatch',
                         'killBatchById',
+                    ]
+                },
+                {
+                    index: 'unusualBatchListAction',
+                    title: '异常批次',
+                    flag: false,
+                    function: 'unusualBatchListAction',
+                    permissions: [
+                        'listKilledBatchsByCon',
+                        'listKilledBatchGoodsByCon',
                     ]
                 },
             ],

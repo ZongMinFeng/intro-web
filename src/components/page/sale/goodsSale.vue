@@ -41,10 +41,10 @@
                             <span class="i-header">定&nbsp;&nbsp;&nbsp;&nbsp;价</span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="mainPrice">￥{{formatPrice(goodsInfo.specNowPrice)}}</span>
+                            <span class="mainPrice">₦{{formatPrice(goodsInfo.specNowPrice)}}</span>
                         </el-col>
                         <el-col :span="5">
-                            <span class="minorPrice">₦</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
+                            <span class="minorPrice">￥</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
                         </el-col>
                         <el-col :span="5">
                             <span class="minorPrice">$</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/dollarRate)}}

@@ -185,13 +185,9 @@
                         if (res.data.goodsList) {
                             this.goodsList.push(...res.data.goodsList);
                             this.goodsListShow.push(...res.data.goodsList);
+
                             if (this.currentPage < res.data.totalPage&&this.currentPage<1000) {
                                 this.currentPage++;
-                                //处理汇率
-                                localStorage.setItem('dollarRate', res.data.sysRate.dollarRate);
-                                this.dollarRate=res.data.sysRate.dollarRate;
-                                localStorage.setItem('nalaRate', res.data.sysRate.nalaRate);
-                                this.nalaRate=res.data.sysRate.nalaRate;
                                 //递归调用
                                 this.getGoodsOnce();
                             }
@@ -278,6 +274,11 @@
                             sortOrder:-1,
                         };
                         this.categoryAll.push(category);
+                        //处理汇率
+                        localStorage.setItem('dollarRate', res.data.sysRate.dollarRate);
+                        this.dollarRate=res.data.sysRate.dollarRate;
+                        localStorage.setItem('nalaRate', res.data.sysRate.nalaRate);
+                        this.nalaRate=res.data.sysRate.nalaRate;
                     },
                     res=>{
 

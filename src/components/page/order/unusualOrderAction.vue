@@ -24,7 +24,7 @@
             <el-table-column label="商品信息" width="170">
                 <template slot-scope="props">
                     <div>
-                        <div v-for="(item, index) in props.row.orderTDetailList" :key='item.specGoodsId'
+                        <div v-for="(item, index) in props.row.orderAbnormDetailList" :key='item.specGoodsId'
                              style="width: 44px; margin-right: 5px; float: left; padding: 1px; margin-bottom: 5px;">
                             <div>
                                 <img style="height: 40px; width: 40px; background-color: white;" :preview="index"
@@ -52,17 +52,6 @@
             </el-table-column>
             <el-table-column label="买家留言" prop="buyerMessage"></el-table-column>
             <el-table-column label="备注" prop="memo"></el-table-column>
-            <el-table-column label="操作" width="170">
-                <template slot-scope="props">
-                    <el-button v-if="props.row.status==='9'" type="primary" @click="confirmOrderTap(props.row)">接单</el-button>
-                    <el-button v-if="props.row.status==='9'" type="danger" @click="closeOrderTap(props.row)">关闭订单</el-button>
-                    <el-button v-if="props.row.status==='8'" type="primary" @click="confirmOrderPayTap(props.row)">确认收款</el-button>
-                    <el-button v-if="props.row.status==='7'" type="primary" @click="confirmOrderSendTap(props.row)">确认发货</el-button>
-                    <p style="margin-top: 2px;">
-                        <el-button v-if="props.row.status!=='1'&&props.row.status!=='2'" type="danger" @click="unusualOrderTap(props.row)">异常订单标记</el-button>
-                    </p>
-                </template>
-            </el-table-column>
         </el-table>
         <div class="pagination">
             <el-pagination @current-change="handleCurrentChange"
@@ -101,8 +90,7 @@
         closeOrder,
         confirmOrderPay,
         confirmOrderSend,
-        confirmOrderStock, killOrderById,
-        listAllOrders
+        confirmOrderStock, listAllKilledOrders,
     } from "../../../util/module";
     import _String from '../../../util/string';
     import * as cfg from "../../../config/cfg";
@@ -119,8 +107,6 @@
                     memo:'',
                 },
                 statuses: [
-                    {id: '1', value: '已发货'},
-                    {id: '2', value: '订单关闭'},
                     {id: '7', value: '已收款/确认'},
                     {id: '8', value: '已接单'},
                     {id: '9', value: '已下单'},
@@ -170,13 +156,17 @@
                 params.currentPage = this.currentPage;
                 params.pageSize = this.pageSize;
                 params.status = this.searchForm.status;
-                listAllOrders(this, params).then(
+                listAllKilledOrders(this, params).then(
                     res => {
                         this.tableData = [];
+                        //无记录
+                        if (res.data == null) {
+                            return;
+                        }
                         this.AllCount = res.data.total;
                         res.data.records.forEach(item => {
-                            item.orderTInfo.orderTDetailList = item.orderTDetailList;
-                            this.tableData.push(item.orderTInfo);
+                            item.orderAbnormInfo.orderAbnormDetailList = item.orderAbnormDetailList;
+                            this.tableData.push(item.orderAbnormInfo);
                         });
                     },
                     res => {
@@ -321,32 +311,6 @@
                         this.$message.success('确认发货成功');
                         this.initData();
                         this.dialogVisible=false;
-                    },
-                    res=>{
-
-                    }
-                ).catch();
-            },
-
-            unusualOrderTap(item){
-                this.$confirm('此操作将订单标记为异常，是否确认?', '标记订单', {
-                    confirmButtonText: '确认',
-                    cancelButtonText: '取消',
-                    type: 'warning'
-                }).then(
-                    () => {
-                        this.unusualOrderCommit(item);
-                    }
-                );
-            },
-
-            unusualOrderCommit(item){
-                let params={};
-                params.orderId=item.orderId;
-                killOrderById(this, params).then(
-                    res=>{
-                        this.$message.success('异常订单标记成功！');
-                        this.initData();
                     },
                     res=>{
 

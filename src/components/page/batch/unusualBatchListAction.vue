@@ -69,14 +69,9 @@
                 </template>
             </el-table-column>
             <el-table-column label="备注" prop="memo"></el-table-column>
-            <el-table-column label="操作" width="240">
+            <el-table-column label="操作" width="100">
                 <template slot-scope="props">
-                    <el-button v-if="props.row.status==='9'" type="primary" @click="modifyTap(props.row)">修改</el-button>
-                    <el-button type="primary" @click="detailTap(props.row)">单据操作</el-button>
-                    <p style="margin-top: 2px;">
-                        <el-button v-if="props.row.status==='9'" type="danger" @click="deleteTap(props.row)">删除</el-button>
-                        <el-button v-if="props.row.status!=='1'" type="danger" @click="terminateTap(props.row)">终止批次</el-button>
-                    </p>
+                    <el-button type="primary" @click="detailTap(props.row)">单据查看</el-button>
                 </template>
             </el-table-column>
         </el-table>
@@ -149,7 +144,7 @@
         addBatchinfo,
         deleteBatchinfoById,
         killBatchById,
-        listBatchsByCon,
+        listBatchsByCon, listKilledBatchsByCon,
         updateBatchinfo
     } from "../../../util/module";
     import {toDate} from "../../../tool/Format";
@@ -331,7 +326,7 @@
             },
 
             detailTap(item) {
-                this.$router.push({path:'/batchInfoAction', query:{batchId:item.batchId}})
+                this.$router.push({path:'/unusualBatchInfoAction', query:{batchId:item.batchId}})
             },
 
             modifyTap(item) {
@@ -458,7 +453,7 @@
                 params.ladingBill = this.searchForm.ladingBill;
                 params.currentPage = this.currentPage;
                 params.pageSize = this.pageSize;
-                listBatchsByCon(this, params).then(
+                listKilledBatchsByCon(this, params).then(
                     res => {
                         this.tableData = res.data.records;
                         this.AllCount = res.data.total;

@@ -2110,11 +2110,11 @@ const updateTellerInfo = (me, params) => {
             send.specDepartmentId = params.specDepartmentId;
             singArray.specDepartmentId = params.specDepartmentId;
         }
-        if (params.tellerPhone!=null) {
+        if (params.tellerPhone != null) {
             send.tellerPhone = params.tellerPhone;
             singArray.tellerPhone = params.tellerPhone;
         }
-        if (params.tellerName!=null) {
+        if (params.tellerName != null) {
             send.tellerName = params.tellerName;
         }
         if (params.tellerPositionIds) {
@@ -3539,11 +3539,11 @@ const addBatchGoods = (me, params) => {
             item.batchGoodsId = itemTmp.batchGoodsId;
             item.tellerBuyPrice = itemTmp.tellerBuyPrice;
             item.tellerBuyCount = itemTmp.tellerBuyCount;
-            if(itemTmp.thisCount ){
-                item.thisCount =itemTmp.thisCount ;
+            if (itemTmp.thisCount) {
+                item.thisCount = itemTmp.thisCount;
             }
-            if(itemTmp.thisChange ){
-                item.thisChange =itemTmp.thisChange ;
+            if (itemTmp.thisChange) {
+                item.thisChange = itemTmp.thisChange;
             }
             singArray.goodsList.push(item);
         }
@@ -3673,15 +3673,15 @@ const updateBatchGoodsById = (me, params) => {
             send.tellerBuyCount = params.tellerBuyCount;
             singArray.tellerBuyCount = params.tellerBuyCount;
         }
-        if (params.buyThisUnit ) {
-            send.buyThisUnit  = params.buyThisUnit ;
+        if (params.buyThisUnit) {
+            send.buyThisUnit = params.buyThisUnit;
         }
-        if (params.thisChange ) {
-            send.thisChange  = params.thisChange ;
+        if (params.thisChange) {
+            send.thisChange = params.thisChange;
             singArray.thisChange = params.thisChange;
         }
-        if (params.thisCount ) {
-            send.thisCount  = params.thisCount ;
+        if (params.thisCount) {
+            send.thisCount = params.thisCount;
             singArray.thisCount = params.thisCount;
         }
         if (params.memo) {
@@ -4677,12 +4677,12 @@ const updateSysRate = (me, params) => {
         urlParams.txnId = PERMISSIONS.updateSysRate.txnId;
 
         if (params.id) {
-            send.id  = params.id ;
-            singArray.id  = params.id ;
+            send.id = params.id;
+            singArray.id = params.id;
         }
         if (params.version) {
-            send.version  = params.version ;
-            singArray.version  = params.version ;
+            send.version = params.version;
+            singArray.version = params.version;
         }
         if (params.dollarRate) {
             send.dollarRate = params.dollarRate;
@@ -4760,9 +4760,9 @@ const uptPriceAndStock = (me, params) => {
             send.specGoodsId = params.specGoodsId;
             singArray.specGoodsId = params.specGoodsId;
         }
-        if (params.version ) {
-            send.version  = params.version ;
-            singArray.version  = params.version ;
+        if (params.version) {
+            send.version = params.version;
+            singArray.version = params.version;
         }
         if (params.specNowPrice) {
             send.specNowPrice = params.specNowPrice;
@@ -4845,14 +4845,192 @@ const approveCustomer = (me, params) => {
 
         if (params.customerList) {
             send.customerList = params.customerList;
-            singArray.customerList=[];
-            params.customerList.forEach(item=>{
-                let tmp={};
-                tmp.recycleSeq=item.recycleSeq;
-                tmp.tellerId=item.tellerId;
-                tmp.status=item.status;
+            singArray.customerList = [];
+            params.customerList.forEach(item => {
+                let tmp = {};
+                tmp.recycleSeq = item.recycleSeq;
+                tmp.tellerId = item.tellerId;
+                tmp.status = item.status;
                 singArray.customerList.push(tmp);
             });
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.7    查询异常订单  /listAllKilledOrders?currentPage=1&pageSize=10   位图索引 17
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listAllKilledOrders = (me, params) => {
+    console.log("listAllKilledOrders params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.listAllKilledOrders.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listAllKilledOrders.txnId;
+        // urlParams.noSing = true;
+
+        if (params.status) {
+            send.status = params.status;
+            singArray.status = params.status;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.6.6    结束异常订单 /killOrderById 位图索引16
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const killOrderById = (me, params) => {
+    console.log("approveCustomer params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.killOrderById.url;
+        urlParams.txnId = PERMISSIONS.killOrderById.txnId;
+        // urlParams.noSing = true;
+
+        if (params.orderId) {
+            send.orderId = params.orderId;
+            singArray.orderId = params.orderId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.14    终止批次 /killBatchById 位图索引44
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const killBatchById = (me, params) => {
+    console.log("approveCustomer params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.killBatchById.url;
+        urlParams.txnId = PERMISSIONS.killBatchById.txnId;
+        // urlParams.noSing = true;
+
+        if (params.batchId) {
+            send.batchId = params.batchId;
+            singArray.batchId = params.batchId;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.15    分页查询异常批次信息  /listKilledBatchsByCon?currentPage=1&pageSize=10 位图索引45
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listKilledBatchsByCon = (me, params) => {
+    console.log("listKilledBatchsByCon params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.listKilledBatchsByCon.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listKilledBatchsByCon.txnId;
+        urlParams.noSing = true;
+
+        if (params.status) {
+            send.status = params.status;
+            singArray.status = params.status;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
+/**
+ * 1.3.3.16    分页查询异常批次(集装箱)对应物资 /listKilledBatchGoodsByCon?currentPage=1&pageSize=40  位图索引46
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listKilledBatchGoodsByCon = (me, params) => {
+    console.log("listKilledBatchGoodsByCon params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+
+        urlParams.url = PERMISSIONS.listKilledBatchGoodsByCon.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listKilledBatchGoodsByCon.txnId;
+        urlParams.noSing = true;
+
+        if (params.batchId) {
+            send.batchId = params.batchId;
+        }
+        if (params.batchName) {
+            send.batchName = params.batchName;
+        }
+        if (params.ladingBill) {
+            send.ladingBill = params.ladingBill;
         }
 
         urlParams.send = send;
@@ -5003,5 +5181,10 @@ export {
     putDownIndex,
     uptPriceAndStock,
     listApproveCustomers,
-    approveCustomer
+    approveCustomer,
+    listAllKilledOrders,
+    killOrderById,
+    killBatchById,
+    listKilledBatchsByCon,
+    listKilledBatchGoodsByCon
 };
