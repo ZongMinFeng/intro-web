@@ -49,7 +49,7 @@
                             <div>
                                 <div class="row1">
                                     <div class="price">
-                                        <span>₦</span><strong>{{formatPrice(item.specNowPrice)}}</strong>
+                                        <span>₦</span><strong>{{formatPrice(item.specNowPrice)}}/{{getUnitName(item.unitId)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row2">
@@ -62,7 +62,7 @@
                                 <div class="row3">
                                     <span>{{item.goodsName}}</span>
                                 </div>
-                                <div class="row4">
+                                <div v-if="item.goodsType" class="row4">
                                     <span>型号：{{item.goodsType}}</span>
                                 </div>
                             </div>
@@ -78,7 +78,7 @@
 <script>
     import {getAllConfig, listGooCategorysByPid, wxIndexContent} from "../../util/module";
     import * as cfg from "../../config/cfg";
-    import {getArrayObjectByCon, inArrayOptionByCons} from "../../Gw/GwArray";
+    import {getArrayObjectByCon, inArrayOptionByCons, indexByCons} from "../../Gw/GwArray";
     import _String from '@/util/string';
     import myPresellList from '@/components/page/sale/myPresellList.vue'
 
@@ -112,6 +112,7 @@
                 dollarRate:1,
                 nalaRate:1,
                 myPresellShow:false,
+                unitList:[],
             }
         },
 
@@ -279,11 +280,23 @@
                         this.dollarRate=res.data.sysRate.dollarRate;
                         localStorage.setItem('nalaRate', res.data.sysRate.nalaRate);
                         this.nalaRate=res.data.sysRate.nalaRate;
+
+                        //单位
+                        this.unitList=res.data.unitList;
                     },
                     res=>{
 
                     }
                 ).catch();
+            },
+
+            getUnitName(unitId){
+                let unitName='';
+                let index=indexByCons(this.unitList, unitId, 'unitId');
+                if (index > -0.01) {
+                    unitName=this.unitList[index].unitName;
+                }
+                return unitName;
             },
             
             getCategoryShow(categoryId){

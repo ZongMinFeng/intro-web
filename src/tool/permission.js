@@ -103,6 +103,14 @@ const PERMISSIONS = {
         url: BASE_URL + '/orderMng/listAllKilledOrders',
         txnId: 'listAllKilledOrders'
     },
+    //18
+    listMyCustomerOrders: {
+        //暂时不定权限
+        // index: 18,
+        name: '查询顾客订单',
+        url: BASE_URL + '/orderMng/listMyCustomerOrders',
+        txnId: 'listMyCustomerOrders'
+    },
     //31
     listBatchsByCon: {
         index: 31,

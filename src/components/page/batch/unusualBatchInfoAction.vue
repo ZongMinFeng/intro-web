@@ -427,6 +427,10 @@
                 this.searchForm.batchId = this.$route.query.batchId;
                 this.getBatchInfo();
             }
+            if (this.$route.params.batchInfo) {
+                this.batchInfo=this.$route.params.batchInfo;
+                this.getGoodsSerials();
+            }
         },
 
         methods: {

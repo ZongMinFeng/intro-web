@@ -103,6 +103,7 @@ module.exports = {
                 },
                 {
                     path: '/unusualBatchInfoAction',
+                    name:'unusualBatchInfoAction',
                     component: resolve => require(['../components/page/batch/unusualBatchInfoAction.vue'], resolve),
                     meta: {title: '异常批次物资明细', function: 'unusualBatchInfoAction'}
                 },
@@ -125,6 +126,11 @@ module.exports = {
                     path: '/unusualOrderAction',
                     component: resolve => require(['../components/page/order/unusualOrderAction.vue'], resolve),
                     meta: {title: '异常订单', function: 'unusualOrderAction'}
+                },
+                {
+                    path: '/customerOrderAction',
+                    component: resolve => require(['../components/page/order/customerOrderAction.vue'], resolve),
+                    meta: {title: '顾客订单', function: 'customerOrderAction'}
                 },
                 {
                     path: '/myOrderAction',
@@ -185,6 +191,15 @@ module.exports = {
                     function: 'myOrderAction',
                     permissions: [
                         'createOrder',
+                    ]
+                },
+                {
+                    index: 'customerOrderAction',
+                    title: '顾客订单',
+                    flag: true,
+                    function: 'customerOrderAction',
+                    permissions: [
+                        'listMyCustomerOrders',
                     ]
                 },
                 {
@@ -281,8 +296,6 @@ module.exports = {
                         'uptPriceAndStock'
                     ]
                 },
-
-
             ],
         },
 

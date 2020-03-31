@@ -326,7 +326,7 @@
             },
 
             detailTap(item) {
-                this.$router.push({path:'/unusualBatchInfoAction', query:{batchId:item.batchId}})
+                this.$router.push({name:'unusualBatchInfoAction', params:{batchInfo:item}});
             },
 
             modifyTap(item) {

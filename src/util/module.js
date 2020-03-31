@@ -5045,6 +5045,40 @@ const listKilledBatchGoodsByCon = (me, params) => {
     });
 };
 
+/**
+ * 1.3.6.8	我的顾客订单  /listMyCustomerOrders?currentPage=1&pageSize=10   位图索引 18
+ * @param me
+ * @param params
+ * @returns {Promise<any>}
+ */
+const listMyCustomerOrders = (me, params) => {
+    console.log("listMyCustomerOrders params", params); //debug
+    return new Promise((resolve, reject) => {
+        let urlParams = {};
+        let send = {};
+        let singArray = {};
+        urlParams.noSing = true;
+
+        urlParams.url = PERMISSIONS.listMyCustomerOrders.url;
+        urlParams.url += '?currentPage=' + params.currentPage + '&pageSize=' + params.pageSize;
+        urlParams.txnId = PERMISSIONS.listMyCustomerOrders.txnId;
+
+        if (params.status) {
+            send.status = params.status;
+        }
+
+        urlParams.send = send;
+        urlParams.singArray = singArray;
+        common.sendServer(urlParams, me).then(
+            (res) => {
+                resolve(res)
+            }, (res) => {
+                reject(res)
+            }
+        );
+    });
+};
+
 export {
     instGetAllById,
     instTellersGetByCons,
@@ -5186,5 +5220,6 @@ export {
     killOrderById,
     killBatchById,
     listKilledBatchsByCon,
-    listKilledBatchGoodsByCon
+    listKilledBatchGoodsByCon,
+    listMyCustomerOrders
 };
