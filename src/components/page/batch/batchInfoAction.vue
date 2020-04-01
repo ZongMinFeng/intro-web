@@ -2,14 +2,23 @@
     <div class="container">
         <el-form :model="searchForm" ref="searchForm" label-width="80px">
             <el-row>
+                <!--暂时不用单据号查询批次-->
+                <!--<el-col :span="6">-->
+                    <!--<el-form-item label="单据号" prop="batchId">-->
+                        <!--<el-input v-model="searchForm.batchId" clearable placeholder="请输入单据号"></el-input>-->
+                    <!--</el-form-item>-->
+                <!--</el-col>-->
+                <!--<el-col :span="6">-->
+                    <!--<el-button type="primary" @click="getBatchInfo">查询</el-button>-->
+                <!--</el-col>-->
+                <!--暂时替代单据号占位 begin-->
                 <el-col :span="6">
-                    <el-form-item label="单据号" prop="batchId">
-                        <el-input v-model="searchForm.batchId" clearable placeholder="请输入单据号"></el-input>
-                    </el-form-item>
+                    &nbsp;
                 </el-col>
                 <el-col :span="6">
-                    <el-button type="primary" @click="getBatchInfo">查询</el-button>
+                    &nbsp;
                 </el-col>
+                <!--暂时替代单据号占位 end-->
                 <el-col :span="6">
                     &nbsp;
                 </el-col>
@@ -41,12 +50,13 @@
             <el-table-column type="expand">
                 <template slot-scope="props">
                     <el-form label-position="left" inline class="demo-table-expand">
-                        <el-form-item label="物资系列ID">
-                            <span>{{ props.row.batchGoodsId }}</span>
-                        </el-form-item>
-                        <el-form-item label="主物资ID">
-                            <span>{{ props.row.goodsId }}</span>
-                        </el-form-item>
+                        <!--暂时不显示ID-->
+                        <!--<el-form-item label="物资系列ID">-->
+                            <!--<span>{{ props.row.batchGoodsId }}</span>-->
+                        <!--</el-form-item>-->
+                        <!--<el-form-item label="主物资ID">-->
+                            <!--<span>{{ props.row.goodsId }}</span>-->
+                        <!--</el-form-item>-->
                         <el-form-item label="创建者">
                             <span>{{ props.row.createTellerId }}</span>
                         </el-form-item>
@@ -82,7 +92,7 @@
             </el-table-column>
             <el-table-column key="1" label="名称" prop="goodsName"></el-table-column>
             <el-table-column key="2" label="备注" prop="memo"></el-table-column>
-            <el-table-column key="3" label="采购价格" width="160" align="right" header-align="left">
+            <el-table-column key="3" label="采购价格" width="170" align="right" header-align="left">
                 <template slot-scope="props">
                     <div v-if="batchInfo.batchCny==='1'">
                         <span>₦{{formatPrice(props.row.tellerBuyPrice)}}</span>
@@ -98,7 +108,7 @@
                 </template>
             </el-table-column>
             <el-table-column key="4" label="采购数量" prop="tellerBuyCount" align="right" header-align="left"></el-table-column>
-            <el-table-column key="5" label="采购单位" prop="buyBaseUnit"></el-table-column>
+            <el-table-column key="5" label="采购单位" prop="buyBaseUnit" width="80px"></el-table-column>
             <el-table-column key="6" v-if="showRealCount" label="已入库数量" align="right" header-align="left">
                 <template slot-scope="props">
                     {{props.row.realCount}}
@@ -997,6 +1007,7 @@
 <style scoped>
     .batchInfoDiv {
         border: 1px solid rgb(235, 238, 245);
+        margin-top: 10px;
         margin-bottom: 10px;
         padding: 10px;
     }

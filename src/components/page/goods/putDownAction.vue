@@ -53,10 +53,22 @@
             </el-table-column>
             <el-table-column label="库存" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p>总库存：{{props.row.stockNum}}</p>
-                    <p style="color: red;">总锁定库存：{{props.row.lockNum}}</p>
-                    <p>内部库存：{{props.row.innerStockNum}}</p>
-                    <p style="color: red;">内部锁定库存：{{props.row.innerLockNum}}</p>
+                    <p>
+                        总库存：{{props.row.stockNum}}&nbsp;
+                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 3)"></i>
+                    </p>
+                    <p style="color: red;">
+                        总锁定库存：{{props.row.lockNum==null?0:props.row.lockNum}}&nbsp;
+                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 4)"></i>
+                    </p>
+                    <p>
+                        内部库存：{{props.row.innerStockNum==null?0:props.row.innerStockNum}}&nbsp;
+                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 5)"></i>
+                    </p>
+                    <p style="color: red;">
+                        内部锁定库存：{{props.row.innerLockNum==null?0:props.row.innerLockNum}}&nbsp;
+                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 6)"></i>
+                    </p>
                 </template>
             </el-table-column>
             <el-table-column label="型号" prop="goodsType"></el-table-column>
@@ -117,69 +129,82 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
+            </el-form>
+            <span slot="footer" class="dialog_footer">
+                <el-button @click="dialogVisible=false">取消</el-button>
+                <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
+            </span>
+        </el-dialog>
+
+        <el-dialog :title="dialogTitle" :visible.sync="stockVisible">
+            <el-form :model="stockForm" label-width="120px" ref="stockForm">
+                <el-row v-if="flag===3">
                     <el-col :span="24">
-                        <el-form-item label="对外库存" prop="stockNumEdit" :rules="[{validator: checkStockNumEdit, trigger: 'blur'} ]">
+                        <el-form-item label="对外库存" prop="stockNumEdit"
+                                      :rules="[{validator: checkStockNumEdit, trigger: 'blur'} ]">
                             <el-row>
                                 <el-col :span="4">
-                                    {{dialogForm.stockNum}}
+                                    {{stockForm.stockNum}}
                                 </el-col>
                                 <el-col :span="3">
                                     修改量:
                                 </el-col>
                                 <el-col :span="17">
-                                    <el-input v-model="dialogForm.stockNumEdit"></el-input>
+                                    <el-input v-model="stockForm.stockNumEdit" placeholder="正数表示增加量，负数表示减少量"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row v-if="flag===4">
+                    <el-col :span="24">
+                        <el-form-item label="对外锁定库存" prop="lockNumEdit"
+                                      :rules="[{validator: checkLockNumEdit, trigger: 'blur'} ]">
+                            <el-row>
+                                <el-col :span="4">
+                                    {{stockForm.lockNum}}&nbsp;
+                                </el-col>
+                                <el-col :span="3">
+                                    修改量:
+                                </el-col>
+                                <el-col :span="17">
+                                    <el-input v-model="stockForm.lockNumEdit"  placeholder="正数表示增加量，负数表示减少量"></el-input>
+                                </el-col>
+                            </el-row>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row v-if="flag===5">
+                    <el-col :span="24">
+                        <el-form-item label="内部库存" prop="innerStockNumEdit"
+                                      :rules="[{validator: checkInnerStockNumEdit, trigger: 'blur'} ]">
+                            <el-row>
+                                <el-col :span="4">
+                                    {{stockForm.innerStockNum}}
+                                </el-col>
+                                <el-col :span="3">
+                                    修改量:
+                                </el-col>
+                                <el-col :span="17">
+                                    <el-input v-model="stockForm.innerStockNumEdit"  placeholder="正数表示增加量，负数表示减少量"></el-input>
                                 </el-col>
                             </el-row>
                         </el-form-item>
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="对外锁定库存" prop="lockNumEdit" :rules="[{validator: checkLockNumEdit, trigger: 'blur'} ]">
+                    <el-col :span="24" v-if="flag===6">
+                        <el-form-item label="内部锁定库存" prop="innerLockNumEdit"
+                                      :rules="[{validator: checkInnerLockNumEdit, trigger: 'blur'} ]">
                             <el-row>
                                 <el-col :span="4">
-                                    {{dialogForm.lockNum}}&nbsp;
+                                    {{stockForm.innerLockNum}}
                                 </el-col>
                                 <el-col :span="3">
                                     修改量:
                                 </el-col>
                                 <el-col :span="17">
-                                    <el-input v-model="dialogForm.lockNumEdit"></el-input>
-                                </el-col>
-                            </el-row>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="内部库存" prop="innerStockNumEdit" :rules="[{validator: checkInnerStockNumEdit, trigger: 'blur'} ]">
-                            <el-row>
-                                <el-col :span="4">
-                                    {{dialogForm.innerStockNum}}
-                                </el-col>
-                                <el-col :span="3">
-                                    修改量:
-                                </el-col>
-                                <el-col :span="17">
-                                    <el-input v-model="dialogForm.innerStockNumEdit"></el-input>
-                                </el-col>
-                            </el-row>
-                        </el-form-item>
-                    </el-col>
-                </el-row>
-                <el-row>
-                    <el-col :span="24">
-                        <el-form-item label="内部锁定库存" prop="innerLockNumEdit" :rules="[{validator: checkInnerLockNumEdit, trigger: 'blur'} ]">
-                            <el-row>
-                                <el-col :span="4">
-                                    {{dialogForm.innerLockNum}}
-                                </el-col>
-                                <el-col :span="3">
-                                    修改量:
-                                </el-col>
-                                <el-col :span="17">
-                                    <el-input v-model="dialogForm.innerLockNumEdit"></el-input>
+                                    <el-input v-model="stockForm.innerLockNumEdit"  placeholder="正数表示增加量，负数表示减少量"></el-input>
                                 </el-col>
                             </el-row>
                         </el-form-item>
@@ -188,7 +213,7 @@
             </el-form>
             <span slot="footer" class="dialog_footer">
                 <el-button @click="dialogVisible=false">取消</el-button>
-                <el-button type="primary" @click="dialogFormConfirm">确定</el-button>
+                <el-button type="primary" @click="stockFormConfirm">确定</el-button>
             </span>
         </el-dialog>
     </div>
@@ -232,6 +257,7 @@
                 },
                 dollarRate: 1,
                 nalaRate: 1,
+                //2.价格修改  3.总库存修改  4.总锁定库存修改  5.内部库存修改  6.内部锁定库存修改
                 flag: 1,
                 dialogVisible: false,
                 dialogForm: {
@@ -247,16 +273,48 @@
                     innerStockNumEdit: null,
                 },
                 dialogFormOld:{},
+                stockVisible:false,
+                stockForm:{
+                    goodsName: null,
+                    specNowPrice:null,
+                    stockNum: null,
+                    lockNum: null,
+                    innerLockNum: null,
+                    innerStockNum: null,
+                    stockNumEdit: null,
+                    lockNumEdit: null,
+                    innerLockNumEdit: null,
+                    innerStockNumEdit: null,
+                },
+                stockFormOld:{},
             };
         },
 
         computed: {
             dialogTitle() {
-                if (this.flag === 1) {
-                    return '新增';
-                } else {
-                    return '修改';
+                let str='';
+                switch (this.flag) {
+                    case 1:
+                        str='新增';
+                        break;
+                    case 2:
+                        str='修改';
+                        break;
+                    case 3:
+                        str='修改总库存';
+                        break;
+                    case 4:
+                        str='修改总锁定库存';
+                        break;
+                    case 5:
+                        str='修改内部库存';
+                        break;
+                    case 6:
+                        str='修改内部锁定库存';
+                        break;
+                    default:
                 }
+                return str;
             }
         },
 
@@ -293,7 +351,7 @@
                     callback(new Error('请输入数字，最多两位小数'));
                     return;
                 }
-                if (parseFloat(value) + parseFloat(this.dialogForm.stockNum+'')<-0.005) {
+                if (parseFloat(value) + parseFloat(this.stockForm.stockNum+'')<-0.005) {
                     callback(new Error('修改后数量不可为负数'));
                     return;
                 }
@@ -309,8 +367,12 @@
                     callback(new Error('请输入数字，最多两位小数'));
                     return;
                 }
-                if (parseFloat(value) + parseFloat(this.dialogForm.lockNum+'')<-0.005) {
+                if (parseFloat(value) + parseFloat(this.stockForm.lockNum+'')<-0.005) {
                     callback(new Error('修改后数量不可为负数'));
+                    return;
+                }
+                if (parseFloat(value) + parseFloat(this.stockForm.lockNum+'') - parseFloat(this.stockForm.stockNum+'')>0.005) {
+                    callback(new Error('总锁定库存不能大于总库存！'));
                     return;
                 }
                 callback();
@@ -325,7 +387,7 @@
                     callback(new Error('请输入数字，最多两位小数'));
                     return;
                 }
-                if (parseFloat(value) + parseFloat(this.dialogForm.innerStockNum+'')<-0.005) {
+                if (parseFloat(value) + parseFloat(this.stockForm.innerStockNum+'')<-0.005) {
                     callback(new Error('修改后数量不可为负数'));
                     return;
                 }
@@ -341,8 +403,12 @@
                     callback(new Error('请输入数字，最多两位小数'));
                     return;
                 }
-                if (parseFloat(value) + parseFloat(this.dialogForm.innerLockNum+'')<-0.005) {
+                if (parseFloat(value) + parseFloat(this.stockForm.innerLockNum+'')<-0.005) {
                     callback(new Error('修改后数量不可为负数'));
+                    return;
+                }
+                if (parseFloat(value) + parseFloat(this.stockForm.innerLockNum+'') - parseFloat(this.stockForm.innerStockNum+'')>0.005) {
+                    callback(new Error('内部锁定库存不能大于内部库存！'));
                     return;
                 }
                 callback();
@@ -393,6 +459,52 @@
                         }
                     ).catch();
                 }
+            },
+
+            stockFormConfirm(){
+                this.$refs.stockForm.validate((valid) => {
+                    if (valid) {
+                        this.stockFormCommit();
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+            stockFormCommit(){
+                let change=false;
+                let params={};
+                params.specGoodsId = this.stockForm.specGoodsId;
+                params.version = this.stockForm.version;
+                if (this.stockForm.stockNumEdit&&this.stockForm.stockNumEdit!=='0') {
+                    params.stockNum = this.stockForm.stockNumEdit;
+                    change=true;
+                }
+                if (this.stockForm.lockNumEdit&&this.stockForm.lockNumEdit!=='0') {
+                    params.lockNum = this.stockForm.lockNumEdit;
+                    change=true;
+                }
+                if (this.stockForm.innerLockNumEdit&&this.stockForm.innerLockNumEdit!=='0') {
+                    params.innerLockNum = this.stockForm.innerLockNumEdit;
+                    change=true;
+                }
+                if (this.stockForm.innerStockNumEdit&&this.stockForm.innerStockNumEdit!=='0') {
+                    params.innerStockNum = this.stockForm.innerStockNumEdit;
+                    change=true;
+                }
+                if (change === false) {
+                    this.$message.error('没有修改量，无需提交！');
+                    return;
+                }
+                uptPriceAndStock(this, params).then(
+                    res => {
+                        this.$message.success('修改成功');
+                        this.initData();
+                        this.stockVisible = false;
+                    },
+                    res => {
+                    }
+                ).catch();
             },
 
             checkCount(rule, value, callback) {
@@ -478,6 +590,45 @@
                 this.dialogVisible = true;
             },
 
+            modiStock(item, flag){
+                if (this.$refs.stockForm) {
+                    this.$refs.stockForm.clearValidate();
+                }
+                this.stockForm={
+                    goodsName: null,
+                    specNowPrice:null,
+                    stockNum: null,
+                    lockNum: null,
+                    innerLockNum: null,
+                    innerStockNum: null,
+                    stockNumEdit: null,
+                    lockNumEdit: null,
+                    innerLockNumEdit: null,
+                    innerStockNumEdit: null,
+                };
+                if (flag === 3) {
+                    this.flag = 3;
+                }
+                if (flag === 4) {
+                    this.flag = 4;
+                }
+                if (flag === 5) {
+                    this.flag = 5;
+                }
+                if (flag === 6) {
+                    this.flag = 6;
+                }
+                this.stockForm.specGoodsId=item.specGoodsId;
+                this.stockForm.goodsName = item.goodsName;
+                this.stockForm.version=item.version;
+                this.stockForm.stockNum = item.stockNum;
+                this.stockForm.lockNum = item.lockNum;
+                this.stockForm.innerLockNum = item.innerLockNum;
+                this.stockForm.innerStockNum = item.innerStockNum;
+                this.stockFormOld=deepCopy(this.stockForm);
+                this.stockVisible = true;
+            },
+
             getSerails() {
                 let params = {};
                 params.currentPage = this.currentPage;
@@ -547,5 +698,9 @@
 
 <style scoped>
     .tellerBuyPriceClass {
+    }
+
+    .icon-button:hover{
+        cursor: pointer;
     }
 </style>

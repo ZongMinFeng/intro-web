@@ -10,7 +10,7 @@
             lazy
             @node-click="handleNodeClick" style="padding:10px 0">
        <span class="custom-tree-node" slot-scope="{ node, data}">
-            <span>
+            <span style="flex: 4;">
                 <svg-icon class="svgname" icon-class="terrace" v-if="node.data.instLevel === '1'"/>
                 <svg-icon class="svgname" icon-class="group" v-if="node.data.instLevel === '2'"/>
                 <svg-icon class="svgname" icon-class="sub-institutional" v-if="node.data.instLevel === '3'"/>
@@ -18,11 +18,11 @@
                 <svg-icon class="svgname" icon-class="building" v-if="node.data.instLevel === '5'"/>
                 <span :title="node.label">{{ node.label.substring(0, 20) }}</span><span v-if="node.label.length>20">...</span>
             </span>
-            <span style="font-size: 12px;">
+            <span style="font-size: 12px; flex: 2; padding-right: 15px;">
                 <span v-if="node.data.adminName">管理员:{{node.data.adminName}}</span>
                 <span v-if="node.data.adminMobile">&nbsp;&nbsp;手机号:{{node.data.adminMobile}}</span>
             </span>
-            <span>
+            <span style="flex: 1;">
                 <el-button v-if="create!=null&&node.data.instLevel === '1'"
                            type="text"
                            icon="el-icon-circle-plus"

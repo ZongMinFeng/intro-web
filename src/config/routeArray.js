@@ -315,14 +315,8 @@ module.exports = {
                         'addBatchinfo',
                         'updateBatchinfo',
                         'deleteBatchinfoById',
-                    ]
-                },
-                {
-                    index: 'batchInfoAction',
-                    title: '批次操作',
-                    flag: false,
-                    function: 'batchInfoAction',
-                    permissions: [
+
+                        //批次操作
                         'listBatchGoodsByCon',
                         'addBatchGoods',
                         'updateBatchGoodsById',
@@ -337,6 +331,27 @@ module.exports = {
                         'killBatchById',
                     ]
                 },
+                // 暂时不直接显示批次操作功能点，需要从批次列表中跳转
+                // {
+                //     index: 'batchInfoAction',
+                //     title: '批次操作',
+                //     flag: false,
+                //     function: 'batchInfoAction',
+                //     permissions: [
+                //         'listBatchGoodsByCon',
+                //         'addBatchGoods',
+                //         'updateBatchGoodsById',
+                //         'deleteBatchGoodsById',
+                //         'uptBatchLadingBill',
+                //         'uptBatchRealCount',
+                //
+                //         'submitLocalPrice',
+                //         'cacSuggestPrice',
+                //         'submitReportPrice',
+                //         'putonBatch',
+                //         'killBatchById',
+                //     ]
+                // },
                 {
                     index: 'unusualBatchListAction',
                     title: '异常批次',

@@ -173,6 +173,10 @@
                 listAllOrders(this, params).then(
                     res => {
                         this.tableData = [];
+                        if (res.data == null) {
+                            this.AllCount=0;
+                            return;
+                        }
                         this.AllCount = res.data.total;
                         res.data.records.forEach(item => {
                             item.orderTInfo.orderTDetailList = item.orderTDetailList;
