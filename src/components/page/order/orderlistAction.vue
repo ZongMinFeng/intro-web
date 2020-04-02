@@ -20,7 +20,68 @@
         </el-form>
 
         <el-table :data="tableData" border stripe>
-            <el-table-column label="订单号" prop="orderId"></el-table-column>
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="确认库存操作员">
+                            <span>{{ props.row.constockTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="确认库存时间">
+                            <span>{{ toDate(props.row.constockTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="支付人员">
+                            <span>{{ props.row.payTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="支付时间">
+                            <span>{{ toDate(props.row.payTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="送货员">
+                            <span>{{ props.row.sendTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="送货时间">
+                            <span>{{ toDate(props.row.sendTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="关闭人员">
+                            <span>{{ props.row.closeTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="关闭时间">
+                            <span>{{ toDate(props.row.closeTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="总数量">
+                            <span>{{ props.row.goodsAllNum }}</span>
+                        </el-form-item>
+                        <el-form-item label="公司地址">
+                            <span>{{ props.row.companyAddress }}</span>
+                        </el-form-item>
+                        <el-form-item label="公司名称">
+                            <span>{{ props.row.companyName }}</span>
+                        </el-form-item>
+                        <el-form-item label="联系人">
+                            <span>{{ props.row.linkMan }}</span>
+                        </el-form-item>
+                        <el-form-item label="顾客职位">
+                            <span>{{ props.row.position }}</span>
+                        </el-form-item>
+                        <el-form-item label="项目地址">
+                            <span>{{ props.row.projectAddress }}</span>
+                        </el-form-item>
+                        <el-form-item label="项目名称">
+                            <span>{{ props.row.projectName }}</span>
+                        </el-form-item>
+                        <el-form-item label="销售员">
+                            <span>{{ props.row.saleTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="操作员">
+                            <span>{{ props.row.tellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="订单状态">
+                            <span>{{ props.row.status }}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
+            <!--暂时不用订单号-->
+            <!--<el-table-column label="订单号" prop="orderId"></el-table-column>-->
             <el-table-column label="商品信息" width="170">
                 <template slot-scope="props">
                     <div>
@@ -47,7 +108,6 @@
             <el-table-column label="时间" width="225">
                 <template slot-scope="props">
                     <p>创建时间：{{toDate(props.row.createTime)}}</p>
-                    <p v-if="props.row.payTime">支付时间：{{toDate(props.row.payTime)}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="买家留言" prop="buyerMessage"></el-table-column>
@@ -362,5 +422,16 @@
 </script>
 
 <style scoped>
-
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
 </style>

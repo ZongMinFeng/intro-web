@@ -23,6 +23,8 @@
             </el-table-column>
             <el-table-column label="材质" prop="specMaterial"></el-table-column>
             <el-table-column label="尺寸" prop="specSize"></el-table-column>
+            <el-table-column label="单位" prop="unitName"></el-table-column>
+            <el-table-column label="分类" prop="categoryName"></el-table-column>
             <el-table-column label="操作" width="340">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
@@ -89,6 +91,26 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="分类" prop="categoryId">
+                            <category-selection @click="categoryClick" :placeholder="placeholder"></category-selection>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
+                        <el-form-item label="单位">
+                            <el-select v-model="dialogForm.unitId" placeholder="请选择单位"
+                                       style="width: 100%;"
+                                       filterable allow-create
+                                       @change="unitChange">
+                                <el-option v-for="item in units" :key="item.unitId" :label="item.unitName"
+                                           :value="item.unitId"></el-option>
+                            </el-select>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
                 <el-row v-if="flag===2">
                     <el-col :span="24">
                         <el-form-item label="型号" prop="goodsType"
@@ -97,8 +119,6 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-
-
                 <div class="picture">
                     <div class="list-name">物资轮播信息（拖动可调换顺序）</div>
                     <el-upload
@@ -159,21 +179,23 @@
 
 <script>
     import {
-        addGoodsserial, deleteGoodsserialByGoodsId,
+        addGoodsserial, addGooUnitinfo, deleteGoodsserialByGoodsId,
         deleteGoodsserialById,
         getGooTGoodsinfoById, listAllUnitinfos,
         listGoodsserialsByGoodsId,
         sendPicture, updateGoodsserialById
     } from "../../../util/module";
-    import {trimSpace} from "../../../Gw/GwArray";
+    import {inArrayOptionByCons, trimSpace} from "../../../Gw/GwArray";
     import * as cfg from "../../../config/cfg";
     import _String from '../../../util/string';
     import draggable from 'vuedraggable';
+    import CategorySelection from '../../common/selection/CategorySelection';
 
     export default {
         name: "goodsSerail",
         components: {
-            draggable
+            draggable,
+            CategorySelection
         },
         data() {
             return {
@@ -231,6 +253,7 @@
                 units: [],
                 dollarRate:1,
                 nalaRate:1,
+                placeholder:null,
             }
         },
 
@@ -262,6 +285,33 @@
                 this.getSerail();
             },
 
+            categoryClick(nodeInfo) {
+                this.dialogForm.categoryId = nodeInfo.categoryId;
+            },
+
+            unitChange() {
+                //如果单位是新增的，那么发送新增单位交易
+                if (inArrayOptionByCons(this.units, this.dialogForm.unitId, 'unitId')) {
+                    return;
+                }
+                let params = {};
+                params.unitName = this.dialogForm.unitId;
+                addGooUnitinfo(this, params).then(
+                    res => {
+                        let unit = res.data;
+                        this.units.push(unit);
+                        this.$nextTick(() => {
+                            this.dialogForm.unitId = unit.unitId;
+                        });
+                    },
+                    res => {
+                        this.$nextTick(() => {
+                            this.dialogForm.unitId = null;
+                        });
+                    }
+                ).catch();
+            },
+
             getUnitName(unitId) {
                 let unitInfo = {};
                 this.units.forEach(item => {
@@ -285,6 +335,10 @@
                 this.dialogForm.goodsName = item.goodsName;
                 this.dialogForm.goodsType = item.goodsType;
                 this.dialogForm.memo = item.memo;
+                this.dialogForm.categoryId=item.categoryId;
+                this.dialogForm.categoryName=item.categoryName;
+                this.dialogForm.unitId=item.unitId;
+                this.placeholder=item.categoryName;
                 let tmp = [];
                 tmp = item.goodsImgs.split(',');
                 this.dialogForm.imgs = trimSpace(tmp);
@@ -300,6 +354,9 @@
                 this.dialogFormOld.goodsName = item.goodsName;
                 this.dialogFormOld.goodsType = item.goodsType;
                 this.dialogFormOld.memo = item.memo;
+                this.dialogFormOld.categoryId=item.categoryId;
+                this.dialogFormOld.categoryName=item.categoryName;
+                this.dialogFormOld.unitId=item.unitId;
                 let tmpOld = [];
                 tmpOld = item.goodsImgs.split(',');
                 this.dialogFormOld.imgs = trimSpace(tmpOld);
@@ -464,6 +521,12 @@
                     }
                     if (this.dialogForm.memo !== this.dialogFormOld.memo) {
                         params.memo = this.dialogForm.memo;
+                    }
+                    if (this.dialogForm.categoryId !== this.dialogFormOld.categoryId) {
+                        params.categoryId = this.dialogForm.categoryId;
+                    }
+                    if (this.dialogForm.unitId !== this.dialogFormOld.unitId) {
+                        params.unitId = this.dialogForm.unitId;
                     }
                     updateGoodsserialById(this, params).then(
                         res => {

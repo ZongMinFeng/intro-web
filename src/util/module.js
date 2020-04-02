@@ -3281,6 +3281,14 @@ const updateGoodsserialById = (me, params) => {
             send.goodsImgs = params.goodsImgs;
             singArray.goodsImgs = params.goodsImgs;
         }
+        if (params.unitId) {
+            send.unitId = params.unitId;
+            singArray.unitId = params.unitId;
+        }
+        if (params.categoryId) {
+            send.categoryId = params.categoryId;
+            singArray.categoryId = params.categoryId;
+        }
         if (params.goodsName) {
             send.goodsName = params.goodsName;
         }
