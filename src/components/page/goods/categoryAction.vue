@@ -7,7 +7,7 @@
         <ul class="levels">
             <li v-for="(item) in levels" :key="item.id">
                 <button @click="goToLevel(item)">{{item.level}}.{{item.label}}</button>
-                <span>&nbsp;>>&nbsp;&nbsp;</span>
+                <span class="levels-span">&nbsp;>>&nbsp;&nbsp;</span>
             </li>
         </ul>
 
@@ -149,6 +149,9 @@
                 listGooCategorysByPid(this, params).then(
                     res => {
                         this.tableData = res.data;
+                        this.tableData.sort((a, b)=>{
+                            return a.sortOrder-b.sortOrder;
+                        });
                     },
                     res => {
                         if (res.returnMsg) {
@@ -364,6 +367,14 @@
         margin-top: 5px;
         margin-bottom: 10px;
         list-style-type: none;
+    }
+
+    .levels button{
+        color: rgb(128,111,102);
+    }
+
+    .levels-span{
+        color: rgb(176,165,159);
     }
 
     .levels li {
