@@ -16,7 +16,7 @@
                 </el-col>
             </el-row>
             <el-row>
-                <el-col :span="12">
+                <el-col :span="6">
                     <el-form-item label="单位">
                         <el-select v-model="searchForm.unitId" placeholder="请选择单位"
                                    style="width: 100%;"
@@ -25,6 +25,12 @@
                             <el-option v-for="item in units" :key="item.unitId" :label="item.unitName"
                                        :value="item.unitId"></el-option>
                         </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="序号" prop="cQ"
+                                  :rules="[{required:true, message:'请输入物资序号', trigger:'blur'}, {validator:checkCq, trigger:'blur'}]">
+                        <el-input v-model="searchForm.cQ" placeholder="请输入物资序号"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :span="12">
@@ -58,12 +64,14 @@
                                 </div>
                                 <!--目前默认轮播图的第一张为主图-->
                                 <!--<el-button v-if="item === searchForm.mainPicture" class="drag-list-button"-->
-                                           <!--type="warning">此为主图-->
+                                <!--type="warning">此为主图-->
                                 <!--</el-button>-->
                                 <!--<el-button v-if="item !== searchForm.mainPicture&&!item.endsWith('.mp4')" type="primary"-->
-                                           <!--class="drag-list-button" @click="onMainPicTap(item)">设为主图-->
+                                <!--class="drag-list-button" @click="onMainPicTap(item)">设为主图-->
                                 <!--</el-button>-->
-                                <el-button v-if="index!==0" style="float: right;" type="danger" @click="deletePicTap(item, index)">删除</el-button>
+                                <el-button v-if="index!==0" style="float: right;" type="danger"
+                                           @click="deletePicTap(item, index)">删除
+                                </el-button>
                             </div>
                         </transition-group>
                     </draggable>
@@ -126,7 +134,8 @@
                     goodsType: null,
                     version: null,
                     categoryId: null,
-                    goodsName: null
+                    goodsName: null,
+                    cQ: null
                 },
                 searchFormOld: {
                     goodsId: null,
@@ -155,7 +164,7 @@
 
         computed: {
             addDisabled() {
-                return !(this.searchForm.goodsId != null && this.searchForm.categoryId != null && this.searchForm.goodsName != null && this.searchForm.mainPicture != null && this.searchForm.imgs.length > 0 && this.searchForm.goodsType != null && this.searchForm.unitId != null && this.addFlag === 1);
+                return !(this.searchForm.goodsId != null && this.searchForm.categoryId != null && this.searchForm.goodsName != null && this.searchForm.mainPicture != null && this.searchForm.imgs.length > 0 && this.searchForm.goodsType != null && this.searchForm.unitId != null && this.addFlag === 1 && this.searchForm.cQ != null);
             },
 
             saveDisabled() {
@@ -192,6 +201,15 @@
                 return funcArray;
             },
 
+            checkCq(rule, value, callback) {
+                let reg = /^[1-9]\d{0,7}$/;
+                if (!reg.test(value)) {
+                    callback(new Error('请输入序号，最大8位数字！'));
+                    return;
+                }
+                callback();
+            },
+
             getGoods() {
                 let params = {};
                 params.goodsId = this.searchForm.goodsId;
@@ -205,6 +223,7 @@
                         this.searchForm.goodsType = res.data.goodsType;
                         this.searchForm.unitId = res.data.unitId;
                         this.searchForm.memo = res.data.memo;
+                        this.searchForm.cQ=res.data.cQ;
                         this.searchForm.version = res.data.version;
                         let tmp = [];
                         tmp = this.searchForm.goodsImgs.split(',');
@@ -220,6 +239,7 @@
                         this.searchFormOld.goodsType = res.data.goodsType;
                         this.searchFormOld.unitId = res.data.unitId;
                         this.searchFormOld.memo = res.data.memo;
+                        this.searchFormOld.cQ=res.data.cQ;
                         this.searchFormOld.version = res.data.version;
                         let tmp2 = [];
                         tmp2 = this.searchFormOld.goodsImgs.split(',');
@@ -235,14 +255,14 @@
                 ).catch();
             },
 
-            getCategoryName(id){
-                let params={};
-                params.categoryId=id;
+            getCategoryName(id) {
+                let params = {};
+                params.categoryId = id;
                 getGooCategoryById(this, params).then(
-                    res=>{
-                        this.placeholder=res.data.categoryName;
+                    res => {
+                        this.placeholder = res.data.categoryName;
                     },
-                    res=>{
+                    res => {
 
                     }
                 ).catch();
@@ -293,6 +313,16 @@
             },
 
             addConfirm() {
+                this.$refs.searchForm.validate((valid) => {
+                    if (valid) {
+                        this.formCommit();
+                    } else {
+                        return false;
+                    }
+                });
+            },
+
+            formCommit() {
                 if (this.create) {
                     //新增
                     let params = {};
@@ -305,12 +335,13 @@
                     params.goodsType = this.searchForm.goodsType;
                     params.unitId = this.searchForm.unitId;
                     params.memo = this.searchForm.memo;
+                    params.cQ=this.searchForm.cQ;
                     addGooTGoodsinfo(this, params).then(
                         res => {
                             this.$message.success('新增成功!');
                             this.addFlag = 2;
                             this.$emit('createOk');
-                            this.searchForm.version=res.data.version;
+                            this.searchForm.version = res.data.version;
                         },
                         res => {
 
@@ -339,6 +370,9 @@
                     }
                     if (this.searchForm.unitId !== this.searchFormOld.unitId) {
                         params.unitId = this.searchForm.unitId;
+                    }
+                    if (this.searchForm.cQ !== this.searchFormOld.cQ) {
+                        params.cQ=this.searchForm.cQ;
                     }
                     if (this.searchForm.memo !== this.searchFormOld.memo) {
                         params.memo = this.searchForm.memo;
@@ -387,7 +421,7 @@
                         this.searchForm.imgs.push(res.data.fileNames);
                         if (!this.searchForm.mainPicture || this.searchForm.mainPicture === '') {
                             console.log('修改main');//debug
-                            this.searchForm.mainPicture=res.data.fileNames;
+                            this.searchForm.mainPicture = res.data.fileNames;
                         }
                     },
                     res => {

@@ -2496,6 +2496,10 @@ const addGooTGoodsinfo = (me, params) => {
             send.goodsImgs = params.goodsImgs;
             singArray.goodsImgs = params.goodsImgs;
         }
+        if (params.cQ) {
+            send.cQ = params.cQ;
+            singArray.cQ = params.cQ;
+        }
         if (params.goodsType) {
             send.goodsType = params.goodsType;
         }
@@ -2820,6 +2824,10 @@ const updateGooTGoodsinfoById = (me, params) => {
         if (params.goodsImgs) {
             send.goodsImgs = params.goodsImgs;
             singArray.goodsImgs = params.goodsImgs;
+        }
+        if (params.cQ) {
+            send.cQ = params.cQ;
+            singArray.cQ = params.cQ;
         }
         if (params.goodsType) {
             send.goodsType = params.goodsType;
