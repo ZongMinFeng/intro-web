@@ -30,10 +30,25 @@
                     创建时间:<span class="batchInfoCol">{{toDate(batchInfo.createTime)}}</span>
                 </el-col>
             </el-row>
-            <el-row style="margin-top: 20px;">
+            <el-row v-if="batchInfo.batchFlag==='I'" style="margin-top: 20px;">
                 <el-steps :active="getStep(batchInfo.status)" finish-status="success" process-status="error">
                     <el-step title="初始"></el-step>
                     <el-step title="海运"></el-step>
+                    <el-step title="物资正在入库"></el-step>
+                    <el-step title="物资已入库"></el-step>
+                    <el-step title="本地价格正在提交"></el-step>
+                    <el-step title="本地价格已提交"></el-step>
+                    <el-step title="建议价格计算中"></el-step>
+                    <el-step title="建议价格已计算"></el-step>
+                    <el-step title="零售价申报中"></el-step>
+                    <el-step title="零售价已申报"></el-step>
+                    <el-step title="物资上架中"></el-step>
+                    <el-step title="上架"></el-step>
+                </el-steps>
+            </el-row>
+            <el-row v-if="batchInfo.batchFlag==='O'" style="margin-top: 20px;">
+                <el-steps :active="getStep(batchInfo.status)" finish-status="success" process-status="error">
+                    <el-step title="初始"></el-step>
                     <el-step title="物资正在入库"></el-step>
                     <el-step title="物资已入库"></el-step>
                     <el-step title="本地价格正在提交"></el-step>
@@ -407,44 +422,83 @@
 
             getStep(step){
                 let nowStep=1;
-                switch (step) {
-                    case '9':
-                        nowStep=0;
-                        break;
-                    case '8':
-                        nowStep=1;
-                        break;
-                    case 'A':
-                        nowStep=2;
-                        break;
-                    case '7':
-                        nowStep=3;
-                        break;
-                    case 'B':
-                        nowStep=4;
-                        break;
-                    case '6':
-                        nowStep=5;
-                        break;
-                    case 'C':
-                        nowStep=6;
-                        break;
-                    case '5':
-                        nowStep=7;
-                        break;
-                    case 'D':
-                        nowStep=8;
-                        break;
-                    case '4':
-                        nowStep=9;
-                        break;
-                    case 'E':
-                        nowStep=10;
-                        break;
-                    case '1':
-                        nowStep=11;
-                        break;
+                if (this.batchInfo.batchFlag === 'I') {
+                    switch (step) {
+                        case '9':
+                            nowStep=0;
+                            break;
+                        case '8':
+                            nowStep=1;
+                            break;
+                        case 'A':
+                            nowStep=2;
+                            break;
+                        case '7':
+                            nowStep=3;
+                            break;
+                        case 'B':
+                            nowStep=4;
+                            break;
+                        case '6':
+                            nowStep=5;
+                            break;
+                        case 'C':
+                            nowStep=6;
+                            break;
+                        case '5':
+                            nowStep=7;
+                            break;
+                        case 'D':
+                            nowStep=8;
+                            break;
+                        case '4':
+                            nowStep=9;
+                            break;
+                        case 'E':
+                            nowStep=10;
+                            break;
+                        case '1':
+                            nowStep=11;
+                            break;
+                    }
+                }else{
+                    switch (step) {
+                        case '9':
+                            nowStep=0;
+                            break;
+                        case 'A':
+                            nowStep=1;
+                            break;
+                        case '7':
+                            nowStep=2;
+                            break;
+                        case 'B':
+                            nowStep=3;
+                            break;
+                        case '6':
+                            nowStep=4;
+                            break;
+                        case 'C':
+                            nowStep=5;
+                            break;
+                        case '5':
+                            nowStep=6;
+                            break;
+                        case 'D':
+                            nowStep=7;
+                            break;
+                        case '4':
+                            nowStep=8;
+                            break;
+                        case 'E':
+                            nowStep=9;
+                            break;
+                        case '1':
+                            nowStep=10;
+                            break;
+                    }
                 }
+
                 return nowStep;
             },
 
@@ -1036,5 +1090,10 @@
         margin-bottom: 0;
         width: 50%;
     }
+</style>
 
+<style>
+    .el-step__title{
+        font-size: 12px;
+    }
 </style>
