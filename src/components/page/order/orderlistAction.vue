@@ -75,9 +75,44 @@
                             <span>{{ props.row.tellerId }}</span>
                         </el-form-item>
                         <el-form-item label="订单状态">
-                            <span>{{ props.row.status }}</span>
+                            <span>{{ getStatusName(props.row.status) }}</span>
                         </el-form-item>
                     </el-form>
+                    <span style="color: rgb(255,102,0); margin-top: 10px; margin-bottom: 5px; font-size: 14px;">商品详情</span>
+                    <el-table :data="props.row.orderTDetailList" row-class-name="rowClass"
+                              :row-key="props.row.orderTDetailList.specGoodsId"
+                              border>
+                        <el-table-column label="商品信息" align="center" header-align="center" width="200">
+                            <template slot-scope="props">
+                                <div style="width: 80px; height: 80px; float: left;">
+                                    <img style="height: 80px; width: 80px;background-color: white;"
+                                         :src="pictureUrl + props.row.goodsId + '/'+props.row.mainPicture">
+                                </div>
+                                <div style="width: 80px; height: 80px; float: left;">
+                                    <span>{{props.row.goodsName}}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="单价" align="right" header-align="right">
+                            <template slot-scope="props">
+                                <p><strong>₦{{formatPrice(props.row.specNowPrice)}}</strong></p>
+                                <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
+                                <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="数量" align="right" header-align="right">
+                            <template slot-scope="props">
+                                <p>{{props.row.dealNum}}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="小计" align="right" header-align="right">
+                            <template slot-scope="props">
+                                <p><strong style="color:red">₦{{formatPrice(props.row.specNowPrice*props.row.dealNum)}}</strong></p>
+                                <p>￥{{formatPrice(props.row.specNowPrice/nalaRate*props.row.dealNum)}}</p>
+                                <p>${{formatPrice(props.row.specNowPrice/dollarRate*props.row.dealNum)}}</p>
+                            </template>
+                        </el-table-column>
+                    </el-table>
                 </template>
             </el-table-column>
             <!--暂时不用订单号-->
@@ -166,6 +201,8 @@
     } from "../../../util/module";
     import _String from '../../../util/string';
     import * as cfg from "../../../config/cfg";
+    import {getArrayObjectByCon, getArrayObjectByObject} from "../../../Gw/GwArray";
+    import {orderStatus} from "@/tool/status.js";
 
     export default {
         name: "orderlistAction",
@@ -219,6 +256,14 @@
         methods: {
             initData() {
                 this.getOrders();
+            },
+
+            getStatusName(id){
+                let item = getArrayObjectByCon(orderStatus, id, 'id');
+                if (item) {
+                    return item.value;
+                }
+                return '未知';
             },
 
             reflash(){

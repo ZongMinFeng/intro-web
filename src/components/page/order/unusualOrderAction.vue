@@ -20,7 +20,103 @@
         </el-form>
 
         <el-table :data="tableData" border stripe>
-            <el-table-column label="订单号" prop="orderId"></el-table-column>
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="确认库存操作员">
+                            <span>{{ props.row.constockTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="确认库存时间">
+                            <span>{{ toDate(props.row.constockTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="支付人员">
+                            <span>{{ props.row.payTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="支付时间">
+                            <span>{{ toDate(props.row.payTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="送货员">
+                            <span>{{ props.row.sendTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="送货时间">
+                            <span>{{ toDate(props.row.sendTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="关闭人员">
+                            <span>{{ props.row.closeTeller }}</span>
+                        </el-form-item>
+                        <el-form-item label="关闭时间">
+                            <span>{{ toDate(props.row.closeTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="总数量">
+                            <span>{{ props.row.goodsAllNum }}</span>
+                        </el-form-item>
+                        <el-form-item label="公司地址">
+                            <span>{{ props.row.companyAddress }}</span>
+                        </el-form-item>
+                        <el-form-item label="公司名称">
+                            <span>{{ props.row.companyName }}</span>
+                        </el-form-item>
+                        <el-form-item label="联系人">
+                            <span>{{ props.row.linkMan }}</span>
+                        </el-form-item>
+                        <el-form-item label="顾客职位">
+                            <span>{{ props.row.position }}</span>
+                        </el-form-item>
+                        <el-form-item label="项目地址">
+                            <span>{{ props.row.projectAddress }}</span>
+                        </el-form-item>
+                        <el-form-item label="项目名称">
+                            <span>{{ props.row.projectName }}</span>
+                        </el-form-item>
+                        <el-form-item label="销售员">
+                            <span>{{ props.row.saleTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="操作员">
+                            <span>{{ props.row.tellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="订单状态">
+                            <span>{{ getStatusName(props.row.status) }}</span>
+                        </el-form-item>
+                    </el-form>
+                    <span style="color: rgb(255,102,0); margin-top: 10px; margin-bottom: 5px; font-size: 14px;">商品详情</span>
+                    <el-table :data="props.row.orderAbnormDetailList" row-class-name="rowClass"
+                              :row-key="props.row.orderAbnormDetailList.specGoodsId"
+                              border>
+                        <el-table-column label="商品信息" align="center" header-align="center" width="200">
+                            <template slot-scope="props">
+                                <div style="width: 80px; height: 80px; float: left;">
+                                    <img style="height: 80px; width: 80px;background-color: white;"
+                                         :src="pictureUrl + props.row.goodsId + '/'+props.row.mainPicture">
+                                </div>
+                                <div style="width: 80px; height: 80px; float: left;">
+                                    <span>{{props.row.goodsName}}</span>
+                                </div>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="单价" align="right" header-align="right">
+                            <template slot-scope="props">
+                                <p><strong>₦{{formatPrice(props.row.specNowPrice)}}</strong></p>
+                                <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
+                                <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="数量" align="right" header-align="right">
+                            <template slot-scope="props">
+                                <p>{{props.row.dealNum}}</p>
+                            </template>
+                        </el-table-column>
+                        <el-table-column label="小计" align="right" header-align="right">
+                            <template slot-scope="props">
+                                <p><strong style="color:red">₦{{formatPrice(props.row.specNowPrice*props.row.dealNum)}}</strong></p>
+                                <p>￥{{formatPrice(props.row.specNowPrice/nalaRate*props.row.dealNum)}}</p>
+                                <p>${{formatPrice(props.row.specNowPrice/dollarRate*props.row.dealNum)}}</p>
+                            </template>
+                        </el-table-column>
+                    </el-table>
+                </template>
+            </el-table-column>
+            <!--暂时不用订单号-->
+            <!--<el-table-column label="订单号" prop="orderId"></el-table-column>-->
             <el-table-column label="商品信息" width="170">
                 <template slot-scope="props">
                     <div>
@@ -94,6 +190,8 @@
     } from "../../../util/module";
     import _String from '../../../util/string';
     import * as cfg from "../../../config/cfg";
+    import {getArrayObjectByCon} from "../../../Gw/GwArray";
+    import {orderStatus} from "@/tool/status.js";
 
     export default {
         name: "orderlistAction",
@@ -145,6 +243,14 @@
         methods: {
             initData() {
                 this.getOrders();
+            },
+
+            getStatusName(id){
+                let item = getArrayObjectByCon(orderStatus, id, 'id');
+                if (item) {
+                    return item.value;
+                }
+                return '未知';
             },
 
             reflash(){
@@ -322,5 +428,16 @@
 </script>
 
 <style scoped>
-
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
 </style>

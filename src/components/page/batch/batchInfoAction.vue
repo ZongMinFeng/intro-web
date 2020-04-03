@@ -34,15 +34,36 @@
         </el-form>
 
         <div class="batchInfoDiv">
-            <el-row>
-                <el-col class="batchInfoCol" :span="5">ID:{{batchInfo.batchId}}</el-col>
-                <el-col class="batchInfoCol" :span="5">名称:{{batchInfo.batchName}}</el-col>
-                <el-col class="batchInfoCol" :span="5">采购区域:{{getBatchFlagName(batchInfo.batchFlag)}}</el-col>
-                <el-col class="batchInfoCol" :span="5">提单号:{{batchInfo.ladingBill}}</el-col>
-                <el-col class="batchInfoCol" :span="4">币种:{{batchCnyName(batchInfo.batchCny)}}</el-col>
+            <el-row style="margin-top: 10px;">
+                <el-col :span="6" v-if="batchInfo.batchFlag==='I'">集装箱或批次号:<span class="batchInfoCol">{{batchInfo.batchName}}</span></el-col>
+                <el-col :span="6" v-if="batchInfo.batchFlag==='O'">批次号:<span class="batchInfoCol">{{batchInfo.batchName}}</span></el-col>
+                <el-col :span="6">采购区域:<span class="batchInfoCol">{{getBatchFlagName(batchInfo.batchFlag)}}</span></el-col>
+                <el-col :span="6">提单号:<span class="batchInfoCol">{{batchInfo.ladingBill}}</span></el-col>
+                <el-col :span="6">币种:<span class="batchInfoCol">{{batchCnyName(batchInfo.batchCny)}}</span></el-col>
             </el-row>
-            <el-row>
-                <el-col :span="6">状态:{{getStatusName(batchInfo.status)}}</el-col>
+            <el-row style="margin-top: 5px;">
+                <el-col :span="6">
+                    创建者:<span class="batchInfoCol">{{batchInfo.createTellerId}}</span>
+                </el-col>
+                <el-col :span="6">
+                    创建时间:<span class="batchInfoCol">{{toDate(batchInfo.createTime)}}</span>
+                </el-col>
+            </el-row>
+            <el-row style="margin-top: 20px;">
+                <el-steps :active="getStep(batchInfo.status)" finish-status="success" process-status="finish">
+                    <el-step title="初始"></el-step>
+                    <el-step title="海运"></el-step>
+                    <el-step title="物资正在入库"></el-step>
+                    <el-step title="物资已入库"></el-step>
+                    <el-step title="本地价格正在提交"></el-step>
+                    <el-step title="本地价格已提交"></el-step>
+                    <el-step title="建议价格计算中"></el-step>
+                    <el-step title="建议价格已计算"></el-step>
+                    <el-step title="零售价申报中"></el-step>
+                    <el-step title="零售价已申报"></el-step>
+                    <el-step title="物资上架中"></el-step>
+                    <el-step title="上架"></el-step>
+                </el-steps>
             </el-row>
         </div>
 
@@ -444,6 +465,49 @@
                 this.getGoodsSerials();
             },
 
+            getStep(step){
+                let nowStep=1;
+                switch (step) {
+                    case '9':
+                        nowStep=0;
+                        break;
+                    case '8':
+                        nowStep=1;
+                        break;
+                    case 'A':
+                        nowStep=2;
+                        break;
+                    case '7':
+                        nowStep=3;
+                        break;
+                    case 'B':
+                        nowStep=4;
+                        break;
+                    case '6':
+                        nowStep=5;
+                        break;
+                    case 'C':
+                        nowStep=6;
+                        break;
+                    case '5':
+                        nowStep=7;
+                        break;
+                    case 'D':
+                        nowStep=8;
+                        break;
+                    case '4':
+                        nowStep=9;
+                        break;
+                    case 'E':
+                        nowStep=10;
+                        break;
+                    case '1':
+                        nowStep=11;
+                        break;
+                }
+                return nowStep;
+            },
+
             toDate(dateStr){
                 return toDate(dateStr);
             },
@@ -751,6 +815,7 @@
             },
 
             modifyTap(item) {
+                console.log('item', item);//debug
                 this.dialogForm = {
                     id: null,
                     recycleSeq: null,
@@ -766,21 +831,23 @@
                     buyBaseUnit: null,
                     unitName: null,
                 };
-                this.dialogFormOld = deepCopy(this.dialogForm);
                 this.flag = 2;
                 this.dialogForm.id = item.id;
                 this.dialogForm.batchGoodsId = item.batchGoodsId;
                 this.dialogForm.version = item.version;
                 this.dialogForm.tellerBuyPrice = item.tellerBuyPrice;
                 this.dialogForm.tellerBuyCount = item.tellerBuyCount;
+                this.dialogForm.count = item.tellerBuyCount;
                 this.dialogForm.goodsName = item.goodsName;
                 this.dialogForm.buyBaseUnit = item.buyBaseUnit;
+                this.dialogForm.unitName = item.buyBaseUnit;
                 this.dialogForm.memo = item.memo;
                 if (item.buyThisUnit) {
                     this.dialogForm.count = item.thisCount;
                     this.dialogForm.thisChange = item.thisChange;
                     this.dialogForm.unitName = item.buyThisUnit;
                 }
+                this.dialogFormOld = deepCopy(this.dialogForm);
                 this.dialogVisible = true;
             },
 
@@ -920,11 +987,14 @@
                     if (this.dialogForm.thisChange !== this.dialogFormOld.thisChange) {
                         params.thisChange = this.dialogForm.thisChange;
                     }
-                    if (this.dialogForm.count !== this.dialogFormOld.count) {
-                        params.thisCount = this.dialogForm.count;
-                    }
                     if (this.dialogForm.memo !== this.dialogFormOld.memo) {
                         params.memo = this.dialogForm.memo;
+                    }
+                    //有单位换算
+                    if (this.dialogForm.buyBaseUnit!=null&&this.dialogForm.unitName !== this.dialogForm.buyBaseUnit) {
+                        if (this.dialogForm.count !== this.dialogFormOld.count) {
+                            params.thisCount = this.dialogForm.count;
+                        }
                     }
                     updateBatchGoodsById(this, params).then(
                         res => {
