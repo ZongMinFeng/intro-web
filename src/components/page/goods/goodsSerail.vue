@@ -72,6 +72,13 @@
                 </el-row>
                 <el-row>
                     <el-col :span="24">
+                        <el-form-item label="序号" prop="cq" :rules="[{required:true, message:'请输入物资序号', trigger:'blur'}, {validator:checkcq, trigger:'blur'}]">
+                            <el-input v-model="dialogForm.cq"></el-input>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row>
+                    <el-col :span="24">
                         <el-form-item label="颜色" prop="specColor">
                             <el-input v-model="dialogForm.specColor"></el-input>
                         </el-form-item>
@@ -209,6 +216,7 @@
                     unitId: null,
                     memo: null,
                     version: null,
+                    cq:null
                 },
                 goodsId: null,
                 tableData: [],
@@ -226,6 +234,7 @@
                     imgs: [],
                     specSize: null,
                     specMaterial: null,
+                    cq:null,
                 },
                 dialogFormOld: {
                     goodsId: null,
@@ -240,6 +249,7 @@
                     imgs: [],
                     specSize: null,
                     specMaterial: null,
+                    cq:null,
                 },
                 flag: 1,//1.新增  2.修改
                 dragOptions: {
@@ -338,6 +348,7 @@
                 this.dialogForm.categoryId=item.categoryId;
                 this.dialogForm.categoryName=item.categoryName;
                 this.dialogForm.unitId=item.unitId;
+                this.dialogForm.cq=item.cq;
                 this.placeholder=item.categoryName;
                 let tmp = [];
                 tmp = item.goodsImgs.split(',');
@@ -357,6 +368,7 @@
                 this.dialogFormOld.categoryId=item.categoryId;
                 this.dialogFormOld.categoryName=item.categoryName;
                 this.dialogFormOld.unitId=item.unitId;
+                this.dialogFormOld.cq=item.cq;
                 let tmpOld = [];
                 tmpOld = item.goodsImgs.split(',');
                 this.dialogFormOld.imgs = trimSpace(tmpOld);
@@ -528,6 +540,9 @@
                     if (this.dialogForm.unitId !== this.dialogFormOld.unitId) {
                         params.unitId = this.dialogForm.unitId;
                     }
+                    if (this.dialogForm.cq !== this.dialogFormOld.cq) {
+                        params.cq=this.dialogForm.cq;
+                    }
                     updateGoodsserialById(this, params).then(
                         res => {
                             this.$message.success('修改成功');
@@ -585,6 +600,15 @@
                     //不能继续上传
                     event.cancelBubble = true;
                 }
+            },
+
+            checkcq(rule, value, callback) {
+                let reg = /^[1-9]\d{0,7}$/;
+                if (!reg.test(value)) {
+                    callback(new Error('请输入序号，最大8位数字！'));
+                    return;
+                }
+                callback();
             },
 
             checkUploadButton() {

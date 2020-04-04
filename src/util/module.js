@@ -2496,9 +2496,8 @@ const addGooTGoodsinfo = (me, params) => {
             send.goodsImgs = params.goodsImgs;
             singArray.goodsImgs = params.goodsImgs;
         }
-        if (params.cQ) {
-            send.cQ = params.cQ;
-            singArray.cQ = params.cQ;
+        if (params.cq) {
+            send.cq = params.cq;
         }
         if (params.goodsType) {
             send.goodsType = params.goodsType;
@@ -2825,9 +2824,8 @@ const updateGooTGoodsinfoById = (me, params) => {
             send.goodsImgs = params.goodsImgs;
             singArray.goodsImgs = params.goodsImgs;
         }
-        if (params.cQ) {
-            send.cQ = params.cQ;
-            singArray.cQ = params.cQ;
+        if (params.cq) {
+            send.cq = params.cq;
         }
         if (params.goodsType) {
             send.goodsType = params.goodsType;
@@ -3275,6 +3273,9 @@ const updateGoodsserialById = (me, params) => {
         if (params.version) {
             send.version = params.version;
             singArray.version = params.version;
+        }
+        if (params.cq) {
+            send.cq = params.cq;
         }
         if (params.specColor) {
             send.specColor = params.specColor;
