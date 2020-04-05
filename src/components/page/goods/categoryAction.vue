@@ -389,6 +389,7 @@
 
     .levels li button:hover {
         color: red;
+        cursor: pointer;
     }
 
     .green {

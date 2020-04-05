@@ -29,6 +29,39 @@
         </el-form>
 
         <el-table :data="tableData" border stripe>
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="创建者">
+                            <span>{{ props.row.createTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建时间">
+                            <span>{{ toDate(props.row.createTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改者">
+                            <span>{{ props.row.updateTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改时间">
+                            <span>{{ toDate(props.row.updateTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="总库存">
+                            <span>{{ props.row.stockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="总锁定库存">
+                            <span>{{ props.row.lockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="内部库存">
+                            <span>{{ props.row.innerStockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="内部锁定库存">
+                            <span>{{ props.row.innerLockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="销售数量">
+                            <span>{{ props.row.specSellCount}}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
             <el-table-column label="名称" prop="goodsName"></el-table-column>
             <!--目前不展示-->
             <!--<el-table-column prop="goodsId" label="物资ID" width="170"></el-table-column>-->
@@ -61,6 +94,7 @@
                     {{getCategoryName(props.row.categoryId)}}
                 </template>
             </el-table-column>
+            <el-table-column label="序号" prop="cq" align="right" header-align="left"></el-table-column>
             <el-table-column label="状态" width="80">
                 <template slot-scope="props">
                     {{getStatusName(props.row.status)}}
@@ -108,6 +142,7 @@
     import * as cfg from "../../../config/cfg";
     import _String from '../../../util/string';
     import CategorySelection from '../../common/selection/CategorySelection';
+    import {toDate} from "../../../tool/Format";
 
     export default {
         name: "goodsinfoAction",
@@ -166,6 +201,10 @@
         methods: {
             initData() {
                 this.goodsList();
+            },
+
+            toDate(dateStr) {
+                return toDate(dateStr);
             },
 
             refreshTap(){
@@ -343,5 +382,16 @@
 </script>
 
 <style scoped>
-
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
+    }
 </style>

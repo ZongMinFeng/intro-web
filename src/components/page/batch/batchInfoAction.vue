@@ -55,7 +55,7 @@
                     <el-step title="海运"></el-step>
                     <el-step title="物资正在入库"></el-step>
                     <el-step title="物资已入库"></el-step>
-                    <el-step title="本地价格正在提交"></el-step>
+                    <el-step title="本地价格提交中"></el-step>
                     <el-step title="本地价格已提交"></el-step>
                     <el-step title="建议价格计算中"></el-step>
                     <el-step title="建议价格已计算"></el-step>
@@ -70,7 +70,7 @@
                     <el-step title="初始"></el-step>
                     <el-step title="物资正在入库"></el-step>
                     <el-step title="物资已入库"></el-step>
-                    <el-step title="本地价格正在提交"></el-step>
+                    <el-step title="本地价格提交中"></el-step>
                     <el-step title="本地价格已提交"></el-step>
                     <el-step title="建议价格计算中"></el-step>
                     <el-step title="建议价格已计算"></el-step>
@@ -241,7 +241,7 @@
                             {{dialogForm.goodsName}}
                         </el-col>
                         <el-col :span="3">
-                            <el-button type="primary" @click="choiceTap">选择</el-button>
+                            <el-button v-if="flag===1" type="primary" @click="choiceTap">选择</el-button>
                         </el-col>
                     </el-form-item>
                 </el-row>
@@ -368,7 +368,7 @@
                     {id: '8', value: '海运'},
                     {id: '9', value: '初始'},
                     {id: 'A', value: '物资正在入库'},
-                    {id: 'B', value: '本地价格正在提交'},
+                    {id: 'B', value: '本地价格提交中'},
                     {id: 'C', value: '建议价格计算中'},
                     {id: 'D', value: '零售价申报中'},
                     {id: 'E', value: '物资上架中'},
@@ -465,7 +465,6 @@
         },
 
         created() {
-            // this.$route.query.batchId="BI685783182406328320";//debug
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;
             this.getUnits();
@@ -577,7 +576,6 @@
             },
 
             getUnitName(unitId) {
-                console.log("unitId", unitId);//debug
                 let unitInfo = {};
                 this.units.forEach(item => {
                     if (item.unitId === unitId) {
@@ -749,7 +747,6 @@
             },
 
             doReportPrices(item, index) {
-                console.log("this.reportPrices[index]", this.reportPrices[index]);//debug
                 if (!this.reportPrices[index] || this.reportPrices[index] === '') {
                     this.$message.error('请输入零售价!');
                     return;
@@ -868,7 +865,6 @@
             },
 
             modifyTap(item) {
-                console.log('item', item);//debug
                 this.dialogForm = {
                     id: null,
                     recycleSeq: null,
@@ -1031,22 +1027,24 @@
                     if (this.dialogForm.tellerBuyPrice !== this.dialogFormOld.tellerBuyPrice) {
                         params.tellerBuyPrice = formatPrice(this.dialogForm.tellerBuyPrice);
                     }
-                    if (this.dialogForm.count !== this.dialogFormOld.count||this.dialogForm.thisChange !== this.dialogFormOld.thisChange) {
-                        params.tellerBuyCount = formatPrice(this.dialogForm.count * this.dialogForm.thisChange);
-                    }
-                    if (this.dialogForm.unitName !== this.dialogFormOld.unitName) {
-                        params.buyThisUnit = this.dialogForm.unitName;
-                    }
-                    if (this.dialogForm.thisChange !== this.dialogFormOld.thisChange) {
-                        params.thisChange = this.dialogForm.thisChange;
+                    params.tellerBuyCount =formatPrice(this.dialogForm.count);
+                    if (this.dialogForm.buyBaseUnit !== this.dialogFormOld.buyBaseUnit) {
+                        params.buyBaseUnit = this.dialogForm.buyBaseUnit;
                     }
                     if (this.dialogForm.memo !== this.dialogFormOld.memo) {
                         params.memo = this.dialogForm.memo;
                     }
                     //有单位换算
                     if (this.dialogForm.buyBaseUnit!=null&&this.dialogForm.unitName !== this.dialogForm.buyBaseUnit) {
-                        if (this.dialogForm.count !== this.dialogFormOld.count) {
+                        if (this.dialogForm.count !== this.dialogFormOld.count || this.dialogForm.unitName !== this.dialogFormOld.unitName || this.dialogForm.thisChange !== this.dialogFormOld.thisChange) {
+                            params.thisChange = this.dialogForm.thisChange;
+                            params.buyThisUnit = this.dialogForm.unitName;
                             params.thisCount = this.dialogForm.count;
+                            params.tellerBuyCount=formatPrice(this.dialogForm.count * this.dialogForm.thisChange);
+                        }
+                    }else{
+                        if (this.dialogForm.unitName !== this.dialogFormOld.unitName) {
+                            params.buyThisUnit=this.dialogForm.unitName;
                         }
                     }
                     updateBatchGoodsById(this, params).then(
@@ -1080,6 +1078,7 @@
             },
 
             onAddNewTap() {
+                this.flag=1;
                 if (this.$refs.dialogForm) {
                     this.$refs.dialogForm.clearValidate();
                 }

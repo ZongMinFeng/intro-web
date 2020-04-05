@@ -6,6 +6,45 @@
         </div>
 
         <el-table :data="tableData" border stripe>
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="创建者">
+                            <span>{{ props.row.createTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建时间">
+                            <span>{{ toDate(props.row.createTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改者">
+                            <span>{{ props.row.updateTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改时间">
+                            <span>{{ toDate(props.row.updateTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="总库存">
+                            <span>{{ props.row.stockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="总锁定库存">
+                            <span>{{ props.row.lockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="内部库存">
+                            <span>{{ props.row.innerStockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="内部锁定库存">
+                            <span>{{ props.row.innerLockNum}}</span>
+                        </el-form-item>
+                        <el-form-item label="销售数量">
+                            <span>{{ props.row.specSellCount}}</span>
+                        </el-form-item>
+                        <el-form-item label="型号">
+                            <span>{{ props.row.goodsType}}</span>
+                        </el-form-item>
+                        <el-form-item label="备注">
+                            <span>{{ props.row.memo}}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
             <el-table-column label="名称" prop="goodsName"></el-table-column>
             <el-table-column label="系列主图" width="120" align="center" header-align="left">
                 <template slot-scope="scope">
@@ -25,7 +64,8 @@
             <el-table-column label="尺寸" prop="specSize"></el-table-column>
             <el-table-column label="单位" prop="unitName"></el-table-column>
             <el-table-column label="分类" prop="categoryName"></el-table-column>
-            <el-table-column label="操作" width="340">
+            <el-table-column label="序号" width="50px" prop="cq" align="right" header-align="left"></el-table-column>
+            <el-table-column label="操作" width="150">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
                     <el-button type="danger" @click="deleteTap(props.row)">删除</el-button>
@@ -43,8 +83,8 @@
                     </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="12" :xl="8">
-                    <el-form-item label="ID">
-                        <el-input :disabled="true" v-model="goodsInfo.goodsId"></el-input>
+                    <el-form-item label="备注">
+                        <el-input :disabled="true" v-model="goodsInfo.memo"></el-input>
                     </el-form-item>
                 </el-col>
                 <el-col :sm="24" :md="12" :xl="8">
@@ -71,7 +111,7 @@
                     </el-col>
                 </el-row>
                 <el-row>
-                    <el-col :span="24">
+                    <el-col v-if="flag===2" :span="24">
                         <el-form-item label="序号" prop="cq" :rules="[{required:true, message:'请输入物资序号', trigger:'blur'}, {validator:checkcq, trigger:'blur'}]">
                             <el-input v-model="dialogForm.cq"></el-input>
                         </el-form-item>
@@ -197,6 +237,7 @@
     import _String from '../../../util/string';
     import draggable from 'vuedraggable';
     import CategorySelection from '../../common/selection/CategorySelection';
+    import {toDate} from "../../../tool/Format";
 
     export default {
         name: "goodsSerail",
@@ -295,6 +336,10 @@
                 this.getSerail();
             },
 
+            toDate(dateStr) {
+                return toDate(dateStr);
+            },
+
             categoryClick(nodeInfo) {
                 this.dialogForm.categoryId = nodeInfo.categoryId;
             },
@@ -334,6 +379,9 @@
             },
 
             modifyTap(item) {
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
                 this.flag = 2;
                 this.dialogForm.goodsId = item.goodsId;
                 this.dialogForm.specGoodsId = item.specGoodsId;
@@ -377,7 +425,28 @@
             },
 
             onAddNewTap() {
+                if (this.$refs.dialogForm) {
+                    this.$refs.dialogForm.clearValidate();
+                }
+                this.dialogForm={
+                    goodsId: null,
+                    categoryId: null,
+                    goodsName: null,
+                    mainPicture: null,
+                    goodsImgs: null,
+                    goodsType: null,
+                    unitId: null,
+                    memo: null,
+                    specColor: null,
+                    imgs: [],
+                    specSize: null,
+                    specMaterial: null,
+                    cq:null,
+                };
+                this.dialogForm.categoryId=this.goodsInfo.categoryId;
+                this.placeholder=this.goodsInfo.categoryName;
                 this.dialogForm.goodsId = this.goodsInfo.goodsId;
+                this.dialogForm.unitId=this.goodsInfo.unitId;
                 this.dialogForm.imgs = [];
                 this.dialogForm.imgs.push(...this.goodsInfo.imgs);
                 this.flag = 1;
@@ -647,6 +716,7 @@
                         console.log('获取物资信息', res);//debug
                         this.goodsInfo.goodsId = res.data.goodsId;
                         this.goodsInfo.categoryId = res.data.categoryId;
+                        this.goodsInfo.categoryName=res.data.categoryName;
                         this.goodsInfo.goodsName = res.data.goodsName;
                         this.goodsInfo.mainPicture = res.data.mainPicture;
                         this.goodsInfo.goodsImgs = res.data.goodsImgs;
@@ -821,5 +891,18 @@
         color: rgb(192, 196, 204);
         font-size: 13.3333px;
         font-weight: 400;
+    }
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
     }
 </style>

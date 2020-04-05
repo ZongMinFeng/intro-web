@@ -31,6 +31,27 @@
         </el-form>
 
         <el-table :data="tableData" border stripe @row-dblclick="dbCliick">
+            <el-table-column type="expand">
+                <template slot-scope="props">
+                    <el-form label-position="left" inline class="demo-table-expand">
+                        <el-form-item label="创建者">
+                            <span>{{ props.row.createTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="创建时间">
+                            <span>{{ toDate(props.row.createTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改者">
+                            <span>{{ props.row.updateTellerId }}</span>
+                        </el-form-item>
+                        <el-form-item label="修改时间">
+                            <span>{{ toDate(props.row.updateTime) }}</span>
+                        </el-form-item>
+                        <el-form-item label="销售数量">
+                            <span>{{ props.row.specSellCount}}</span>
+                        </el-form-item>
+                    </el-form>
+                </template>
+            </el-table-column>
             <el-table-column label="系列名称" prop="goodsName"></el-table-column>
             <!--<el-table-column prop="goodsId" label="物资ID"></el-table-column>-->
             <el-table-column label="系列主图" width="120" align="center" header-align="left">
@@ -77,6 +98,7 @@
                     {{getUnitName(props.row.unitId)}}
                 </template>
             </el-table-column>
+            <el-table-column label="序号" width="50px" prop="cq" align="right" header-align="left"></el-table-column>
             <el-table-column label="状态" width="80">
                 <template slot-scope="props">
                     {{getStatusName(props.row.status)}}
@@ -226,6 +248,7 @@
     import _String from '../../../util/string';
     import GwRegular from '@/Gw/GwRegular.js';
     import {deepCopy} from "../../../Gw/GwDateUtil";
+    import {toDate} from "../../../tool/Format";
 
     export default {
         name: "goodsSelection",
@@ -340,6 +363,10 @@
         methods: {
             initData() {
                 this.getSerails();
+            },
+
+            toDate(dateStr) {
+                return toDate(dateStr);
             },
 
             checkStockNumEdit(rule, value, callback){
@@ -702,5 +729,18 @@
 
     .icon-button:hover{
         cursor: pointer;
+    }
+
+    .demo-table-expand {
+        font-size: 0;
+    }
+    .demo-table-expand label {
+        width: 90px;
+        color: #99a9bf;
+    }
+    .demo-table-expand .el-form-item {
+        margin-right: 0;
+        margin-bottom: 0;
+        width: 50%;
     }
 </style>
