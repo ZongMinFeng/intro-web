@@ -29,16 +29,16 @@
                         <el-form-item label="确认库存时间">
                             <span>{{ toDate(props.row.constockTime) }}</span>
                         </el-form-item>
-                        <el-form-item label="支付人员">
+                        <el-form-item label="确认订单收款操作员">
                             <span>{{ props.row.payTeller }}</span>
                         </el-form-item>
-                        <el-form-item label="支付时间">
+                        <el-form-item label="确认订单收款操作时间">
                             <span>{{ toDate(props.row.payTime) }}</span>
                         </el-form-item>
-                        <el-form-item label="送货员">
+                        <el-form-item label="订单发货操作员">
                             <span>{{ props.row.sendTeller }}</span>
                         </el-form-item>
-                        <el-form-item label="送货时间">
+                        <el-form-item label="订单发货操作时间">
                             <span>{{ toDate(props.row.sendTime) }}</span>
                         </el-form-item>
                         <el-form-item label="关闭人员">
@@ -95,9 +95,9 @@
                         </el-table-column>
                         <el-table-column label="单价" align="right" header-align="right">
                             <template slot-scope="props">
-                                <p><strong>₦{{formatPrice(props.row.specNowPrice)}}</strong></p>
-                                <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
-                                <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
+                                <p><strong>₦{{formatPriceDot(props.row.specNowPrice)}}</strong></p>
+                                <p>￥{{formatPriceDot(props.row.specNowPrice/nalaRate)}}</p>
+                                <p>${{formatPriceDot(props.row.specNowPrice/dollarRate)}}</p>
                             </template>
                         </el-table-column>
                         <el-table-column label="数量" align="right" header-align="right">
@@ -107,9 +107,9 @@
                         </el-table-column>
                         <el-table-column label="小计" align="right" header-align="right">
                             <template slot-scope="props">
-                                <p><strong style="color:red">₦{{formatPrice(props.row.specNowPrice*props.row.dealNum)}}</strong></p>
-                                <p>￥{{formatPrice(props.row.specNowPrice/nalaRate*props.row.dealNum)}}</p>
-                                <p>${{formatPrice(props.row.specNowPrice/dollarRate*props.row.dealNum)}}</p>
+                                <p><strong style="color:red">₦{{formatPriceDot(props.row.specNowPrice*props.row.dealNum)}}</strong></p>
+                                <p>￥{{formatPriceDot(props.row.specNowPrice/nalaRate*props.row.dealNum)}}</p>
+                                <p>${{formatPriceDot(props.row.specNowPrice/dollarRate*props.row.dealNum)}}</p>
                             </template>
                         </el-table-column>
                     </el-table>
@@ -135,9 +135,9 @@
             </el-table-column>
             <el-table-column label="订单金额" width="150" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p><strong style="color:red">₦{{formatPrice(props.row.orderAmt)}}</strong></p>
-                    <p>￥{{formatPrice(props.row.orderAmt/nalaRate)}}</p>
-                    <p>${{formatPrice(props.row.orderAmt/dollarRate)}}</p>
+                    <p><strong style="color:red">₦{{formatPriceDot(props.row.orderAmt)}}</strong></p>
+                    <p>￥{{formatPriceDot(props.row.orderAmt/nalaRate)}}</p>
+                    <p>${{formatPriceDot(props.row.orderAmt/dollarRate)}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="时间" width="225">
@@ -193,6 +193,7 @@
     import * as cfg from "../../../config/cfg";
     import {getArrayObjectByCon} from "../../../Gw/GwArray";
     import {orderStatus} from "@/tool/status.js";
+    import {formatPriceDot} from "../../../tool/Format";
 
     export default {
         name: "orderlistAction",
@@ -286,7 +287,11 @@
 
             //格式化金额
             formatPrice(price) {
-                return _String.number_format(price, 2);
+                return _String.number_format(price, 2, '.', '');
+            },
+
+            formatPriceDot(price){
+                return formatPriceDot(price);
             },
 
             handleSizeChange() {

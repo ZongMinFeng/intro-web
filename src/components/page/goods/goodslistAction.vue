@@ -74,9 +74,9 @@
             <el-table-column label="物资价格" width="160" align="right" header-align="left">
                 <template slot-scope="props">
                     <div v-if="props.row.specNowPrice>0.005">
-                        <p>₦{{formatPrice(props.row.specNowPrice)}}</p>
-                        <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
-                        <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
+                        <p>₦{{formatPriceDot(props.row.specNowPrice)}}</p>
+                        <p>￥{{formatPriceDot(props.row.specNowPrice/nalaRate)}}</p>
+                        <p>${{formatPriceDot(props.row.specNowPrice/dollarRate)}}</p>
                     </div>
                     <div v-else style="color:red">
                         未定价
@@ -94,7 +94,7 @@
                     {{getCategoryName(props.row.categoryId)}}
                 </template>
             </el-table-column>
-            <el-table-column label="序号" prop="cq" align="right" header-align="left"></el-table-column>
+            <el-table-column label="分类序号" prop="cq" align="right" header-align="left"></el-table-column>
             <el-table-column label="状态" width="80">
                 <template slot-scope="props">
                     {{getStatusName(props.row.status)}}
@@ -142,7 +142,7 @@
     import * as cfg from "../../../config/cfg";
     import _String from '../../../util/string';
     import CategorySelection from '../../common/selection/CategorySelection';
-    import {toDate} from "../../../tool/Format";
+    import {formatPriceDot, toDate} from "../../../tool/Format";
 
     export default {
         name: "goodsinfoAction",
@@ -201,6 +201,10 @@
         methods: {
             initData() {
                 this.goodsList();
+            },
+
+            formatPriceDot(price){
+                return formatPriceDot(price);
             },
 
             toDate(dateStr) {
@@ -283,7 +287,7 @@
 
             //格式化金额
             formatPrice(price) {
-                return _String.number_format(price, 2);
+                return _String.number_format(price, 2, '.', '');
             },
 
             deleteTap(item) {

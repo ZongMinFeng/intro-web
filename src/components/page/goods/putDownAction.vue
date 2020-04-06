@@ -72,23 +72,23 @@
                     </div>
                 </template>
             </el-table-column>
-            <el-table-column label="库存" align="right" header-align="left">
+            <el-table-column label="库存" width="180px" align="right" header-align="left">
                 <template slot-scope="props">
                     <p>
                         总库存：{{props.row.stockNum}}&nbsp;
-                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 3)"></i>
+                        <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 3)"></i>
                     </p>
                     <p style="color: red;">
                         总锁定库存：{{props.row.lockNum==null?0:props.row.lockNum}}&nbsp;
-                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 4)"></i>
+                        <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 4)"></i>
                     </p>
                     <p>
                         内部库存：{{props.row.innerStockNum==null?0:props.row.innerStockNum}}&nbsp;
-                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 5)"></i>
+                        <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 5)"></i>
                     </p>
                     <p style="color: red;">
                         内部锁定库存：{{props.row.innerLockNum==null?0:props.row.innerLockNum}}&nbsp;
-                        <i class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 6)"></i>
+                        <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 6)"></i>
                     </p>
                 </template>
             </el-table-column>
@@ -98,7 +98,13 @@
                     {{getUnitName(props.row.unitId)}}
                 </template>
             </el-table-column>
-            <el-table-column label="序号" width="50px" prop="cq" align="right" header-align="left"></el-table-column>
+            <el-table-column label="分类序号" width="70px" prop="cq" align="right" header-align="left"></el-table-column>
+            <el-table-column label="首页序号" width="70px" align="right" header-align="left">
+                <template slot-scope="props">
+                    {{props.row.pq}}
+                    <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modifyTap(props.row, 7)"></i>
+                </template>
+            </el-table-column>
             <el-table-column label="状态" width="80">
                 <template slot-scope="props">
                     {{getStatusName(props.row.status)}}
@@ -136,7 +142,7 @@
                         </el-form-item>
                     </el-col>
                 </el-row>
-                <el-row>
+                <el-row v-if="flag===2">
                     <el-col :span="24">
                         <el-form-item label="上架价格" prop="specNowPrice"
                                       :rules="[{required:true, message:'请输入上架价格', trigger: 'blur'},{validator:checkCount, trigger:'blur'}]">
@@ -148,6 +154,14 @@
                                     <el-input class="tellerBuyPriceClass" v-model="dialogForm.specNowPrice"></el-input>
                                 </el-col>
                             </el-row>
+                        </el-form-item>
+                    </el-col>
+                </el-row>
+                <el-row v-if="flag===7">
+                    <el-col :span="24">
+                        <el-form-item label="首页序号" prop="pq"
+                                      :rules="[{required:true, message:'请输入首页序号', trigger: 'blur'},{validator:checkPq, trigger:'blur'}]">
+                            <el-input v-model="dialogForm.pq" maxlength="8"></el-input>
                         </el-form-item>
                     </el-col>
                 </el-row>
@@ -280,7 +294,7 @@
                 },
                 dollarRate: 1,
                 nalaRate: 1,
-                //2.价格修改  3.总库存修改  4.总锁定库存修改  5.内部库存修改  6.内部锁定库存修改
+                //2.价格修改  3.总库存修改  4.总锁定库存修改  5.内部库存修改  6.内部锁定库存修改  7.首页序号修改
                 flag: 1,
                 dialogVisible: false,
                 dialogForm: {
@@ -294,6 +308,7 @@
                     lockNumEdit: null,
                     innerLockNumEdit: null,
                     innerStockNumEdit: null,
+                    pq:null
                 },
                 dialogFormOld:{},
                 stockVisible:false,
@@ -334,6 +349,9 @@
                         break;
                     case 6:
                         str='修改内部锁定库存';
+                        break;
+                    case 7:
+                        str='修改首页序号';
                         break;
                     default:
                 }
@@ -380,6 +398,18 @@
                 }
                 if (parseFloat(value) + parseFloat(this.stockForm.stockNum+'')<-0.005) {
                     callback(new Error('修改后数量不可为负数'));
+                    return;
+                }
+                callback();
+            },
+
+            checkPq(rule, value, callback){
+                if (value == null ||value===''|| value === '0') {
+                    callback();
+                    return;
+                }
+                if (!GwRegular.num8.test(value)) {
+                    callback(new Error('请输入整数，最多8位'));
                     return;
                 }
                 callback();
@@ -457,7 +487,7 @@
 
                 }
 
-                if (this.flag === 2) {
+                if (this.flag === 2 || this.flag===7) {
                     //修改
                     params.specGoodsId = this.dialogForm.specGoodsId;
                     params.version = this.dialogForm.version;
@@ -475,6 +505,9 @@
                     }
                     if (this.dialogForm.innerStockNumEdit&&this.dialogForm.innerStockNumEdit!=='0') {
                         params.innerStockNum = this.dialogForm.innerStockNumEdit;
+                    }
+                    if (this.dialogForm.pq!==this.dialogFormOld.pq) {
+                        params.pq = this.dialogForm.pq;
                     }
                     uptPriceAndStock(this, params).then(
                         res => {
@@ -588,7 +621,7 @@
                 ).catch();
             },
 
-            modifyTap(item) {
+            modifyTap(item, flag) {
                 if (this.$refs.dialogForm) {
                     this.$refs.dialogForm.clearValidate();
                 }
@@ -603,8 +636,13 @@
                     lockNumEdit: null,
                     innerLockNumEdit: null,
                     innerStockNumEdit: null,
+                    pq:null,
                 };
-                this.flag = 2;
+                if (flag) {
+                    this.flag=flag;
+                }else{
+                    this.flag = 2;
+                }
                 this.dialogForm.specGoodsId=item.specGoodsId;
                 this.dialogForm.goodsName = item.goodsName;
                 this.dialogForm.version=item.version;
@@ -613,6 +651,7 @@
                 this.dialogForm.lockNum = item.lockNum;
                 this.dialogForm.innerLockNum = item.innerLockNum;
                 this.dialogForm.innerStockNum = item.innerStockNum;
+                this.dialogForm.pq=item.pq||0;
                 this.dialogFormOld=deepCopy(this.dialogForm);
                 this.dialogVisible = true;
             },

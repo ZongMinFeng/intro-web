@@ -8,7 +8,7 @@ let formatPrice=function (price) {
 
 //格式化金额
 let formatPriceDot=function (price) {
-    return _String.number_format(price, 2);
+    return _String.number_format(price, 2, '.', ',');
 
 };
 

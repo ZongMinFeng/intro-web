@@ -1,7 +1,6 @@
 import * as md5 from "./md5";
 import * as jsonSha256 from "./jsonSha256";
 import {PERMISSIONS} from "../tool/permission";
-import {pubRandom} from "./pub";
 import {formatPrice} from "../tool/Format";
 
 const common = require('./common.js');
@@ -4800,6 +4799,10 @@ const uptPriceAndStock = (me, params) => {
         if (params.innerLockNum) {
             send.innerLockNum = params.innerLockNum;
             singArray.innerLockNum = params.innerLockNum;
+        }
+        if (params.pq) {
+            send.pq = params.pq;
+            singArray.pq = params.pq;
         }
 
         urlParams.send = send;

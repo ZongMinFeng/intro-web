@@ -85,7 +85,7 @@ _String.number_format = function (number, decimals, dec_point, thousands_sep) {
         };
 
     s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
-    if (thousands_sep && thousands_sep !== '') {
+    if (sep) {
         var re = /(-?\d+)(\d{3})/;
         while (re.test(s[0])) {
             s[0] = s[0].replace(re, "$1" + sep + "$2");

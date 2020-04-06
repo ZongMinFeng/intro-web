@@ -2,45 +2,31 @@
  * 用于代码测试
  */
 
-let objectCopy = function (oldVal) {
-    let newVal;
-    if (oldVal instanceof Object) {
-        newVal = {};
-        for (let key in oldVal) {
-            newVal[key] = objectCopy(oldVal[key]);
+const number_format = function (number, decimals, dec_point, thousands_sep) {
+    number = (number + '').replace(/[^0-9+-Ee.]/g, '');
+    var n = !isFinite(+number) ? 0 : +number,
+        prec = !isFinite(+decimals) ? 2 : Math.abs(decimals),
+        sep = (typeof thousands_sep === 'undefined') ? ',' : thousands_sep,
+        dec = (typeof dec_point === 'undefined') ? '.' : dec_point,
+        s = '',
+        toFixedFix = function (n, prec) {
+            var k = Math.pow(10, prec);
+            return '' + Math.ceil(n * k) / k;
+        };
+
+    s = (prec ? toFixedFix(n, prec) : '' + Math.round(n)).split('.');
+    if (sep) {
+        var re = /(-?\d+)(\d{3})/;
+        while (re.test(s[0])) {
+            s[0] = s[0].replace(re, "$1" + sep + "$2");
         }
-        return newVal;
     }
 
-    if (oldVal instanceof Array) {
-        let newVal = [];
-        oldVal.forEach(oldItem => {
-            let newItem;
-            newItem = objectCopy(oldItem);
-            newVal.push(newItem);
-        });
-        return newVal;
+    if ((s[1] || '').length < prec) {
+        s[1] = s[1] || '';
+        s[1] += new Array(prec - s[1].length + 1).join('0');
     }
-
-    newVal = oldVal;
-
-    return newVal;
-
+    return s.join(dec);
 };
 
-let test = {
-    a: 2,
-    b: {
-        b1: '哈哈',
-        b2: 4,
-    },
-    c: "d"
-};
-
-let test2;
-test2 = objectCopy(test);
-let test3={};
-test3.b=test.b;
-test.b.b1 = '拉拉';
-console.log(test2);
-console.log(test3);
+console.log(number_format(200000.003, 2, '.', ','));

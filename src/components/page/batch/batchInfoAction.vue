@@ -131,15 +131,15 @@
             <el-table-column key="3" label="采购价格" width="170" align="right" header-align="left">
                 <template slot-scope="props">
                     <div v-if="batchInfo.batchCny==='1'">
-                        <span>₦{{formatPrice(props.row.tellerBuyPrice)}}</span>
+                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice)}}</span>
                     </div>
                     <div v-if="batchInfo.batchCny==='2'">
-                        <span>￥{{formatPrice(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPrice(props.row.tellerBuyPrice*nalaRate)}}</span>
+                        <span>￥{{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*nalaRate)}}</span>
                     </div>
                     <div v-if="batchInfo.batchCny==='3'">
-                        <span>${{formatPrice(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPrice(props.row.tellerBuyPrice*dollarRate)}}</span>
+                        <span>${{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*dollarRate)}}</span>
                     </div>
                 </template>
             </el-table-column>
@@ -335,7 +335,7 @@
         updateBatchGoodsById, uptBatchLadingBill, uptBatchRealCount
     } from "../../../util/module";
     import GoodsSelection from "../../common/selection/GoodsSelection";
-    import {formatPrice, toDate} from "../../../tool/Format";
+    import {formatPrice, formatPriceDot, toDate} from "../../../tool/Format";
     import {deepCopy} from "../../../Gw/GwDateUtil";
     import GwRegular from "@/Gw/GwRegular.js";
     import {batchCnys, batchCnysId} from "../../../tool/status"
@@ -477,6 +477,10 @@
         methods: {
             initData() {
                 this.getGoodsSerials();
+            },
+
+            formatPriceDot(price){
+                return formatPriceDot(price);
             },
 
             getStep(step){
@@ -950,7 +954,7 @@
 
             //格式化金额
             formatPrice(price) {
-                return _String.number_format(price, 2);
+                return _String.number_format(price, 2, '.', '');
             },
 
             getBatchInfo() {

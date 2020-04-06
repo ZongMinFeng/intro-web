@@ -55,16 +55,21 @@
             <el-table-column label="颜色" prop="specColor"></el-table-column>
             <el-table-column label="系列价格" width="160" align="right" header-align="left">
                 <template slot-scope="props">
-                    <p>₦{{formatPrice(props.row.specNowPrice)}}</p>
-                    <p>￥{{formatPrice(props.row.specNowPrice/nalaRate)}}</p>
-                    <p>${{formatPrice(props.row.specNowPrice/dollarRate)}}</p>
+                    <p>₦{{formatPriceDot(props.row.specNowPrice)}}</p>
+                    <p>￥{{formatPriceDot(props.row.specNowPrice/nalaRate)}}</p>
+                    <p>${{formatPriceDot(props.row.specNowPrice/dollarRate)}}</p>
                 </template>
             </el-table-column>
             <el-table-column label="材质" prop="specMaterial"></el-table-column>
             <el-table-column label="尺寸" prop="specSize"></el-table-column>
             <el-table-column label="单位" prop="unitName"></el-table-column>
             <el-table-column label="分类" prop="categoryName"></el-table-column>
-            <el-table-column label="序号" width="50px" prop="cq" align="right" header-align="left"></el-table-column>
+            <el-table-column label="分类序号" width="70px" prop="cq" align="right" header-align="left"></el-table-column>
+            <el-table-column label="状态" width="80">
+                <template slot-scope="props">
+                    {{getStatusName(props.row.status)}}
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="150">
                 <template slot-scope="props">
                     <el-button type="primary" @click="modifyTap(props.row)">修改</el-button>
@@ -112,7 +117,7 @@
                 </el-row>
                 <el-row>
                     <el-col v-if="flag===2" :span="24">
-                        <el-form-item label="序号" prop="cq" :rules="[{required:true, message:'请输入物资序号', trigger:'blur'}, {validator:checkcq, trigger:'blur'}]">
+                        <el-form-item label="分类序号" prop="cq" :rules="[{required:true, message:'请输入物资分类序号', trigger:'blur'}, {validator:checkcq, trigger:'blur'}]">
                             <el-input v-model="dialogForm.cq"></el-input>
                         </el-form-item>
                     </el-col>
@@ -237,7 +242,7 @@
     import _String from '../../../util/string';
     import draggable from 'vuedraggable';
     import CategorySelection from '../../common/selection/CategorySelection';
-    import {toDate} from "../../../tool/Format";
+    import {formatPriceDot, toDate} from "../../../tool/Format";
 
     export default {
         name: "goodsSerail",
@@ -305,6 +310,12 @@
                 dollarRate:1,
                 nalaRate:1,
                 placeholder:null,
+                statusList: [
+                    {id: '1', value: '上架'},
+                    {id: '2', value: '注销'},
+                    {id: '3', value: '下架'},
+                    {id: '4', value: '新增'},
+                ],
             }
         },
 
@@ -334,6 +345,21 @@
         methods: {
             initData() {
                 this.getSerail();
+            },
+
+            getStatusName(status) {
+                let statusInfo = {id: -1, value: '未知状态'};
+                this.statusList.forEach(item => {
+                    if (item.id === status) {
+                        statusInfo = item;
+                        return false;
+                    }
+                });
+                return statusInfo.value;
+            },
+
+            formatPriceDot(price){
+                return formatPriceDot(price);
             },
 
             toDate(dateStr) {
