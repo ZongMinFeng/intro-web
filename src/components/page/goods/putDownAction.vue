@@ -110,6 +110,11 @@
                     {{getStatusName(props.row.status)}}
                 </template>
             </el-table-column>
+            <el-table-column label="首页显示" width="70">
+                <template slot-scope="props">
+                    <el-switch v-model="props.row.si" active-value="Y" inactive-value="N" @change="changeSi(props.row)"></el-switch>
+                </template>
+            </el-table-column>
             <el-table-column label="操作" width="80">
                 <template slot-scope="props">
                     <p>
@@ -385,6 +390,26 @@
 
             toDate(dateStr) {
                 return toDate(dateStr);
+            },
+
+            changeSi(item){
+                console.log("item", item);//debug
+                let params={};
+                params.specGoodsId = item.specGoodsId;
+                params.version = item.version;
+                params.si=item.si;
+                uptPriceAndStock(this, params).then(
+                    res=>{
+
+                    },
+                    res=>{
+                        if (item.si === 'Y') {
+                            item.si="N";
+                        }else{
+                            item.si="Y";
+                        }
+                    }
+                ).catch();
             },
 
             checkStockNumEdit(rule, value, callback){

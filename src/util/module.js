@@ -4780,6 +4780,10 @@ const uptPriceAndStock = (me, params) => {
             send.version = params.version;
             singArray.version = params.version;
         }
+        if (params.si) {
+            send.si = params.si;
+            singArray.si = params.si;
+        }
         if (params.specNowPrice) {
             send.specNowPrice = params.specNowPrice;
             singArray.specNowPrice = params.specNowPrice;
