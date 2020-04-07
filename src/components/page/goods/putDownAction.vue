@@ -248,7 +248,7 @@
                 </el-row>
             </el-form>
             <span slot="footer" class="dialog_footer">
-                <el-button @click="dialogVisible=false">取消</el-button>
+                <el-button @click="stockVisible=false">取消</el-button>
                 <el-button type="primary" @click="stockFormConfirm">确定</el-button>
             </span>
         </el-dialog>

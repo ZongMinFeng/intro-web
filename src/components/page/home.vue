@@ -175,7 +175,7 @@
 
             //格式化金额
             formatPrice(price) {
-                return _String.number_format(price, 2);
+                return _String.number_format(price, 2, '.', '');
             },
 
             getGoodsOnce(){
