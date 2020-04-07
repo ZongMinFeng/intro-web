@@ -41,13 +41,13 @@
                             <span class="i-header">定&nbsp;&nbsp;&nbsp;&nbsp;价</span>
                         </el-col>
                         <el-col :span="8">
-                            <span class="mainPrice">₦{{formatPrice(goodsInfo.specNowPrice)}}</span>
+                            <span class="mainPrice">₦{{formatPriceDot(goodsInfo.specNowPrice)}}</span>
                         </el-col>
                         <el-col :span="5">
-                            <span class="minorPrice">￥</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/nalaRate)}}</strong>
+                            <span class="minorPrice">￥</span><strong class="minorPrice">{{formatPriceDot(goodsInfo.specNowPrice/nalaRate)}}</strong>
                         </el-col>
                         <el-col :span="5">
-                            <span class="minorPrice">$</span><strong class="minorPrice">{{formatPrice(goodsInfo.specNowPrice/dollarRate)}}
+                            <span class="minorPrice">$</span><strong class="minorPrice">{{formatPriceDot(goodsInfo.specNowPrice/dollarRate)}}
                         </strong></el-col>
                     </el-row>
                 </div>
@@ -122,7 +122,7 @@
     import {trimSpace} from "../../../Gw/GwArray";
     import _String from '@/util/string';
     import productManualShow from './productManualShow.vue';
-    import {formatPrice} from "../../../tool/Format";
+    import {formatPrice, formatPriceDot} from "../../../tool/Format";
 
     export default {
         name: "goodsSale",
@@ -298,6 +298,10 @@
             //格式化金额
             formatPrice(price) {
                 return _String.number_format(price, 2, '.', '');
+            },
+
+            formatPriceDot(price){
+                return formatPriceDot(price);
             },
 
             mouseenter(item, index) {

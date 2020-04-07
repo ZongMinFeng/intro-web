@@ -75,11 +75,11 @@
             <el-table-column label="库存" width="180px" align="right" header-align="left">
                 <template slot-scope="props">
                     <p>
-                        总库存：{{props.row.stockNum}}&nbsp;
+                        外部库存：{{props.row.stockNum}}&nbsp;
                         <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 3)"></i>
                     </p>
                     <p style="color: red;">
-                        总锁定库存：{{props.row.lockNum==null?0:props.row.lockNum}}&nbsp;
+                        外部锁定库存：{{props.row.lockNum==null?0:props.row.lockNum}}&nbsp;
                         <i v-if="props.row.status==='1'" class="el-icon-edit icon-button" title="修改" @click="modiStock(props.row, 4)"></i>
                     </p>
                     <p>
@@ -294,7 +294,7 @@
                 },
                 dollarRate: 1,
                 nalaRate: 1,
-                //2.价格修改  3.总库存修改  4.总锁定库存修改  5.内部库存修改  6.内部锁定库存修改  7.首页序号修改
+                //2.价格修改  3.外部库存修改  4.外部锁定库存修改  5.内部库存修改  6.内部锁定库存修改  7.首页序号修改
                 flag: 1,
                 dialogVisible: false,
                 dialogForm: {
@@ -339,10 +339,10 @@
                         str='修改';
                         break;
                     case 3:
-                        str='修改总库存';
+                        str='修改外部库存';
                         break;
                     case 4:
-                        str='修改总锁定库存';
+                        str='修改外部锁定库存';
                         break;
                     case 5:
                         str='修改内部库存';
@@ -429,7 +429,7 @@
                     return;
                 }
                 if (parseFloat(value) + parseFloat(this.stockForm.lockNum+'') - parseFloat(this.stockForm.stockNum+'')>0.005) {
-                    callback(new Error('总锁定库存不能大于总库存！'));
+                    callback(new Error('外部锁定库存不能大于外部库存！'));
                     return;
                 }
                 callback();

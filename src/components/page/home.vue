@@ -49,14 +49,14 @@
                             <div>
                                 <div class="row1">
                                     <div class="price">
-                                        <span>₦</span><strong>{{formatPrice(item.specNowPrice)}}/{{getUnitName(item.unitId)}}</strong>
+                                        <span>₦</span><strong>{{formatPriceDot(item.specNowPrice)}}/{{getUnitName(item.unitId)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row2">
                                     <div class="price2">
-                                        <span>￥</span><strong>{{formatPrice(item.specNowPrice/nalaRate)}}</strong>
+                                        <span>￥</span><strong>{{formatPriceDot(item.specNowPrice/nalaRate)}}</strong>
                                         &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                                        <span>$</span><strong>{{formatPrice(item.specNowPrice/dollarRate)}}</strong>
+                                        <span>$</span><strong>{{formatPriceDot(item.specNowPrice/dollarRate)}}</strong>
                                     </div>
                                 </div>
                                 <div class="row3">
@@ -81,6 +81,7 @@
     import {getArrayObjectByCon, inArrayOptionByCons, indexByCons} from "../../Gw/GwArray";
     import _String from '@/util/string';
     import myPresellList from '@/components/page/sale/myPresellList.vue'
+    import {formatPriceDot} from "../../tool/Format";
 
     export default {
         components:{
@@ -178,6 +179,10 @@
                 return _String.number_format(price, 2, '.', '');
             },
 
+            formatPriceDot(price){
+                return formatPriceDot(price);
+            },
+
             getGoodsOnce(){
                 let params = {};
                 params.currentPage = this.currentPage;
@@ -185,7 +190,9 @@
                     res =>  {
                         if (res.data.goodsList) {
                             this.goodsList.push(...res.data.goodsList);
-                            this.goodsListShow.push(...res.data.goodsList);
+                            this.goodsListShow.push(...(res.data.goodsList.filter(item=>{
+                                return item.si==='Y';
+                            })));
 
                             if (this.currentPage < res.data.totalPage&&this.currentPage<1000) {
                                 this.currentPage++;
@@ -205,14 +212,18 @@
             categoryFilter(){
                 this.categoryShow=[];
                 this.getCategoryShow(this.searchForm.categoryId);
-                console.log('categoryShow', this.categoryShow);//debug
                 let goods=[];
                 this.goodsList.forEach(item=>{
                     if (inArrayOptionByCons(this.categoryShow, item.categoryId, 'categoryId')) {
                         goods.push(item);
                     }
                 });
+                goods.sort(this.sortByPq);
                 this.goodsListShow=goods;
+            },
+
+            sortByPq(a, b){
+                return parseInt(a.pq)-parseInt(b.pq);
             },
 
             goToBuy(item){
@@ -301,7 +312,7 @@
                 }
                 return unitName;
             },
-            
+
             getCategoryShow(categoryId){
                 this.categoryShow.push(getArrayObjectByCon(this.categoryAll, categoryId, 'categoryId'));
                 this.categoryAll.forEach(item=>{

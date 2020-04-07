@@ -118,8 +118,8 @@
                         <span>₦{{formatPriceDot(props.row.tellerBuyPrice*nalaRate)}}</span>
                     </div>
                     <div v-if="batchInfo.batchCny==='3'">
-                        <span>${{formatPrice(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPrice(props.row.tellerBuyPrice*dollarRate)}}</span>
+                        <span>${{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*dollarRate)}}</span>
                     </div>
                 </template>
             </el-table-column>
@@ -139,7 +139,7 @@
                              v-if="batchInfo.status!=='9'&&batchInfo.status!=='8'&&batchInfo.status!=='7'&&batchInfo.status!=='A'"
                              label="本地价格" align="right" header-align="left">
                 <template slot-scope="props">
-                    ₦{{formatPrice(props.row.localPrice)}}
+                    ₦{{formatPriceDot(props.row.localPrice)}}
                 </template>
             </el-table-column>
             <el-table-column key="9" v-if="isShow(batchInfo.status, 'cacSuggestPrice')" label="建议价格" align="right" header-align="left">
@@ -149,7 +149,7 @@
             </el-table-column>
             <el-table-column key="10" v-if="isShow(batchInfo.status, 'reportPrice')" label="零售价" align="right" header-align="left">
                 <template slot-scope="props">
-                    ₦{{formatPrice(props.row.reportPrice)}}
+                    ₦{{formatPriceDot(props.row.reportPrice)}}
                 </template>
             </el-table-column>
         </el-table>
