@@ -429,7 +429,7 @@
                 params.si=item.si;
                 uptPriceAndStock(this, params).then(
                     res=>{
-                        item.version=res.data.version;
+                        this.initData();
                     },
                     res=>{
                         if (item.si === 'Y') {
