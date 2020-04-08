@@ -56,9 +56,6 @@
                         <el-form-item label="内部锁定库存">
                             <span>{{ props.row.innerLockNum}}</span>
                         </el-form-item>
-                        <el-form-item label="销售数量">
-                            <span>{{ props.row.specSellCount}}</span>
-                        </el-form-item>
                     </el-form>
                 </template>
             </el-table-column>

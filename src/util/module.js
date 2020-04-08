@@ -3606,6 +3606,9 @@ const listSerialsByConditions = (me, params) => {
         if (params.status) {
             send.status = params.status;
         }
+        if (params.si) {
+            send.si = params.si;
+        }
 
         urlParams.send = send;
         urlParams.singArray = singArray;

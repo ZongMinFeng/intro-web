@@ -19,10 +19,18 @@
                         <category-selection @click="categoryClick"></category-selection>
                     </el-form-item>
                 </el-col>
-                <el-col :span="12">
+                <el-col :span="6">
                     <el-form-item label="状态">
                         <el-select v-model="searchForm.status" placeholder="请选择状态" clearable style="width: 100%;">
                             <el-option v-for="item in statusList" :key="item.id" :label="item.value"
+                                       :value="item.id"></el-option>
+                        </el-select>
+                    </el-form-item>
+                </el-col>
+                <el-col :span="6">
+                    <el-form-item label="首页显示">
+                        <el-select v-model="searchForm.si" placeholder="请选择显示状态" clearable style="width: 100%;">
+                            <el-option v-for="item in siList" :key="item.id" :label="item.value"
                                        :value="item.id"></el-option>
                         </el-select>
                     </el-form-item>
@@ -45,9 +53,6 @@
                         </el-form-item>
                         <el-form-item label="修改时间">
                             <span>{{ toDate(props.row.updateTime) }}</span>
-                        </el-form-item>
-                        <el-form-item label="销售数量">
-                            <span>{{ props.row.specSellCount}}</span>
                         </el-form-item>
                     </el-form>
                 </template>
@@ -281,12 +286,17 @@
                     goodsName: null,
                     goodsType: null,
                     status: '1',
+                    si:'Y',
                 },
                 statusList: [
                     {id: '1', value: '上架'},
                     {id: '2', value: '注销'},
                     {id: '3', value: '下架'},
                     {id: '4', value: '新增'},
+                ],
+                siList: [
+                    {id: 'Y', value: '显示'},
+                    {id: 'N', value: '不显示'},
                 ],
                 tableData: [],
                 currentPage: 1,
@@ -393,14 +403,33 @@
             },
 
             changeSi(item){
-                console.log("item", item);//debug
+                this.$confirm('此操作将更改首页显示，是否确认?', '首页显示', {
+                    confirmButtonText: '确认',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(
+                    () => {
+                        this.changeSiCommit(item);
+                    },
+                    ()=>{
+                        //取消更改首页显示
+                        if (item.si === 'Y') {
+                            item.si="N";
+                        }else{
+                            item.si="Y";
+                        }
+                    }
+                );
+            },
+
+            changeSiCommit(item){
                 let params={};
                 params.specGoodsId = item.specGoodsId;
                 params.version = item.version;
                 params.si=item.si;
                 uptPriceAndStock(this, params).then(
                     res=>{
-
+                        item.version=res.data.version;
                     },
                     res=>{
                         if (item.si === 'Y') {
@@ -728,6 +757,7 @@
                 params.goodsName = this.searchForm.goodsName;
                 params.goodsType = this.searchForm.goodsType;
                 params.status = this.searchForm.status;
+                params.si=this.searchForm.si;
                 listSerialsByConditions(this, params).then(
                     res => {
                         if (res.returnCode === 400) {

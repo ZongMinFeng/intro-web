@@ -100,7 +100,7 @@ const sendServer = (urlParams, me) => {
                     me.$store.commit('loginOut');
                     me.$router.replace('/login');
                     return
-                } else if (data.returnCode !== 200 && data.returnCode !== 400) {
+                } else if (data.returnCode !== 200) {
                     if (!urlParams.errInfoFlag && data.returnCode !== 601 && urlParams.txnId !== cfg.service.getLoginStatus.txnId) {
                         me.$message.error(data.returnMsg);
                     }
