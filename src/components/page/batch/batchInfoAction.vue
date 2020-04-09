@@ -127,19 +127,24 @@
                 </template>
             </el-table-column>
             <el-table-column key="1" label="名称" prop="goodsName"></el-table-column>
-            <el-table-column key="2" label="备注" prop="memo"></el-table-column>
-            <el-table-column key="3" label="采购价格" width="170" align="right" header-align="left">
+            <el-table-column label="系列主图" width="120" align="center" header-align="left">
+                <template slot-scope="scope">
+                    <img style="height: 50px; width: 50px;background-color: white;" :preview="scope.$index"
+                         :src="pictureUrl + scope.row.goodsId + '/'+scope.row.mainPicture">
+                </template>
+            </el-table-column>
+            <el-table-column key="3" label="采购价格" width="140" align="right" header-align="left">
                 <template slot-scope="props">
                     <div v-if="batchInfo.batchCny==='1'">
-                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice)}}</span>
+                        <p>₦{{formatPriceDot(props.row.tellerBuyPrice)}}</p>
                     </div>
                     <div v-if="batchInfo.batchCny==='2'">
-                        <span>￥{{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*nalaRate)}}</span>
+                        <p>￥{{formatPriceDot(props.row.tellerBuyPrice)}}</p>
+                        <p>₦{{formatPriceDot(props.row.tellerBuyPrice*nalaRate)}}</p>
                     </div>
                     <div v-if="batchInfo.batchCny==='3'">
-                        <span>${{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*dollarRate)}}</span>
+                        <p>${{formatPriceDot(props.row.tellerBuyPrice)}}</p>
+                        <p>₦{{formatPriceDot(props.row.tellerBuyPrice*dollarRate)}}</p>
                     </div>
                 </template>
             </el-table-column>
@@ -209,7 +214,8 @@
                     <el-button v-else type="danger" @click="doReportPrices(props.row, props.$index)">提交零售</el-button>
                 </template>
             </el-table-column>
-            <el-table-column key="16" v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'"
+            <el-table-column key="16" label="备注" prop="memo"></el-table-column>
+            <el-table-column key="17" v-if="batchInfo.status==='4'||batchInfo.status==='E'||batchInfo.status==='1'"
                              label="操作"
                              width="80">
                 <template slot-scope="props">
@@ -340,6 +346,7 @@
     import GwRegular from "@/Gw/GwRegular.js";
     import {batchCnys, batchCnysId} from "../../../tool/status"
     import _String from '../../../util/string';
+    import * as cfg from "../../../config/cfg";
 
     export default {
         name: "batchInfoAction",
@@ -411,6 +418,7 @@
                 goodsInfo: {},
                 dollarRate: 1,
                 nalaRate: 1,
+                pictureUrl: '',
             }
         },
 
@@ -465,6 +473,7 @@
         },
 
         created() {
+            this.pictureUrl = cfg.service.uploadUrl + '/';
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;
             this.getUnits();

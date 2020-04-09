@@ -21,10 +21,10 @@
                         <el-form-item label="修改时间">
                             <span>{{ toDate(props.row.updateTime) }}</span>
                         </el-form-item>
-                        <el-form-item label="总库存">
+                        <el-form-item label="外部库存">
                             <span>{{ props.row.stockNum}}</span>
                         </el-form-item>
-                        <el-form-item label="总锁定库存">
+                        <el-form-item label="外部锁定库存">
                             <span>{{ props.row.lockNum}}</span>
                         </el-form-item>
                         <el-form-item label="内部库存">

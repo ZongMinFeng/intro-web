@@ -1,3 +1,5 @@
+import {PERMISSIONS as PERMISSION} from "../tool/permission";
+
 let jsonSha256 = require('./jsonSha256.js');
 let pub = require('./pub.js');
 let cfg = require('../config/cfg.js');
@@ -69,15 +71,21 @@ const sendServer = (urlParams, me) => {
             header.signValue = jsonSha256.json2sha(signString1)
         }
 
-        const loading = me.$loading({
-            lock: true,
-            text: '拼命加载中',
-            background: 'rgba(0, 0, 0, 0.7)'
-        });
-
+        let loading;
+        if (urlParams.txnId !== PERMISSION.wxIndexContent.txnId){
+            //wxIndexContent加载不需要锁屏
+            loading = me.$loading({
+                lock: true,
+                text: '拼命加载中',
+                background: 'rgba(0, 0, 0, 0.7)'
+            });
+        }
 
         axios.post(urlParams.url, send, {headers: header}).then((res) => {
-            loading.close();
+            //wxIndexContent加载不需要锁屏
+            if (urlParams.txnId !== PERMISSION.wxIndexContent.txnId){
+                loading.close();
+            }
             if (res.status === 200) {
                 const data = res.data;
                 if (urlParams.txnId === cfg.service.getTellerInfoById.txnId) {
@@ -100,7 +108,8 @@ const sendServer = (urlParams, me) => {
                     me.$store.commit('loginOut');
                     me.$router.replace('/login');
                     return
-                } else if (data.returnCode !== 200) {
+                } else if (data.returnCode !== 200 && data.returnCode !== 400 ) {
+                    //returnCode===400表示无数据，不报错
                     if (!urlParams.errInfoFlag && data.returnCode !== 601 && urlParams.txnId !== cfg.service.getLoginStatus.txnId) {
                         me.$message.error(data.returnMsg);
                     }
@@ -110,13 +119,13 @@ const sendServer = (urlParams, me) => {
                 resolve(data);
                 return true
             } else {
-                console.log('res:', res);
                 reject(false);
                 return false
             }
         }, (res) => {
-            console.log('res:', res);
-            loading.close();
+            if (urlParams.txnId !== PERMISSION.wxIndexContent.txnId){
+                loading.close();
+            }
             if (res.message.includes('timeout')) {
                 me.$message.error('网络异常，结果未知，请稍后再试!');
                 reject('timeout');

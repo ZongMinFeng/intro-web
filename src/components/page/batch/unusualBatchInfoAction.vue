@@ -1,17 +1,6 @@
 <template>
     <div class="container">
         <el-form :model="searchForm" ref="searchForm" label-width="80px">
-            <!--暂时不提供查询-->
-            <!--<el-row>-->
-                <!--<el-col :span="6">-->
-                    <!--<el-form-item label="单据号" prop="batchId">-->
-                        <!--<el-input v-model="searchForm.batchId" clearable placeholder="请输入单据号"></el-input>-->
-                    <!--</el-form-item>-->
-                <!--</el-col>-->
-                <!--<el-col :span="6">-->
-                    <!--<el-button type="primary" @click="getBatchInfo">查询</el-button>-->
-                <!--</el-col>-->
-            <!--</el-row>-->
         </el-form>
 
         <div class="batchInfoDiv">
@@ -107,19 +96,24 @@
                 </template>
             </el-table-column>
             <el-table-column key="1" label="名称" prop="goodsName"></el-table-column>
-            <el-table-column key="2" label="备注" prop="memo"></el-table-column>
-            <el-table-column key="3" label="采购价格" width="160" align="right" header-align="left">
+            <el-table-column label="系列主图" width="120" align="center" header-align="left">
+                <template slot-scope="scope">
+                    <img style="height: 50px; width: 50px;background-color: white;" :preview="scope.$index"
+                         :src="pictureUrl + scope.row.goodsId + '/'+scope.row.mainPicture">
+                </template>
+            </el-table-column>
+            <el-table-column key="3" label="采购价格" width="140" align="right" header-align="left">
                 <template slot-scope="props">
                     <div v-if="batchInfo.batchCny==='1'">
-                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice)}}</span>
+                        <p>₦{{formatPriceDot(props.row.tellerBuyPrice)}}</p>
                     </div>
                     <div v-if="batchInfo.batchCny==='2'">
-                        <span>￥{{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*nalaRate)}}</span>
+                        <p>￥{{formatPriceDot(props.row.tellerBuyPrice)}}</p>
+                        <p>₦{{formatPriceDot(props.row.tellerBuyPrice*nalaRate)}}</p>
                     </div>
                     <div v-if="batchInfo.batchCny==='3'">
-                        <span>${{formatPriceDot(props.row.tellerBuyPrice)}}</span>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-                        <span>₦{{formatPriceDot(props.row.tellerBuyPrice*dollarRate)}}</span>
+                        <p>${{formatPriceDot(props.row.tellerBuyPrice)}}</p>
+                        <p>₦{{formatPriceDot(props.row.tellerBuyPrice*dollarRate)}}</p>
                     </div>
                 </template>
             </el-table-column>
@@ -152,6 +146,7 @@
                     ₦{{formatPriceDot(props.row.reportPrice)}}
                 </template>
             </el-table-column>
+            <el-table-column key="11" label="备注" prop="memo"></el-table-column>
         </el-table>
         <div class="pagination">
             <el-pagination @current-change="handleCurrentChange"
@@ -276,6 +271,7 @@
     import GwRegular from "@/Gw/GwRegular.js";
     import {batchCnys, batchCnysId} from "../../../tool/status"
     import _String from '../../../util/string';
+    import * as cfg from "../../../config/cfg";
 
     export default {
         name: "batchInfoAction",
@@ -347,6 +343,7 @@
                 goodsInfo: {},
                 dollarRate: 1,
                 nalaRate: 1,
+                pictureUrl:'',
             }
         },
 
@@ -401,6 +398,7 @@
         },
 
         created() {
+            this.pictureUrl = cfg.service.uploadUrl + '/';
             // this.$route.query.batchId="BI685783182406328320";//debug
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;
