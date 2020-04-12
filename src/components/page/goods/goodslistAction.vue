@@ -187,7 +187,7 @@
         },
 
         created() {
-            this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.pictureUrl = cfg.service.pictureUrl + '/';
             this.nalaRate=localStorage.getItem('nalaRate')||1;
             this.dollarRate=localStorage.getItem('dollarRate')||1;
             this.getUnits();

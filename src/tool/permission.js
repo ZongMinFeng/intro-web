@@ -141,7 +141,8 @@ const PERMISSIONS = {
     },
     //31
     getBatchinfoById: {
-        index: 35,
+        // 暂时不控制权限
+        // index: 35,
         name: '查询批次(集装箱)',
         url: BASE_URL + '/batch/getBatchinfoById',
         txnId: 'getBatchinfoById'
@@ -197,7 +198,8 @@ const PERMISSIONS = {
     },
     //43
     listSerialsByConditions: {
-        index: 43,
+        // 暂时不控制权限
+        // index: 43,
         name: '查询所有指定条件的系列',
         url: BASE_URL + '/batch/listSerialsByConditions',
         txnId: 'listSerialsByConditions'
@@ -313,7 +315,8 @@ const PERMISSIONS = {
     },
     //114
     getTellerInfoById: {
-        index: 114,
+        // 暂时不控制权限
+        // index: 114,
         name: '查询部门员工信息'
     },
     //115
@@ -348,7 +351,8 @@ const PERMISSIONS = {
     },
     //121
     loginOut: {
-        index: 121,
+        // 暂时不控制
+        // index: 121,
         name: '退出登录'
     },
     //122
@@ -403,7 +407,8 @@ const PERMISSIONS = {
     },
     //205
     listGooCategorysByPid: {
-        index: 205,
+        // 暂时不用权限控制
+        // index: 205,
         name: '查询物资所有子分类',
         url: BASE_URL + '/goods/listGooCategorysByPid',
         txnId: 'listGooCategorysByPid'
@@ -455,7 +460,8 @@ const PERMISSIONS = {
     },
     //215
     getGooTGoodsinfoById: {
-        index: 215,
+        // 暂时不控制权限
+        // index: 215,
         name: '查询物资基础信息'
     },
     //216
@@ -532,7 +538,8 @@ const PERMISSIONS = {
     },
     //230
     listGoodsserialsByGoodsId: {
-        index: 230,
+        // 暂时不控制权限
+        // index: 230,
         name: '查询系列信息'
     },
 
@@ -582,6 +589,8 @@ const handelPermission = function (funcMap) {
     let permissions = funcMap2position(funcMap);
     //将权限数组存入store
     store.commit('setPermissions', permissions);
+    //将permission存入localhost
+    localStorage.setItem('PERMISSIONS', permissions.join('|'));
 };
 
 const getPermissions = function () {

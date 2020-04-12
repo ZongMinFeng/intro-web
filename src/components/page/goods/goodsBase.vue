@@ -186,7 +186,7 @@
                 this.addFlag = 2;
             }
             this.searchForm.goodsId = this.goodsId;
-            this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.pictureUrl = cfg.service.pictureUrl + '/';
             this.getUnits();
             if (this.addFlag === 2) {
                 this.getGoods();

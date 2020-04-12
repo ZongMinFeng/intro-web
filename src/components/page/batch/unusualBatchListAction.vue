@@ -1,7 +1,6 @@
 <template>
     <div class="container">
         <div class="handle-box">
-            <el-button type="success" icon="el-icon-plus" @click="onAddNewTap">新增</el-button>
             <el-button style="float: right;" type="primary" @click="refresh">刷新</el-button>
         </div>
 

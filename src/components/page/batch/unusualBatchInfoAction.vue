@@ -398,7 +398,7 @@
         },
 
         created() {
-            this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.pictureUrl = cfg.service.pictureUrl + '/';
             // this.$route.query.batchId="BI685783182406328320";//debug
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;

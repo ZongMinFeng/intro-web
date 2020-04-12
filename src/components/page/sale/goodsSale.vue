@@ -162,6 +162,11 @@
                     return;
                 }
 
+                if (val === '') {
+                    this.numBuy=1;
+                    return;
+                }
+
                 let num = parseInt(val);
                 if (num === 0) {
                     this.numPlusDisableShow = true;
@@ -184,7 +189,7 @@
 
         created() {
             this.specGoodsId = this.$route.query.specGoodsId;
-            this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.pictureUrl = cfg.service.pictureUrl + '/';
             this.nalaRate = localStorage.getItem('nalaRate') || 1;
             this.dollarRate = localStorage.getItem('dollarRate') || 1;
             this.getGoodsInfo();

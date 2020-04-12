@@ -16,10 +16,10 @@ import store from './store'
 
 import Router from 'vue-router'
 
-const routerPush = Router.prototype.push
+const routerPush = Router.prototype.push;
 Router.prototype.push = function push(location) {
     return routerPush.call(this, location).catch(error => error)
-}
+};
 
 // 拖拽el-dialog
 import './directives'
@@ -35,10 +35,10 @@ import 'vue-photo-preview/dist/skin.css'
 Vue.use(preview);
 
 
-Vue.config.productionTip = false
+Vue.config.productionTip = false;
 Vue.use(ElementUI, {
     size: 'small'
-})
+});
 //设置axios超时时间10秒
 axios.defaults.timeout = 10000
 //原型上挂在axios,便于全局使用
@@ -67,4 +67,4 @@ new Vue({
     router,
     store,
     render: h => h(App)
-}).$mount('#app')
+}).$mount('#app');

@@ -9,8 +9,6 @@ let util = require('./util.js');
 let axios = require('axios');
 let base64 = require('./base64');
 
-let superPosition = getPermissions();
-
 const sendServer = (urlParams, me) => {
     let reqUuid = localStorage.getItem('reqUuid') || '';
     let macKey = localStorage.getItem('macKey') || '';
@@ -28,9 +26,12 @@ const sendServer = (urlParams, me) => {
         header.reqTime = ssDate;
 
         //判断权限
+        let superPosition = getPermissions();
         let index=superPosition.indexOf(urlParams.txnId);
-        console.log('index', index);//debug
-        if (index<0){
+        if (index<0&&urlParams.txnId!=='getLoginStatus'&&urlParams.txnId!=='genLoginId'){
+            console.log('index', index);//debug
+            console.log('txnId', urlParams.txnId);//debug
+            console.log('superPosition', superPosition);//debug
             me.$message.warning('对不起，您没有此权限，请联系管理员！');
             reject('no permission');
             return;

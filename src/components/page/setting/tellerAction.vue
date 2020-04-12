@@ -128,7 +128,7 @@
             <!--<div>-->
             <!--权限值：{{detailForm.funcMap}}-->
             <!--</div>-->
-            <position-selection v-model="detailForm.funcMap"></position-selection>
+            <position-selection disabled v-model="detailForm.funcMap"></position-selection>
         </el-dialog>
     </div>
 </template>
