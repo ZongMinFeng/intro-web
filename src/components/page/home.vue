@@ -136,7 +136,7 @@
             if (this.$route.query.showMypresell) {
                 this.myPresellShow=true;
             }
-            this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.pictureUrl = cfg.service.pictureUrl + '/';
             this.nalaRate=localStorage.getItem('nalaRate')||1;
             this.dollarRate=localStorage.getItem('dollarRate')||1;
             this.getGoods();
@@ -198,6 +198,8 @@
                                 this.currentPage++;
                                 //递归调用
                                 this.getGoodsOnce();
+                            }else{
+                                this.goodsListShow.sort(this.sortByPq);
                             }
                         }
 

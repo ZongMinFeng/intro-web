@@ -182,3 +182,9 @@ a {
     display: inline-block;
     width: 100%;
 }
+
+
+/*树形结构✔的颜色*/
+.my-css .el-checkbox__input.is-disabled.is-checked .el-checkbox__inner::after {
+    border-color: #1669cc;
+}

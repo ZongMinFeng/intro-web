@@ -100,7 +100,7 @@
         },
 
         created() {
-            this.pictureUrl = cfg.service.uploadUrl + '/';
+            this.pictureUrl = cfg.service.pictureUrl + '/';
             this.getUnits();
             this.initData();
         },

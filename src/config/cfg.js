@@ -1,14 +1,10 @@
-const baseUrl = '/adminTest'; //生产
-// const baseUrl='/mock';//测试
-// const baseUrl='';//DJ测试
-const baseUrlApi = '/apiTest'; //生产
+const baseUrl = '/adminTest'; //测试
+const baseUrlApi = '/apiTest'; //测试
 
 module.exports = {
     baseUrl,
     baseUrlApi,
     service: {
-        uploadUrl: 'http://139.196.162.158:10081', //测试
-        // uploadUrl:'http://139.196.162.158:10080',//生产 v-uu
         pictureUrl: 'http://139.196.162.158:10081', //测试
 
         checkTellerId: {

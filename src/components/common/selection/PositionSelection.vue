@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div class="position-border">
+        <div class="position-border my-css">
             <el-tree :data="treeData"
                      node-key="id"
                      show-checkbox
@@ -103,13 +103,6 @@
                 props: {
                     label: 'label',
                     children: 'children',
-                    disabled: function (data, node) {
-                        if (data.disabled) {
-                            return true;
-                        }else{
-                            return false;
-                        }
-                    },
                 },
                 //选中的权限
                 position: [],
@@ -143,6 +136,7 @@
                     let treeLevel1 = {};
                     treeLevel1.id = level1.index;
                     treeLevel1.label = level1.title;
+                    treeLevel1.disabled=false;
                     let level1hasSuper = false;
                     if (level1.subs) {
                         treeLevel1.children = [];
@@ -150,6 +144,7 @@
                             let treeLevel2 = {};
                             treeLevel2.id = level2.index;
                             treeLevel2.label = level2.title;
+                            treeLevel2.disabled=false;
                             let level2hasSuper = false;
                             if (level2.permissions) {
                                 treeLevel2.children = [];
@@ -159,6 +154,7 @@
                                         treeLevel3.id = permission;
                                         treeLevel3.label = PERMISSIONS[permission].name;
                                         treeLevel3.isPermission = 'Y';
+                                        treeLevel3.disabled=false;
                                         if (this.superPosition.indexOf(permission) > -0.005) {
                                             treeLevel2.children.push(treeLevel3);
                                             level2hasSuper = true;
@@ -177,9 +173,10 @@
                     }
                 });
                 if (this.disabled === '') {
-                    this.disabledAll(treeDataAll);
+                    this.disabledAll(this.treeData);
                 }
                 this.treeData=treeDataAll;
+                console.log('treeDataAll', treeDataAll);//debug
             },
 
             setChecked() {
@@ -194,6 +191,9 @@
                     }
                 });
                 this.$refs.tree.setCheckedKeys(this.position);
+                if (this.disabled === '') {
+                    this.disabledAll(this.treeData);
+                }
             },
 
             check() {
@@ -209,10 +209,13 @@
             },
 
             disabledAll(treeData){
-                treeData.disabled=true;
-                if (treeData.children instanceof Array && treeData.children.length > 0) {
-                    this.disabledAll(treeData.children);
-                }
+                treeData.forEach(item=>{
+                    item.disabled=true;
+                    if (item.children instanceof Array && item.children.length > 0) {
+                        this.disabledAll(item.children);
+                    }
+                });
+
             },
         }
     }

@@ -1,4 +1,4 @@
-import {PERMISSIONS as PERMISSION} from "../tool/permission";
+import {getPermissions, PERMISSIONS as PERMISSION} from "../tool/permission";
 
 let jsonSha256 = require('./jsonSha256.js');
 let pub = require('./pub.js');
@@ -8,6 +8,8 @@ let sysArg = require('./../config/sysArg.js');
 let util = require('./util.js');
 let axios = require('axios');
 let base64 = require('./base64');
+
+let superPosition = getPermissions();
 
 const sendServer = (urlParams, me) => {
     let reqUuid = localStorage.getItem('reqUuid') || '';
@@ -24,6 +26,15 @@ const sendServer = (urlParams, me) => {
         let header = urlParams.header || {};
         header.txnId = urlParams.txnId;
         header.reqTime = ssDate;
+
+        //判断权限
+        let index=superPosition.indexOf(urlParams.txnId);
+        console.log('index', index);//debug
+        if (index<0){
+            me.$message.warning('对不起，您没有此权限，请联系管理员！');
+            reject('no permission');
+            return;
+        }
 
         if (urlParams.txnId === cfg.service.genLoginId.txnId) {
             sha256Key = '8AAE67FA6B5B1BBCF14BC7CA425A0116'

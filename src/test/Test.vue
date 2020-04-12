@@ -1,18 +1,22 @@
 <template>
     <div>
-        <my-presell-list></my-presell-list>
+        <position-selection disabled v-model="position"></position-selection>
+        权限值{{position}}
     </div>
 </template>
 
 <script>
-    import myPresellList from '@/components/page/sale/myPresellList.vue'
+    import PositionSelection from "../components/common/selection/PositionSelection";
+
     export default {
         components:{
-            myPresellList
+            PositionSelection
         },
 
         data() {
-            return {}
+            return {
+                position:'FFF',
+            }
         },
         methods: {}
     }
